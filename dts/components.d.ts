@@ -8,9 +8,23 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Compute: typeof import('./../src/components/Compute.vue')['default']
+    ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
+    ElCard: typeof import('element-plus/es')['ElCard']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
+    ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
+    ElementPlusSetup: typeof import('~icons/el/ement-plus-setup')['default']
+    ElementPlusUI: typeof import('~icons/el/ement-plus-u-i')['default']
+    ElementSetup: typeof import('~icons/el/ement-setup')['default']
+    ElForm: typeof import('element-plus/es')['ElForm']
+    ElFormItem: typeof import('element-plus/es')['ElFormItem']
+    ElInput: typeof import('element-plus/es')['ElInput']
+    ElProgress: typeof import('element-plus/es')['ElProgress']
+    ElTable: typeof import('element-plus/es')['ElTable']
+    ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UIElementExample: typeof import('./../src/views/ui-kit/components/UIElementExample.vue')['default']
   }
 }

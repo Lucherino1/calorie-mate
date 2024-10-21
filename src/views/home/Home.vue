@@ -1,7 +1,5 @@
 <template>
-  <div class="p-5">
-    <p>Home</p>
-  </div>
+  <p>Home</p>
 </template>
 
 <script lang="ts" setup>

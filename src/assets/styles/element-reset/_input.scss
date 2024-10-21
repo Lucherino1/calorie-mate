@@ -1,0 +1,14 @@
+@import "element-plus/theme-chalk/src/input";
+
+.el-input {
+
+  &__wrapper {
+    @apply py-[18px] px-6
+  }
+  &__inner {
+    @apply text-gray-light leading-[14px] border-gray-light
+  }
+  &__inner::placeholder  {
+    @apply text-gray-light leading-[14px]
+  }
+}

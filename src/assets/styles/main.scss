@@ -3,6 +3,8 @@
 @import 'base';
 @import './utils/animations';
 @import './element-reset';
+@import './element-reset/card';
+@import './element-reset/input';
 
 @tailwind components;
 @tailwind utilities;

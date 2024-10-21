@@ -14,6 +14,7 @@
     "postinstall": "run-p openapi-generate"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.45.6",
     "@vueuse/core": "^10.11.0",
     "axios": "^1.7.2",
     "element-plus": "^2.7.6",

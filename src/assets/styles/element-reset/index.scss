@@ -5,13 +5,49 @@
     'primary': (
       'base': colors.$primary, // todo: this MUST be a valid 6-digit HEX color in order to make it correctly work
     ),
+    'success': (
+      'base': colors.$success,
+    ),
+    'warning': (
+      'base': colors.$warning,
+    ),
+    'danger': (
+      'base': colors.$danger,
+    ),
+    'error': (
+      'base': colors.$error,
+    ),
+    'info': (
+      'base': colors.$info,
+    ),
+  ),
+  $button: (
+    'font-weight': 700,
+  ),
+  $button-border-radius: (
+    'large': 16px,
+    'default': 10px,
+  ),
+  $button-padding-vertical: (
+      'large': 11px,
+      'default': 7px,
+      'small': 6px,
+  ),
+  $button-padding-horizontal: (
+      'large': 31px,
+      'default': 25px,
+      'small': 12px,
+  ),
+  $input: (
+    'border-radius': 16px,
+  ),
+  $card: (
+    'border-radius': 20px,
   )
 );
 
 @use "element-plus/theme-chalk/src/base";
 @use "element-plus/theme-chalk/src/button";
-@use "element-plus/theme-chalk/src/badge";
-@use "element-plus/theme-chalk/src/message";
 @use "element-plus/theme-chalk/src/select";
 @use "element-plus/theme-chalk/src/input";
 @use "element-plus/theme-chalk/src/option";
@@ -22,3 +58,7 @@
 @use "element-plus/theme-chalk/src/card";
 @use "element-plus/theme-chalk/src/table";
 @use "element-plus/theme-chalk/src/switch";
+@use "element-plus/theme-chalk/src/progress";
+@use "element-plus/theme-chalk/src/date-picker";
+@use "element-plus/theme-chalk/src/tabs";
+@use "element-plus/theme-chalk/src/skeleton";

@@ -320,6 +320,7 @@
     "requestInterceptor": true,
     "responseInterceptor": true,
     "useApiClient": true,
-    "generalService": true
+    "generalService": true,
+    "useSupabase": true
   }
 }
