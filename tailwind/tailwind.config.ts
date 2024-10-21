@@ -8,7 +8,14 @@ export default {
   ],
   theme: {
     colors,
-    extend: {}
+    fontFamily: {
+      main: ['DM Sans', 'sans-serif']
+    },
+    extend: {
+      backgroundImage: {
+        'primary-gradient': 'linear-gradient(135deg, #868CFF 0%, #4318FF 100%)'
+      }
+    }
   },
   plugins: []
 } satisfies Config

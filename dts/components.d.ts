@@ -26,5 +26,6 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     UIElementExample: typeof import('./../src/views/ui-kit/components/UIElementExample.vue')['default']
+    UITailwindSetup: typeof import('./../src/views/ui-kit/components/UITailwindSetup.vue')['default']
   }
 }
