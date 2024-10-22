@@ -24,8 +24,7 @@ export const ImportsBuilder = () => AutoImport({
     'vue-router',
     '@vueuse/core',
     '@vueuse/head',
-    'pinia',
-    'vue-i18n'
+    'pinia'
   ],
   resolvers: [ElementPlusResolver()]
 })
