@@ -2,9 +2,10 @@
 
 .el-input {
   &__inner {
-    @apply text-gray-light leading-[14px] border-gray-light
-  }
-  &__inner::placeholder  {
-    @apply text-gray-light leading-[14px]
+    @apply text-gray-light leading-[14px] border-gray-light;
+    
+    &::placeholder {
+      @apply text-gray-light leading-[14px];
+    }
   }
 }
