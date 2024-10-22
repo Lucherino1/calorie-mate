@@ -1,0 +1,15 @@
+@import '/src/assets/styles/variables/colors';
+@import "element-plus/theme-chalk/src/form";
+@import "element-plus/theme-chalk/src/form-item";
+
+.el-form-item {
+  &__label {
+    font-weight: 500;
+    line-height: 14px;
+
+    &::after {
+      color: $primary !important;
+    }
+  }
+}
+

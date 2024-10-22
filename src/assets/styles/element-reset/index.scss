@@ -21,22 +21,18 @@
       'base': colors.$info,
     ),
   ),
+  $common_component_size: (
+    'large': 50px,
+    'default': 36px,
+    'small': 28px,
+  ),
   $button: (
     'font-weight': 700,
   ),
   $button-border-radius: (
     'large': 16px,
     'default': 10px,
-  ),
-  $button-padding-vertical: (
-      'large': 11px,
-      'default': 7px,
-      'small': 6px,
-  ),
-  $button-padding-horizontal: (
-      'large': 31px,
-      'default': 25px,
-      'small': 12px,
+    'small': 8px,
   ),
   $input: (
     'border-radius': 16px,
