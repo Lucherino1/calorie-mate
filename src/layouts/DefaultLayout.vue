@@ -1,8 +1,9 @@
 <template>
   <div class="grid grid-cols-[290px_1fr] bg-gray-ultra-light">
     <Sidebar :menu-list="menuList" />
-
-    <slot name="main" />
+    <main>
+      <slot name="main" />
+    </main>
   </div>
 </template>
 
