@@ -9,7 +9,7 @@ export default {
   theme: {
     colors,
     fontFamily: {
-      main: ['DM Sans', 'sans-serif']
+      main: ['DM Sans', 'serif']
     },
     extend: {
       backgroundImage: {
