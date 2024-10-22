@@ -25,6 +25,7 @@ declare module 'vue' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Sidebar: typeof import('./../src/components/Sidebar.vue')['default']
     UIElementExample: typeof import('./../src/views/ui-kit/components/UIElementExample.vue')['default']
     UITailwindSetup: typeof import('./../src/views/ui-kit/components/UITailwindSetup.vue')['default']
   }
