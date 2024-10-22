@@ -8,26 +8,22 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppTable: typeof import('./../src/components/AppTable.vue')['default']
-    Compute: typeof import('./../src/components/Compute.vue')['default']
     ElBacktop: typeof import('element-plus/es')['ElBacktop']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
     ElCard: typeof import('element-plus/es')['ElCard']
+    ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
-    ElementPlusSetup: typeof import('~icons/el/ement-plus-setup')['default']
-    ElementPlusUI: typeof import('~icons/el/ement-plus-u-i')['default']
-    ElementSetup: typeof import('~icons/el/ement-setup')['default']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElProgress: typeof import('element-plus/es')['ElProgress']
+    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sidebar: typeof import('./../src/components/Sidebar.vue')['default']
-    UIElementExample: typeof import('./../src/views/ui-kit/components/UIElementExample.vue')['default']
-    UITailwindSetup: typeof import('./../src/views/ui-kit/components/UITailwindSetup.vue')['default']
   }
 }
