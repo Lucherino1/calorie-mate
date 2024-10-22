@@ -1,0 +1,13 @@
+<template>
+  <div>
+    <header>
+      Header
+    </header>
+    <main>
+      Main
+    </main>
+    <footer>
+      Footer
+    </footer>
+  </div>
+</template>
