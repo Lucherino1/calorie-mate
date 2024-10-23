@@ -24,10 +24,14 @@
 </template>
 
 <script lang="ts" setup>
+import { routeNames } from '@/router/route-names'
+
+type TRouteNames = keyof typeof routeNames
+
 // add more sidebar menuList options in the Future.
 interface ISidebarMenuList {
   label: string
-  routeName: string
+  routeName: TRouteNames
 }
 
 const menuList: ISidebarMenuList[] = []
