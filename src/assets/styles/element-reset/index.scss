@@ -56,6 +56,6 @@
 @use "element-plus/theme-chalk/src/skeleton";
 @use "element-plus/theme-chalk/src/checkbox";
 
-@import './element-reset/card';
-@import './element-reset/input';
-@import './element-reset/form';
+@import './_card';
+@import './_input';
+@import './_form';
