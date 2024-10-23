@@ -1,6 +1,10 @@
 <template>
   <AppLayout :layout="$route.meta.layout">
-    <router-view />
+    <router-view #default="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </AppLayout>
 </template>
 
