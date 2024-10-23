@@ -34,7 +34,32 @@ interface ISidebarMenuList {
   routeName: TRouteNames
 }
 
-const menuList: ISidebarMenuList[] = []
+const menuList: ISidebarMenuList[] = [
+  {
+    label: 'Dashboard',
+    routeName: 'dashboard'
+  },
+  {
+    label: 'Profile',
+    routeName: 'profileSettings'
+  },
+  {
+    label: 'Adjust Meal',
+    routeName: 'updateMeal'
+  },
+  {
+    label: 'Recepies and products',
+    routeName: 'recepiesAndProducts'
+  },
+  {
+    label: 'Health & Nutrition Calculators',
+    routeName: 'calculators'
+  },
+  {
+    label: 'Get to Know Us',
+    routeName: 'aboutUs'
+  }
+]
 </script>
 
 <style lang="scss" scoped>
