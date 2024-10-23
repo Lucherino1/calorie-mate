@@ -4,9 +4,7 @@
 
 .el-form-item {
   &__label {
-    font-weight: 500;
-    line-height: 14px;
-
+    @apply font-medium leading-[14px];
     &::after {
       color: $primary !important;
     }
