@@ -1,0 +1,61 @@
+@use "../variables/colors";
+
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': colors.$primary, // todo: this MUST be a valid 6-digit HEX color in order to make it correctly work
+    ),
+    'success': (
+      'base': colors.$success,
+    ),
+    'warning': (
+      'base': colors.$warning,
+    ),
+    'danger': (
+      'base': colors.$danger,
+    ),
+    'error': (
+      'base': colors.$error,
+    ),
+    'info': (
+      'base': colors.$info,
+    ),
+  ),
+  $common_component_size: (
+    'large': 50px,
+    'default': 36px,
+    'small': 28px,
+  ),
+  $button: (
+    'font-weight': 700,
+  ),
+  $button-border-radius: (
+    'large': 16px,
+    'default': 10px,
+    'small': 8px,
+  ),
+  $input: (
+    'border-radius': 16px,
+  ),
+  $card: (
+    'border-radius': 20px,
+  )
+);
+
+@use "element-plus/theme-chalk/src/base";
+@use "element-plus/theme-chalk/src/button";
+@use "element-plus/theme-chalk/src/select";
+@use "element-plus/theme-chalk/src/option";
+@use "element-plus/theme-chalk/src/popper";
+@use "element-plus/theme-chalk/src/loading";
+@use "element-plus/theme-chalk/src/table";
+@use "element-plus/theme-chalk/src/switch";
+@use "element-plus/theme-chalk/src/progress";
+@use "element-plus/theme-chalk/src/date-picker";
+@use "element-plus/theme-chalk/src/tabs";
+@use "element-plus/theme-chalk/src/skeleton";
+@use "element-plus/theme-chalk/src/checkbox";
+
+@import './_card';
+@import './_input';
+@import './_form';

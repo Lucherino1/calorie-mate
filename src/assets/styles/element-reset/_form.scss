@@ -1,0 +1,13 @@
+@import '/src/assets/styles/variables/colors';
+@import "element-plus/theme-chalk/src/form";
+@import "element-plus/theme-chalk/src/form-item";
+
+.el-form-item {
+  &__label {
+    @apply font-medium text-primary-dark leading-[14px] #{!important};
+    &::after {
+      @apply font-bold m-0 text-primary #{!important};
+    }
+  }
+}
+
