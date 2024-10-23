@@ -2,7 +2,7 @@
 
 .el-input {
   &__inner {
-    @apply text-primary leading-[14px] border-gray-light;
+    @apply leading-[14px] border-gray-light;
     
     &::placeholder {
       @apply text-gray-light leading-[14px];
