@@ -1,3 +1,4 @@
+import { ELayouts } from '@/types/enums'
 import type { RouteRecordRaw } from 'vue-router'
 
 export const calculatorsRouteNames = {
@@ -10,7 +11,7 @@ export const calculatorsRoutes: RouteRecordRaw[] = [
     name: calculatorsRouteNames.calculators,
     component: () => import('./Calculators.vue'),
     meta: {
-      layout: ''
+      layout: ELayouts.blank
     }
   }
 ]

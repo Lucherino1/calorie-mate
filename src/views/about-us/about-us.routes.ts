@@ -1,5 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
 import AboutUs from './AboutUs.vue'
+import { ELayouts } from '@/types/enums'
 
 export const aboutUsRouteNames = {
   aboutUs: 'aboutUs'
@@ -11,7 +12,7 @@ export const aboutUsRoutes: RouteRecordRaw[] = [
     name: aboutUsRouteNames.aboutUs,
     component: AboutUs,
     meta: {
-      layout: ''
+      layout: ELayouts.blank
     }
   }
 ]
