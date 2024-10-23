@@ -24,9 +24,8 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{
-  menuList: TSidebarMenuList
-}>()
+// add sidebar menuList options in the Future.
+const menuList: TSidebarMenuList = []
 </script>
 
 <style lang="scss" scoped>

@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-[290px_1fr] bg-gray-ultra-light">
-    <Sidebar :menu-list="menuList" />
+    <Sidebar />
     <main>
       <slot name="main" />
     </main>
@@ -8,7 +8,4 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{
-  menuList: TSidebarMenuList
-}>()
 </script>
