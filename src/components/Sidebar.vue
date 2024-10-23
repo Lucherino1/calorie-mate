@@ -38,8 +38,6 @@ const menuList: ISidebarMenuList[] = []
 </script>
 
 <style lang="scss" scoped>
-@import '/src/assets/styles/variables/colors';
-
 li {
   @apply relative;
 }
