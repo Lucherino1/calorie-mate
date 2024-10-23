@@ -1,14 +1,16 @@
 import type { RouteRecordRaw } from 'vue-router'
-import Dashboard from './Dashboard.vue'
 
-export const dashboardRoutesNames = {
+export const dashboardRouteNames = {
   dashboard: 'dashboard'
 }
 
 export const dashboardRoutes: RouteRecordRaw[] = [
   {
     path: '/dashboard',
-    name: dashboardRoutesNames.dashboard,
-    component: Dashboard
+    name: dashboardRouteNames.dashboard,
+    component: () => import('./Dashboard.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
