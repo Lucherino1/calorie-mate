@@ -1,7 +1,7 @@
 <template>
   <aside class="h-screen bg-white">
     <div class="pt-14 pb-12 font-poppins text-[26px] leading-[26px] text-primary-dark text-center border-b">
-      <h1 class="font-bold">CALORIE <span class="font-normal">MATE</span></h1>
+      <h1><b>CALORIE</b>MATE</h1>
     </div>
     <div class="pl-9 pt-10">
       <ul class="flex flex-col gap-5">
@@ -41,21 +41,13 @@ const menuList: ISidebarMenuList[] = []
 @import '/src/assets/styles/variables/colors';
 
 li {
-  position: relative;
+  @apply relative;
 }
 
 .sidebar__link--active {
   &::after {
     content: '';
-    display: block;
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 4px;
-    height: 36px;
-    background-color: $primary;
-    border-radius: 25px;
+    @apply block absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-9 bg-primary rounded-full;
   };
 
   @apply font-bold text-primary-dark;
