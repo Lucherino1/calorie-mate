@@ -4,10 +4,9 @@
 
 .el-form-item {
   &__label {
-    @apply font-medium leading-[14px];
+    @apply font-medium text-primary-dark leading-[14px] #{!important};
     &::after {
-      color: $primary !important;
+      @apply font-bold m-0 text-primary #{!important};
     }
   }
 }
-

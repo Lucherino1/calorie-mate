@@ -3,7 +3,7 @@
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
   $colors: (
     'primary': (
-      'base': colors.$primary, // todo: this MUST be a valid 6-digit HEX color in order to make it correctly work
+      'base': colors.$primary,
     ),
     'success': (
       'base': colors.$success,
@@ -34,12 +34,6 @@
     'default': 10px,
     'small': 8px,
   ),
-  $input: (
-    'border-radius': 16px,
-  ),
-  $card: (
-    'border-radius': 20px,
-  )
 );
 
 @use "element-plus/theme-chalk/src/base";

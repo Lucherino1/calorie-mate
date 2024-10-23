@@ -1,6 +1,7 @@
 @import "element-plus/theme-chalk/src/card";
 
 .el-card {
+  @apply rounded-[20px];
   box-shadow: 14px 17px 40px 4px rgba(112, 144, 176, 0.08) !important;
 
   &__body {
