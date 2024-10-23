@@ -1,5 +1,4 @@
 import type { RouteRecordRaw } from 'vue-router'
-import AboutUs from './AboutUs.vue'
 import { ELayouts } from '@/types/enums'
 
 export const aboutUsRouteNames = {
@@ -10,7 +9,7 @@ export const aboutUsRoutes: RouteRecordRaw[] = [
   {
     path: '/about-us',
     name: aboutUsRouteNames.aboutUs,
-    component: AboutUs,
+    component: () => import('./AboutUs.vue'),
     meta: {
       layout: ELayouts.blank
     }
