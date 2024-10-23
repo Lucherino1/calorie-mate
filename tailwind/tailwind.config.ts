@@ -9,7 +9,7 @@ export default {
   theme: {
     colors,
     fontFamily: {
-      main: ['DM Sans', 'serif'],
+      main: ['DM Sans', 'sans-serif'],
       poppins: ['Poppins', 'sans-serif']
     },
     extend: {
