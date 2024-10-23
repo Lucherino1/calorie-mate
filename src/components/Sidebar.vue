@@ -24,8 +24,13 @@
 </template>
 
 <script lang="ts" setup>
-// add sidebar menuList options in the Future.
-const menuList: TSidebarMenuList = []
+// add more sidebar menuList options in the Future.
+interface ISidebarMenuList {
+  label: string
+  routeName: string
+}
+
+const menuList: ISidebarMenuList[] = []
 </script>
 
 <style lang="scss" scoped>
