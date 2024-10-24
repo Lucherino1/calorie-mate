@@ -1,5 +1,5 @@
 <template>
-  <AppLayout :layout="$route.meta.layout">
+  <AppLayout :layout="route.meta.layout">
     <router-view #default="{ Component }">
       <transition name="fade" mode="out-in">
         <component :is="Component" />
@@ -9,5 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import AppLayout from './layouts/AppLayout.vue'
+import AppLayout from '@/layouts/AppLayout.vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 </script>

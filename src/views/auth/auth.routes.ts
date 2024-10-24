@@ -1,5 +1,4 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { ELayouts } from '@/types/enums'
 
 export const authRouteNames = {
   signin: 'signin',
@@ -10,17 +9,17 @@ export const authRoutes: RouteRecordRaw[] = [
   {
     path: '/sign-in',
     name: authRouteNames.signin,
-    component: () => import('./SignIn.vue'),
+    component: () => import('@/views/auth/SignIn.vue'),
     meta: {
-      layout: ELayouts.blank
+      layout: 'blank'
     }
   },
   {
     path: '/sign-up',
     name: authRouteNames.signup,
-    component: () => import('./SignUp.vue'),
+    component: () => import('@/views/auth/SignUp.vue'),
     meta: {
-      layout: ELayouts.blank
+      layout: 'blank'
     }
   }
 ]

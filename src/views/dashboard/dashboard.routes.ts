@@ -8,9 +8,9 @@ export const dashboardRoutes: RouteRecordRaw[] = [
   {
     path: '/dashboard',
     name: dashboardRouteNames.dashboard,
-    component: () => import('./Dashboard.vue'),
+    component: () => import('@/views/dashboard/Dashboard.vue'),
     meta: {
-      requiresAuth: true
+      requireAuth: true
     }
   }
 ]

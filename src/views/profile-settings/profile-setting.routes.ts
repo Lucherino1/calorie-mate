@@ -8,9 +8,9 @@ export const profileSettignsRoutes: RouteRecordRaw[] = [
   {
     path: '/profile-settings',
     name: profileSettignsRouteNames.profileSettings,
-    component: () => import('./ProfileSettings.vue'),
+    component: () => import('@/views/profile-settings/ProfileSettings.vue'),
     meta: {
-      requiresAuth: true
+      requireAuth: true
     }
   }
 ]
