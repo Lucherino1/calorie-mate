@@ -4,10 +4,10 @@ import { aboutUsRoutes } from '@/views/about-us/about-us.routes'
 import { calculatorsRoutes } from '@/views/calculators/calculators.routes'
 import { authRoutes } from '@/views/auth/auth.routes'
 import { updateMealRoutes } from '@/views/update-meal/update-meal.routes'
-import { recepiesAndProductsRoutes } from '@/views/recipes-and-products/recipes-and-products.routes'
+import { recipesAndProductsRoutes } from '@/views/recipes-and-products/recipes-and-products.routes'
 import { profileSettingRoutes } from '@/views/profile-settings/profile-setting.routes'
 import { dashboardRoutes } from '@/views/dashboard/dashboard.routes'
-import { productRecipeApprovalRoutes } from '@/views/product-recipe-approval/approve-products-and-recepies.routes'
+import { productRecipeApprovalRoutes } from '@/views/product-recipe-approval/approve-products-and-recipes.routes'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
   ...calculatorsRoutes,
   ...authRoutes,
   ...updateMealRoutes,
-  ...recepiesAndProductsRoutes,
+  ...recipesAndProductsRoutes,
   ...profileSettingRoutes,
   ...productRecipeApprovalRoutes
 ]

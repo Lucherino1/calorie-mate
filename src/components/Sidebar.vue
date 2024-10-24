@@ -97,15 +97,13 @@ function logout () {}
 
 <style lang="scss" scoped>
 .sidebar__link--active {
-.menu-icon {
-  @apply fill-primary
-}
-
+  @apply font-bold text-primary-dark fill-primary;
+  .menu-icon {
+    @apply fill-primary
+  }
   &::after {
     content: '';
     @apply block absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-9 bg-primary rounded-full;
   };
-
-  @apply font-bold text-primary-dark fill-primary;
 }
 </style>
