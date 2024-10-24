@@ -22,7 +22,7 @@
           </router-link>
         </li>
       </ul>
-      <div class="pr-9 mt-20 flex flex-col w-full">
+      <div class="pr-5 mt-20 flex flex-col w-full">
         <el-button @click="logout">Logout</el-button>
       </div>
     </div>
