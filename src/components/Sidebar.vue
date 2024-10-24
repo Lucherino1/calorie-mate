@@ -4,7 +4,7 @@
       <h1><b>CALORIE</b>MATE</h1>
     </div>
     <div class="flex-1 pl-5 pt-10">
-      <ul class="flex flex-col gap-5">
+      <ul class="flex flex-col gap-6">
         <li
           v-for="item in menuList"
           :key="item.routeName"
