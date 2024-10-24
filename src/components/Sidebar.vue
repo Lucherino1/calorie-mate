@@ -15,6 +15,7 @@
             class="w-full truncate flex items-center"
             :to="{ name:item.routeName }"
             active-class="dsidebar__link--active"
+            exact-active-class="sidebar__link--active"
           >
             <component :is="item.icon" class="mr-2 menu-icon" />
             {{ item.label }}
@@ -40,6 +41,9 @@ import IconAboutUs from '~icons/icon/about-us'
 import IconSignUp from '~icons/icon/sign-up'
 
 import type { FunctionalComponent } from 'vue'
+import type { routeNames } from '@/router/route-names'
+
+type TRouteNames = Extract<keyof typeof routeNames, string>
 
 interface ISidebarMenuList {
   label: string
