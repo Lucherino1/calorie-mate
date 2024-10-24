@@ -18,4 +18,4 @@ type TTableHeadings<T = Record<string, any>> = Array<{
   formatter?: (row: T) => (number | string)
 }>
 
-type TRouteNames = Extract<keyof typeof routeNames, string>
+type TRouteNames = keyof typeof import('@/router/route-names').routeNames

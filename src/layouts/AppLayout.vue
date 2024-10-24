@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<{
   layout: 'default'
 })
 
-const layouts: Record<ELayouts, typeof BlankLayout | typeof DefaultLayout> = {
+const layouts: Record<ELayouts, Component> = {
   blank: BlankLayout,
   default: DefaultLayout
 }
