@@ -6,17 +6,17 @@
 
 <script lang="ts" setup>
 import { ELayouts } from '@/types/enums'
-import BlankLayout from './BlankLayout.vue'
-import DefaultLayout from './DefaultLayout.vue'
+import BlankLayout from '@/layouts/BlankLayout.vue'
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
 
 const props = withDefaults(defineProps<{
-  layout: ELayouts
+  layout?: keyof typeof ELayouts
 }>(), {
-  layout: ELayouts.default
+  layout: 'default'
 })
 
-const layouts = {
-  [ELayouts.blank]: BlankLayout,
-  [ELayouts.default]: DefaultLayout
+const layouts: Record<ELayouts, typeof BlankLayout | typeof DefaultLayout> = {
+  blank: BlankLayout,
+  default: DefaultLayout
 }
 </script>

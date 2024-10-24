@@ -17,3 +17,5 @@ type TTableHeadings<T = Record<string, any>> = Array<{
   sortMethod?: (a: number, b: number) => number
   formatter?: (row: T) => (number | string)
 }>
+
+type TRouteNames = Extract<keyof typeof routeNames, string>
