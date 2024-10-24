@@ -4,7 +4,7 @@ export const recipesAndProductsRouteNames = {
   recipesAndProducts: 'recipesAndProducts'
 }
 
-export const recepiesAndProductsRoutes: RouteRecordRaw[] = [
+export const recipesAndProductsRoutes: RouteRecordRaw[] = [
   {
     path: '/recipes-and-products',
     name: recipesAndProductsRouteNames.recipesAndProducts,
