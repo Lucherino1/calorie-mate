@@ -7,7 +7,7 @@ declare module 'vue-router' {
   interface RouteMeta {
     // todo: this is just an example. Please setup your own route meta params.
     label?: string
-    layout?: ELayouts,
+    layout?: keyof typeof ELayouts,
     parentName?: string
     requireAuth?: boolean
   }
