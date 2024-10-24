@@ -11,3 +11,8 @@ export enum EElComponentSize {
   default = 'default',
   large = 'large'
 }
+
+export enum ELayouts {
+  default = 'default',
+  blank = 'blank'
+}

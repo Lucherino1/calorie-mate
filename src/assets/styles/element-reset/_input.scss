@@ -1,6 +1,9 @@
 @import "element-plus/theme-chalk/src/input";
 
 .el-input {
+  &__wrapper {
+    @apply rounded-2xl;
+  }
   &__inner {
     @apply leading-[14px] border-gray-light;
     

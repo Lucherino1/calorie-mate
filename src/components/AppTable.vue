@@ -21,6 +21,7 @@
     </el-table-column>
   </el-table>
 </template>
+
 <script lang="ts" setup>
 const prop = defineProps<{
   headers: TTableHeadings
