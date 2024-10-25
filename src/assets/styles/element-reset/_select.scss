@@ -1,0 +1,14 @@
+@import "element-plus/theme-chalk/src/select";
+
+.el-select {
+  &__wrapper {
+    @apply rounded-2xl;
+  }
+  &__inner {
+    @apply leading-[14px] border-gray-light;
+    
+    &::placeholder {
+      @apply text-gray-light leading-[14px];
+    }
+  }
+}
