@@ -48,7 +48,7 @@ export function useCurrentWeightRule (minWeight: number = 35, maxWeight: number 
   return {
     validator: (rule: FormItemRule, value: number, callback: (error?: Error) => void) => {
       if (value < minWeight) {
-        callback(new Error(`Are you sure that's correct? Your starting weight should be at least ${minWeight} kg.`))
+        callback(new Error(`Your starting weight should be at least ${minWeight} kg.`))
       } else if (value > maxWeight) {
         callback(new Error(`That seems a bit high! Please enter a weight under ${maxWeight} kg.`))
       } else {
