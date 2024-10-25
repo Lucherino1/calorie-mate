@@ -21,14 +21,14 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item label="Height" prop="height">
+    <el-form-item label="Height in (cm)" prop="height">
       <el-input v-model.number="localFormModel.height" type="number" placeholder="Enter your height" />
     </el-form-item>
-    <el-form-item label="Current Weight" prop="currentWeight">
+    <el-form-item label="Current Weight in (kg)" prop="currentWeight">
       <el-input v-model.number="localFormModel.currentWeight" type="number" placeholder="Enter your weight" />
     </el-form-item>
 
-    <el-form-item label="Goal Weight" prop="goalWeight">
+    <el-form-item label="Goal Weight in (kg)" prop="goalWeight">
       <el-input v-model.number="localFormModel.goalWeight" type="number" placeholder="Enter your goal weight" />
     </el-form-item>
     <slot name="submitBtn">
