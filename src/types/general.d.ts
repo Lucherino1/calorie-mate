@@ -19,3 +19,21 @@ type TTableHeadings<T = Record<string, any>> = Array<{
 }>
 
 type TRouteNames = keyof typeof import('@/router/route-names').routeNames
+
+type TSex = 'male' | 'female'
+
+interface IProfileFields {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  confirmPassword: string
+}
+
+interface IBodyDetails{
+  age: number
+  sex: TSex
+  height: number
+  currentWeight: number
+  goalWeight: number
+}
