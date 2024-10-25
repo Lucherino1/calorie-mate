@@ -4,7 +4,9 @@
       <div class="flex-1 flex justify-center items-center">
         <div class="flex flex-col gap-2 w-full max-w-[410px] px-2">
           <h2 class="text-4xl leading-[56px] font-bold text-primary-dark">{{ titleText }}</h2>
-          <slot />
+          <transition name="fade" mode="out-in">
+            <slot />
+          </transition>
           <div class="flex flex-col gap-1 mt-1">
             <div class="flex gap-1">
               <p class="text-primary-dark">{{ label }}</p>
