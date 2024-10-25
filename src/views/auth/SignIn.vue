@@ -48,6 +48,7 @@
 </template>
 
 <script setup lang="ts">
+import { calculateBMR, calculateTDEE, calculateGoalCalories, calculateTargetNutritionDetails } from '@/helpers'
 import { routeNames } from '@/router/route-names'
 const router = useRouter()
 const isLoading = ref(false)
@@ -55,6 +56,23 @@ const isLoading = ref(false)
 function toggleAuthPage () {
   router.push({ name: routeNames.signup })
 }
+
+///
+const age = 23
+const sex: TSex = 'male'
+const height = 178
+const currentWeight = 63
+const goalWeight = 70
+const activityLevel = 1.55
+
+const bmr = calculateBMR(currentWeight, height, age, sex)
+const tdee = calculateTDEE(bmr, activityLevel)
+const goalCalories = calculateGoalCalories(currentWeight, goalWeight, tdee)
+const targetNutritionDetails = calculateTargetNutritionDetails(goalCalories)
+
+console.log('Target Nutrition Details:', targetNutritionDetails)
+
+///
 
 const formRef = ref()
 const formModel = reactive({
