@@ -4,7 +4,6 @@
     label="Already have an account?"
     toggle-auth-page-btn-text="Sign Up"
     :toggle-auth-page="toggleAuthPage"
-    :loading-status="isLoading"
   >
     <p class="text-gray-light">Enter your email and password to sign in!</p>
     <el-form
@@ -39,6 +38,7 @@
           class="w-full mt-[20px]"
           :type="$elComponentType.primary"
           :size="$elComponentSize.large"
+          :loading="isLoading"
         >
           Submit
         </el-button>
@@ -48,8 +48,9 @@
 </template>
 
 <script setup lang="ts">
-import { calculateBMR, calculateTDEE, calculateGoalCalories, calculateTargetNutritionDetails } from '@/helpers'
 import { routeNames } from '@/router/route-names'
+const { signin } = useAuthStore()
+
 const router = useRouter()
 const isLoading = ref(false)
 
@@ -57,25 +58,8 @@ function toggleAuthPage () {
   router.push({ name: routeNames.signup })
 }
 
-///
-const age = 23
-const sex: TSex = 'male'
-const height = 178
-const currentWeight = 63
-const goalWeight = 70
-const activityLevel = 1.55
-
-const bmr = calculateBMR(currentWeight, height, age, sex)
-const tdee = calculateTDEE(bmr, activityLevel)
-const goalCalories = calculateGoalCalories(currentWeight, goalWeight, tdee)
-const targetNutritionDetails = calculateTargetNutritionDetails(goalCalories)
-
-console.log('Target Nutrition Details:', targetNutritionDetails)
-
-///
-
 const formRef = ref()
-const formModel = reactive({
+const formModel: ISignInPayload = reactive({
   email: '',
   password: ''
 })
@@ -85,10 +69,12 @@ const formRules = reactive({
   password: [useRequiredRule(), useMinLenRule(8)]
 })
 
-function submit () {
-  formRef.value?.validate((isValid: boolean) => {
+async function submit () {
+  formRef.value?.validate(async (isValid: boolean) => {
     if (isValid) {
-      router.push({ name: routeNames.dashboard })
+      isLoading.value = true
+      await signin(formModel)
+      isLoading.value = false
     }
   })
 }
