@@ -40,7 +40,6 @@
         placeholder="Min. 8 characters"
       />
     </el-form-item>
-    <el-form-item />
     <el-form-item>
       <slot name="submitBtn">
         <el-button
