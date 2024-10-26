@@ -14,3 +14,5 @@ interface ISignUpPayload {
     targetNutritionDetailsByMeal: ITargetNutritionDetailsByMeal
   }
 }
+
+type TUser = TDatabase['public']['Tables']['profiles']['Row']
