@@ -6,11 +6,11 @@ interface ISignInPayload {
 interface ISignUpPayload {
   email: string
   password: string
-  firstName: string
-  lastName: string
-  age: number
-  sex: TSex
-  height: number
-  currentWeight: number
-  goalWeight: number
+  metadata: {
+    firstName: string
+    lastName: string
+    bodyDetails: IBodyDetails
+    targetNutritionDetails: INutritionDetails
+    targetNutritionDetailsByMeal: ITargetNutritionDetailsByMeal
+  }
 }
