@@ -26,7 +26,7 @@
       </ul>
     </div>
     <div class="px-5 py-5 mt-auto flex flex-col w-full">
-      <el-button @click="logout">Logout</el-button>
+      <el-button :loading="isLoading" @click="logout">Logout</el-button>
     </div>
   </aside>
 </template>
@@ -42,6 +42,9 @@ import IconApprove from '~icons/icon/approve'
 import IconAboutUs from '~icons/icon/about-us'
 
 import type { FunctionalComponent } from 'vue'
+
+const { signout } = useAuthStore()
+const isLoading = ref(false)
 
 interface ISidebarMenuList {
   label: string
@@ -92,7 +95,11 @@ const menuList: ISidebarMenuList[] = [
   }
 ]
 // will be done in further
-function logout () {}
+async function logout () {
+  isLoading.value = true
+  await signout()
+  isLoading.value = false
+}
 </script>
 
 <style lang="scss" scoped>
