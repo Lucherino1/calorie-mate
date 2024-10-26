@@ -1,5 +1,3 @@
-import type { ERoles } from './enums'
-
 type TJson =
   | string
   | number
@@ -99,7 +97,7 @@ type TDatabase = {
           firstName: string
           id: string
           lastName: string
-          role: keyof typeof ERoles
+          role: string
           targetNutritionDetails: TJson
           targetNutritionDetailsByMeal: TJson
         }
@@ -109,7 +107,7 @@ type TDatabase = {
           firstName: string
           id: string
           lastName: string
-          role?: keyof typeof ERoles
+          role?: string
           targetNutritionDetails: TJson
           targetNutritionDetailsByMeal: TJson
         }
@@ -119,7 +117,7 @@ type TDatabase = {
           firstName?: string
           id?: string
           lastName?: string
-          role?: keyof typeof ERoles
+          role?: string
           targetNutritionDetails?: TJson
           targetNutritionDetailsByMeal?: TJson
         }
