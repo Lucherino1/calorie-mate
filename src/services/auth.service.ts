@@ -1,15 +1,19 @@
 class AuthService {
-  // auth/v1/token?grant_type=password
-  signip (payload: ISignInPayload) {
+  signin (payload: ISignInPayload) {
     return useSupabase.auth.signInWithPassword(payload)
   }
 
-  // POST: auth/v1/signup, Payload: { email: string, password: string }
-  signup ({ email, password, ...rest }: ISignUpPayload) {
-    return useSupabase.auth.signUp({ email, password, options: { data: rest } })
+  signup ({ email, password, metadata }: ISignUpPayload) {
+    return useSupabase.auth.signUp({
+      email,
+      password,
+      options: { data: metadata }
+    })
   }
 
-  // auth/v1/token?grant_type=refresh_token / { refresh_token: "the-refresh-token" }
+  singout () {
+    return useSupabase.auth.signOut()
+  }
 }
 
 export const authService = new AuthService()
