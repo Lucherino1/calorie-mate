@@ -6,32 +6,7 @@ type TJson =
   | { [key: string]: TJson | undefined }
   | TJson[]
 
-type TDatabase = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          operationName?: string
-          query?: string
-          variables?: TJson
-          extensions?: TJson
-        }
-        Returns: TJson
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
+interface IDatabase<B, T, M> {
   public: {
     Tables: {
       dashboard: {
@@ -92,34 +67,34 @@ type TDatabase = {
       }
       profiles: {
         Row: {
-          bodyDetails: TJson
+          bodyDetails: B
           email: string
           firstName: string
           id: string
           lastName: string
           role: string
-          targetNutritionDetails: TJson
-          targetNutritionDetailsByMeal: TJson
+          targetNutritionDetails: T
+          targetNutritionDetailsByMeal: M
         }
         Insert: {
-          bodyDetails: TJson
+          bodyDetails: B
           email: string
           firstName: string
           id: string
           lastName: string
           role?: string
-          targetNutritionDetails: TJson
-          targetNutritionDetailsByMeal: TJson
+          targetNutritionDetails: T
+          targetNutritionDetailsByMeal: M
         }
         Update: {
-          bodyDetails?: TJson
+          bodyDetails?: B
           email?: string
           firstName?: string
           id?: string
           lastName?: string
           role?: string
-          targetNutritionDetails?: TJson
-          targetNutritionDetailsByMeal?: TJson
+          targetNutritionDetails?: T
+          targetNutritionDetailsByMeal?: M
         }
         Relationships: []
       }
