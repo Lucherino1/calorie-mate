@@ -1,7 +1,10 @@
+import { defineStore } from 'pinia'
 import { router } from '@/router'
 import { routeNames } from '@/router/route-names'
 
 export const useAuthStore = defineStore('authStore', () => {
+  const user = ref<TUser | null>(null)
+
   const signup = async (payload: ISignUpPayload) => {
     try {
       const { data, error } = await authService.signup(payload)
@@ -9,8 +12,8 @@ export const useAuthStore = defineStore('authStore', () => {
       if (error || !data.user) {
         throw new Error(error?.message)
       }
-
-      router.push({ name: routeNames.dashboard })
+      console.log(user)
+      router.push({ name: routeNames.signin })
     } catch (error) {
       console.error(error)
     }
@@ -23,7 +26,8 @@ export const useAuthStore = defineStore('authStore', () => {
       if (error || !data.user) {
         throw new Error(error?.message)
       }
-      console.log(data)
+
+      await getUser(data.user.id)
       router.push({ name: routeNames.dashboard })
     } catch (error) {
       console.error(error)
@@ -32,19 +36,32 @@ export const useAuthStore = defineStore('authStore', () => {
 
   const signout = async () => {
     try {
-      const { error } = await authService.singout()
+      const { error } = await authService.signout()
       if (error) {
-        console.log(error)
+        console.error(error)
       }
+      user.value = null
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
 
     window.location.href = router.resolve({ name: routeNames.signin }).href
   }
+
+  const getUser = async (userId: string) => {
+    try {
+      const userData = await authService.getUserById(userId)
+      user.value = userData
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return {
+    user,
     signup,
     signin,
-    signout
+    signout,
+    getUser
   }
 })

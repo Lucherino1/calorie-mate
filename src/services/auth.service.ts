@@ -11,8 +11,18 @@ class AuthService {
     })
   }
 
-  singout () {
+  signout () {
     return useSupabase.auth.signOut()
+  }
+
+  async getUserById (userId: string) {
+    const { data, error } = await useSupabase.from('profiles').select('*').eq('id', userId).single()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    return data
   }
 }
 
