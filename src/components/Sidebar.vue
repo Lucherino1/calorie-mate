@@ -6,7 +6,7 @@
     <div class="flex-1 pl-5 pt-10">
       <ul class="flex flex-col gap-6">
         <li
-          v-for="item in menuList"
+          v-for="item in filteredMenuList"
           :key="item.routeName"
           class="font-medium leading-[30px] w-full
           text-gray-light hover:font-medium hover:text-primary-dark relative"
@@ -43,7 +43,7 @@ import IconAboutUs from '~icons/icon/about-us'
 
 import type { FunctionalComponent } from 'vue'
 
-const { signout } = useAuthStore()
+const { signout, user } = useAuthStore()
 const isLoading = ref(false)
 
 interface ISidebarMenuList {
@@ -94,7 +94,21 @@ const menuList: ISidebarMenuList[] = [
     icon: IconAboutUs
   }
 ]
-// will be done in further
+
+const filteredMenuList = computed(() => {
+  if (!user) {
+    return menuList.filter(item =>
+      ['signin', 'calculators', 'aboutUs'].includes(item.routeName)
+    )
+  }
+
+  if (user.role === 'admin') {
+    return menuList
+  }
+
+  return menuList.filter(item => !['signin', 'productRecipeApproval'].includes(item.routeName))
+})
+
 async function logout () {
   isLoading.value = true
   await signout()
