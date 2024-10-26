@@ -1,3 +1,5 @@
+import { ElNotification } from 'element-plus'
+
 function roundToNearestTen (value: number): number {
   return Math.round(value / 10) * 10
 }
@@ -103,4 +105,14 @@ export function createSignUpPayload (
   }
 
   return payload
+}
+
+export function showWarningNotification (message: string, title: string = 'Error') {
+  ElNotification({
+    title,
+    message,
+    type: 'error',
+    showClose: true,
+    offset: 50
+  })
 }
