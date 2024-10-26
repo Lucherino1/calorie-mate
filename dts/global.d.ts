@@ -9,8 +9,9 @@ declare module 'vue-router' {
     label?: string
     roles?: keyof typeof ERoles,
     layout?: keyof typeof ELayouts,
-    parentName?: string
-    requireAuth?: boolean
+    parentName?: string,
+    requireAuth?: boolean,
+    isProtectedDuringSession?: boolean
   }
 }
 
