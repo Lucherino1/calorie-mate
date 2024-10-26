@@ -38,3 +38,69 @@ export const calculateTargetNutritionDetails = (calories: number) => {
     proteins: roundToNearestTen(calories * 0.25 / 4)
   }
 }
+
+export const calculateTargetNutritionDetailsByMeal = (targetNutritionDetails: INutritionDetails) => {
+  const mealDistribution: Record<TMealType, number> = {
+    breakfast: 0.3,
+    lunch: 0.35,
+    dinner: 0.25,
+    snacks: 0.1
+  }
+
+  const targetNutritionDetailsByMeal = Object.entries(mealDistribution).reduce(
+    (acc, [meal, percentage]) => {
+      acc[meal as TMealType] = {
+        calories: roundToNearestTen(targetNutritionDetails.calories * percentage),
+        fats: roundToNearestTen(targetNutritionDetails.fats * percentage),
+        carbs: roundToNearestTen(targetNutritionDetails.carbs * percentage),
+        proteins: roundToNearestTen(targetNutritionDetails.proteins * percentage)
+      }
+      return acc
+    },
+    {} as ITargetNutritionDetailsByMeal
+  )
+  return targetNutritionDetailsByMeal
+}
+
+export function createSignUpPayload (
+  bodyDetailsFormData: Partial<IBodyDetails>,
+  profileFormData: IProfileFields
+): ISignUpPayload | null {
+  if (Object.values(bodyDetailsFormData).some(value => value == null)) {
+    console.error('Some fields in bodyDetailsFormData are missing')
+    return null
+  }
+
+  const validatedBodyDetails = bodyDetailsFormData as IBodyDetails
+
+  const bmr = calculateBMR(
+    validatedBodyDetails.currentWeight,
+    validatedBodyDetails.height,
+    validatedBodyDetails.age,
+    validatedBodyDetails.sex
+  )
+
+  const tdee = calculateTDEE(bmr, validatedBodyDetails.activityLevel)
+  const goalCalories = calculateGoalCalories(
+    validatedBodyDetails.currentWeight,
+    validatedBodyDetails.goalWeight,
+    tdee
+  )
+
+  const targetNutritionDetails = calculateTargetNutritionDetails(goalCalories)
+  const targetNutritionDetailsByMeal = calculateTargetNutritionDetailsByMeal(targetNutritionDetails)
+
+  const payload: ISignUpPayload = {
+    email: profileFormData.email,
+    password: profileFormData.password,
+    metadata: {
+      firstName: profileFormData.firstName,
+      lastName: profileFormData.lastName,
+      bodyDetails: validatedBodyDetails,
+      targetNutritionDetails,
+      targetNutritionDetailsByMeal
+    }
+  }
+
+  return payload
+}
