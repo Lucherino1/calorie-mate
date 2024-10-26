@@ -16,13 +16,11 @@ class AuthService {
   }
 
   async getUserById (userId: string) {
-    const { data, error } = await useSupabase.from('profiles').select('*').eq('id', userId).single()
+    return useSupabase.from('profiles').select('*').eq('id', userId)
+  }
 
-    if (error) {
-      throw new Error(error.message)
-    }
-
-    return data
+  async getUser () {
+    return (await useSupabase.auth.getSession()).data.session?.user
   }
 }
 

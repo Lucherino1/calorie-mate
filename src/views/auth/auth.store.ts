@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
 import { router } from '@/router'
 import { routeNames } from '@/router/route-names'
+import { showWarningNotification } from '@/helpers'
 
 export const useAuthStore = defineStore('authStore', () => {
-  const user = ref<TUser | null>(null)
+  const user = ref<TNullable<TUser>>(null)
 
   const signup = async (payload: ISignUpPayload) => {
     try {
@@ -12,10 +13,10 @@ export const useAuthStore = defineStore('authStore', () => {
       if (error || !data.user) {
         throw new Error(error?.message)
       }
-      console.log(user)
+
       router.push({ name: routeNames.signin })
     } catch (error) {
-      console.error(error)
+      showWarningNotification((error as Error).message, 'Signup Error')
     }
   }
 
@@ -24,13 +25,17 @@ export const useAuthStore = defineStore('authStore', () => {
       const { data, error } = await authService.signin(payload)
 
       if (error || !data.user) {
-        throw new Error(error?.message)
+        throw new Error(error?.message || 'Sign In failed')
       }
 
-      await getUser(data.user.id)
+      const userData = await getUserDataById(data.user.id)
+      if (userData) {
+        user.value = userData
+      }
+
       router.push({ name: routeNames.dashboard })
     } catch (error) {
-      console.error(error)
+      showWarningNotification((error as Error).message, 'Sign In Error')
     }
   }
 
@@ -38,8 +43,9 @@ export const useAuthStore = defineStore('authStore', () => {
     try {
       const { error } = await authService.signout()
       if (error) {
-        console.error(error)
+        showWarningNotification(error.message, 'Signout Error')
       }
+
       user.value = null
     } catch (error) {
       console.error(error)
@@ -48,13 +54,35 @@ export const useAuthStore = defineStore('authStore', () => {
     window.location.href = router.resolve({ name: routeNames.signin }).href
   }
 
-  const getUser = async (userId: string) => {
+  const getUserDataById = async (userId: string): Promise<TUser | null> => {
     try {
-      const userData = await authService.getUserById(userId)
-      user.value = userData
+      const { data, error } = await authService.getUserById(userId)
+      if (error) throw new Error(error.message)
+
+      return Array.isArray(data) ? data[0] : data ?? null
     } catch (error) {
-      console.error(error)
+      showWarningNotification((error as Error).message, 'User Data Retrieval Error')
+      return null
     }
+  }
+
+  const getUserData = async (): Promise<TUser | null> => {
+    const userId = (await authService.getUser())?.id
+    if (!userId) return null
+
+    const { data, error } = await authService.getUserById(userId)
+
+    if (error) {
+      await signout()
+      showWarningNotification(error.message, 'Session Error')
+      return null
+    }
+
+    if (Array.isArray(data)) {
+      return data[0] || null
+    }
+
+    return data ?? null
   }
 
   return {
@@ -62,6 +90,7 @@ export const useAuthStore = defineStore('authStore', () => {
     signup,
     signin,
     signout,
-    getUser
+    getUserDataById,
+    getUserData
   }
 })
