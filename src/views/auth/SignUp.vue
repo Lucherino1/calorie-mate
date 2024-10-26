@@ -3,42 +3,47 @@
     title-text="Sign Up"
     label="Don't have an account?"
     toggle-auth-page-btn-text="Sign In"
-    :loading-status="isLoading"
     :toggle-auth-page="toggleAuthPage"
   >
-    <BodyDetailsForm
-      v-if="currentStep === 1"
-      :body-form-data="bodyDetailsFormData"
-      @submit="submitBodyDetails"
-    >
-      <template #submitBtn>
-        <AuthButtonSubmit :submit-btn-text="submitBtnText" />
-      </template>
-    </BodyDetailsForm>
-    <ProfileForm
-      v-else
-      :profile-form-data="profileFormData"
-      @submit="submitEntireProfile"
-    >
-      <template #submitBtn>
-        <span>
-          <el-button
-            link
-            :icon="IconArrowLeft"
-            @click="toggleStep()"
-          >Previous step</el-button>
-        </span>
-        <AuthButtonSubmit :submit-btn-text="submitBtnText" />
-      </template>
-    </ProfileForm>
+    <transition name="fade" mode="out-in">
+      <BodyDetailsForm
+        v-if="currentStep === 1"
+        :body-form-data="bodyDetailsFormData"
+        @submit="submitBodyDetails"
+      >
+        <template #submitBtn>
+          <AuthButtonSubmit :submit-btn-text="submitBtnText" />
+        </template>
+      </BodyDetailsForm>
+      <ProfileForm
+        v-else
+        :profile-form-data="profileFormData"
+        @submit="submitEntireProfile"
+      >
+        <template #submitBtn>
+          <span>
+            <el-button
+              class="mb-7"
+              link
+              :loading="isLoading"
+              :icon="IconArrowLeft"
+              @click="toggleStep()"
+            >Previous step</el-button>
+          </span>
+          <AuthButtonSubmit :submit-btn-text="submitBtnText" />
+        </template>
+      </ProfileForm>
+    </transition>
   </AuthWrapper>
 </template>
 
 <script setup lang="ts">
+import { createSignUpPayload } from '@/helpers'
 import { routeNames } from '@/router/route-names'
 import IconArrowLeft from '~icons/icon/arrow-left'
 
 const router = useRouter()
+const { signup } = useAuthStore()
 const isLoading = ref(false)
 
 function toggleAuthPage () {
@@ -52,16 +57,18 @@ function toggleStep () {
 
 const submitBtnText = computed(() => (currentStep.value === 1 ? 'Next step' : 'Submit'))
 
-const bodyDetailsFormData = ref<TNullableBodyDetails>({
-  age: null,
+const bodyDetailsFormData = ref<Partial<IBodyDetails>>({
+  age: undefined,
   sex: 'male',
-  height: null,
-  currentWeight: null,
-  goalWeight: null
+  activityLevel: undefined,
+  height: undefined,
+  currentWeight: undefined,
+  goalWeight: undefined
 })
 
-function submitBodyDetails (bodyDetailsFormModel: TNullableBodyDetails) {
+function submitBodyDetails (bodyDetailsFormModel: Partial<IBodyDetails>) {
   bodyDetailsFormData.value = bodyDetailsFormModel
+  console.log(bodyDetailsFormModel)
   currentStep.value = 2
 }
 
@@ -73,9 +80,14 @@ const profileFormData = ref<IProfileFields>({
   lastName: ''
 })
 
-function submitEntireProfile (profileFormModel: IProfileFields) {
+async function submitEntireProfile (profileFormModel: IProfileFields) {
   profileFormData.value = profileFormModel
-  router.push({ name: routeNames.dashboard })
-}
+  const payload = createSignUpPayload(bodyDetailsFormData.value, profileFormData.value)
 
+  if (!payload) return
+
+  isLoading.value = true
+  await signup(payload)
+  isLoading.value = false
+}
 </script>
