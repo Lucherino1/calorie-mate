@@ -15,9 +15,4 @@ interface ISignUpPayload {
   }
 }
 
-// type TUser = Omit<ISignUpPayload, 'password'> & {
-//   id: string
-//   role: string
-// }
-
 type TUser = IDatabase<IBodyDetails, INutritionDetails, ITargetNutritionDetailsByMeal>['public']['Tables']['profiles']['Row']
