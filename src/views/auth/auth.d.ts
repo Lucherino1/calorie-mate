@@ -15,4 +15,7 @@ interface ISignUpPayload {
   }
 }
 
-type TUser = TDatabase['public']['Tables']['profiles']['Row']
+type TUser = Omit<ISignUpPayload, 'password'> & {
+  id: string
+  role: string
+}
