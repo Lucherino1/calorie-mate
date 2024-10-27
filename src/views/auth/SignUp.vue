@@ -1,7 +1,7 @@
 <template>
   <AuthWrapper
     title-text="Sign Up"
-    label="Don't have an account?"
+    label="Already have an account?"
     toggle-auth-page-btn-text="Sign In"
     :toggle-auth-page="toggleAuthPage"
   >

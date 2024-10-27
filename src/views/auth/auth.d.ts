@@ -15,4 +15,4 @@ interface ISignUpPayload {
   }
 }
 
-type TUser = IDatabase<IBodyDetails, INutritionDetails, ITargetNutritionDetailsByMeal>['public']['Tables']['profiles']['Row']
+type TUser = TDataBase['public']['Tables']['profiles']['Row']
