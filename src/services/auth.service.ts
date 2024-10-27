@@ -16,7 +16,7 @@ class AuthService {
   }
 
   async getUserById (userId: string) {
-    return useSupabase.from('profiles').select('*').eq('id', userId)
+    return useSupabase.from('profiles').select('*').eq('id', userId).maybeSingle()
   }
 
   async getUser () {
