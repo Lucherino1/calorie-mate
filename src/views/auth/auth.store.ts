@@ -29,9 +29,8 @@ export const useAuthStore = defineStore('authStore', () => {
       }
 
       const userData = await getUserDataById(data.user.id)
-      if (userData) {
-        user.value = userData
-      }
+
+      user.value = userData
 
       router.push({ name: routeNames.dashboard })
     } catch (error) {
@@ -59,7 +58,7 @@ export const useAuthStore = defineStore('authStore', () => {
       const { data, error } = await authService.getUserById(userId)
       if (error) throw new Error(error.message)
 
-      return data[0] ?? null
+      return data
     } catch (error) {
       showWarningNotification((error as Error).message, 'User Data Retrieval Error')
       return null
@@ -78,11 +77,7 @@ export const useAuthStore = defineStore('authStore', () => {
       return null
     }
 
-    if (Array.isArray(data)) {
-      return data[0] || null
-    }
-
-    return data ?? null
+    return data
   }
 
   return {
