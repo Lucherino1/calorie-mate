@@ -1,12 +1,12 @@
 <template>
   <aside class="h-screen bg-white flex flex-col">
     <div class="pt-14 pb-12 font-poppins text-[26px]  text-primary-dark text-center border-b">
-      <h1><b>CALORIE</b>MATE</h1>
+      <h1><b>CALORIE</b> MATE</h1>
     </div>
     <div class="flex-1 pl-5 pt-10">
       <ul class="flex flex-col gap-6">
         <li
-          v-for="item in menuList"
+          v-for="item in filteredMenuList"
           :key="item.routeName"
           class="font-medium leading-[30px] w-full
           text-gray-light hover:font-medium hover:text-primary-dark relative"
@@ -26,7 +26,7 @@
       </ul>
     </div>
     <div class="px-5 py-5 mt-auto flex flex-col w-full">
-      <el-button @click="logout">Logout</el-button>
+      <el-button :loading="isLoading" @click="logout">Logout</el-button>
     </div>
   </aside>
 </template>
@@ -42,6 +42,9 @@ import IconApprove from '~icons/icon/approve'
 import IconAboutUs from '~icons/icon/about-us'
 
 import type { FunctionalComponent } from 'vue'
+
+const { signout, user } = useAuthStore()
+const isLoading = ref(false)
 
 interface ISidebarMenuList {
   label: string
@@ -91,8 +94,26 @@ const menuList: ISidebarMenuList[] = [
     icon: IconAboutUs
   }
 ]
-// will be done in further
-function logout () {}
+
+const filteredMenuList = computed(() => {
+  if (!user) {
+    return menuList.filter(item =>
+      ['signin', 'calculators', 'aboutUs'].includes(item.routeName)
+    )
+  }
+
+  if (user.role === 'admin') {
+    return menuList
+  }
+
+  return menuList.filter(item => !['signin', 'productRecipeApproval'].includes(item.routeName))
+})
+
+async function logout () {
+  isLoading.value = true
+  await signout()
+  isLoading.value = false
+}
 </script>
 
 <style lang="scss" scoped>

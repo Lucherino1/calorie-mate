@@ -49,7 +49,9 @@
 @use "element-plus/theme-chalk/src/tabs";
 @use "element-plus/theme-chalk/src/skeleton";
 @use "element-plus/theme-chalk/src/checkbox";
+@use "element-plus/theme-chalk/src/notification";
 
 @import './_card';
 @import './_input';
 @import './_form';
+@import './select';

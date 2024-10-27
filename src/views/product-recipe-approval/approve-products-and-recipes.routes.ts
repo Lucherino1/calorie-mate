@@ -8,6 +8,10 @@ export const productRecipeApprovalRoutes: RouteRecordRaw[] = [
   {
     path: '/approve-products-and-recipes',
     name: productRecipeApprovalRouteNames.productRecipeApproval,
-    component: () => import('@/views/product-recipe-approval/ProductRecipeApproval.vue')
+    component: () => import('@/views/product-recipe-approval/ProductRecipeApproval.vue'),
+    meta: {
+      requireAuth: true,
+      roles: 'admin'
+    }
   }
 ]
