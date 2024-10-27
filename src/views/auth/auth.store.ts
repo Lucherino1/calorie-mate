@@ -59,7 +59,7 @@ export const useAuthStore = defineStore('authStore', () => {
       const { data, error } = await authService.getUserById(userId)
       if (error) throw new Error(error.message)
 
-      return Array.isArray(data) ? data[0] : data ?? null
+      return data[0] ?? null
     } catch (error) {
       showWarningNotification((error as Error).message, 'User Data Retrieval Error')
       return null

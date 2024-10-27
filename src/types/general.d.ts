@@ -56,3 +56,5 @@ interface ITargetNutritionDetailsByMeal {
 }
 
 type TMealType = 'breakfast' | 'lunch' | 'dinner' | 'snacks'
+
+type TDataBase = IDatabase<IBodyDetails, INutritionDetails, ITargetNutritionDetailsByMeal>
