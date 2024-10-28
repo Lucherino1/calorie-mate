@@ -1,44 +1,50 @@
 <template>
   <AuthWrapper
     title-text="Sign Up"
-    label="Already have an account?"
+    auth-prompt-text="Already have an account?"
     toggle-auth-page-btn-text="Sign In"
     :toggle-auth-page="toggleAuthPage"
   >
     <transition name="fade" mode="out-in">
-      <BodyDetailsForm
+      <UserFormBodyDetails
         v-if="currentStep === 1"
         :body-form-data="bodyDetailsFormData"
+        :submit-button-text="submitBtnText"
         @submit="submitBodyDetails"
-      >
-        <template #submitBtn>
-          <AuthButtonSubmit :submit-btn-text="submitBtnText" />
-        </template>
-      </BodyDetailsForm>
-      <ProfileForm
+      />
+      <UserFormProfile
         v-else
         :profile-form-data="profileFormData"
         @submit="submitEntireProfile"
       >
         <template #submitBtn>
-          <span>
+          <div class="flex justify-between items-center w-full">
             <el-button
-              class="mb-7"
-              link
+              class="flex-1"
               :loading="isLoading"
               :icon="IconArrowLeft"
               @click="toggleStep()"
-            >Previous step</el-button>
-          </span>
-          <AuthButtonSubmit :submit-btn-text="submitBtnText" />
+            >
+              Previous step
+            </el-button>
+            <el-button
+              native-type="submit"
+              class="flex-1"
+              :type="$elComponentType.primary"
+              :size="$elComponentSize.large"
+            >
+              {{ submitBtnText }}
+            </el-button>
+          </div>
         </template>
-      </ProfileForm>
+      </UserFormProfile>
     </transition>
   </AuthWrapper>
 </template>
 
 <script setup lang="ts">
-import { createSignUpPayload } from '@/helpers'
+import UserFormBodyDetails from '@/components/profile-details-forms/UserFormBodyDetails.vue'
+import UserFormProfile from '@/components/profile-details-forms/UserFormProfile.vue'
 import { routeNames } from '@/router/route-names'
 import IconArrowLeft from '~icons/icon/arrow-left'
 
@@ -68,7 +74,6 @@ const bodyDetailsFormData = ref<Partial<IBodyDetails>>({
 
 function submitBodyDetails (bodyDetailsFormModel: Partial<IBodyDetails>) {
   bodyDetailsFormData.value = bodyDetailsFormModel
-  console.log(bodyDetailsFormModel)
   currentStep.value = 2
 }
 
@@ -79,6 +84,50 @@ const profileFormData = ref<IProfileFields>({
   firstName: '',
   lastName: ''
 })
+
+function createSignUpPayload (
+  bodyDetailsFormData: Partial<IBodyDetails>,
+  profileFormData: IProfileFields
+): ISignUpPayload | null {
+  if (Object.values(bodyDetailsFormData).some(value => value == null)) {
+    console.error('Some fields in bodyDetailsFormData are missing')
+    return null
+  }
+
+  const validatedBodyDetails = bodyDetailsFormData as IBodyDetails
+
+  const bmr = calculateNutritionService.calculateBMR(
+    validatedBodyDetails.currentWeight,
+    validatedBodyDetails.height,
+    validatedBodyDetails.age,
+    validatedBodyDetails.sex
+  )
+
+  const tdee = calculateNutritionService.calculateTDEE(bmr, validatedBodyDetails.activityLevel)
+  const goalCalories = calculateNutritionService.calculateGoalCalories(
+    validatedBodyDetails.currentWeight,
+    validatedBodyDetails.goalWeight,
+    tdee
+  )
+
+  const targetNutritionDetails = calculateNutritionService.calculateTargetNutritionDetails(goalCalories)
+  const targetNutritionDetailsByMeal =
+  calculateNutritionService.calculateTargetNutritionDetailsByMeal(targetNutritionDetails)
+
+  const payload: ISignUpPayload = {
+    email: profileFormData.email,
+    password: profileFormData.password,
+    metadata: {
+      firstName: profileFormData.firstName,
+      lastName: profileFormData.lastName,
+      bodyDetails: validatedBodyDetails,
+      targetNutritionDetails,
+      targetNutritionDetailsByMeal
+    }
+  }
+
+  return payload
+}
 
 async function submitEntireProfile (profileFormModel: IProfileFields) {
   profileFormData.value = profileFormModel
