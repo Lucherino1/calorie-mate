@@ -1,3 +1,6 @@
 export const useGeneralStore = defineStore('generalStore', () => {
-  return {}
+  const pageLoading = ref(true)
+  return {
+    pageLoading
+  }
 })
