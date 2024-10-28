@@ -1,7 +1,7 @@
 <template>
   <AuthWrapper
     title-text="Sign In"
-    label="Don't have an account?"
+    auth-prompt-text="Don't have an account?"
     toggle-auth-page-btn-text="Sign Up"
     :toggle-auth-page="toggleAuthPage"
   >
@@ -35,7 +35,7 @@
       <el-form-item>
         <el-button
           native-type="submit"
-          class="w-full mt-[20px]"
+          class="w-full"
           :type="$elComponentType.primary"
           :size="$elComponentSize.large"
           :loading="isLoading"
@@ -49,16 +49,19 @@
 
 <script setup lang="ts">
 import { routeNames } from '@/router/route-names'
+
 const { signin } = useAuthStore()
 
 const router = useRouter()
+
 const isLoading = ref(false)
 
 function toggleAuthPage () {
   router.push({ name: routeNames.signup })
 }
 
-const formRef = ref()
+const formRef = templateRef<TElementPlus['FormInstance']>('formRef')
+
 const formModel: ISignInPayload = reactive({
   email: '',
   password: ''
