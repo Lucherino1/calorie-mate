@@ -66,7 +66,7 @@ const emit = defineEmits<{
 
 const localProfileFormModel = reactive({ ...props.profileFormData })
 
-const formRef = templateRef<TElementPlus['FormInstance']>('formRef')
+const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 
 const formRules = reactive({
   email: [useRequiredRule(), useEmailRule()],

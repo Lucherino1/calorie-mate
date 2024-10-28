@@ -71,7 +71,7 @@ const emit = defineEmits<{
   (e: 'submit', localFormModel: Partial<IBodyDetails>): Partial<IBodyDetails>
 }>()
 
-const formRef = templateRef<TElementPlus['FormInstance']>('')
+const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 
 interface IActivityLevel {
   label: string
