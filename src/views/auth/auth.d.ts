@@ -15,4 +15,13 @@ interface ISignUpPayload {
   }
 }
 
-type TUser = TDataBase['public']['Tables']['profiles']['Row']
+interface IUser {
+  bodyDetails: IBodyDetails
+  email: string
+  firstName: string
+  id: string
+  lastName: string
+  role: string
+  targetNutritionDetails: INutritionDetails
+  targetNutritionDetailsByMeal: ITargetNutritionDetailsByMeal
+}
