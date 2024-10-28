@@ -6,12 +6,12 @@
           <span>
             <button
               class="flex items-center gap-1 text-gray-light hover:text-gray-dark transition-colors duration-300"
-              @click="moveToDashboard"
+              @click="moveToAboutUs"
             >
               <div class="w-6 h-6 flex justify-center items-center">
                 <IconArrowLeft />
               </div>
-              Back to dashboard
+              Back
             </button>
           </span>
           <div>
@@ -74,9 +74,5 @@ defineProps<{
 
 const moveToAboutUs = () => {
   router.push({ name: routeNames.aboutUs })
-}
-
-const moveToDashboard = () => {
-  router.push({ name: routeNames.dashboard })
 }
 </script>

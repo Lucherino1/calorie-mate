@@ -60,7 +60,8 @@ const menuConfig: ISidebarMenuItem[] = [
   {
     label: 'Dashboard',
     routeName: 'dashboard',
-    icon: IconHome
+    icon: IconHome,
+    requiresAuth: true
   },
   {
     label: 'Profile',

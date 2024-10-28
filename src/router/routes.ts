@@ -12,7 +12,7 @@ import { productRecipeApprovalRoutes } from '@/views/product-recipe-approval/app
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/dashboard'
+    redirect: '/about-us'
   },
   {
     path: '/:pathMatch(.*)*',
