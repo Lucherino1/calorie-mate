@@ -2,7 +2,7 @@ import 'vue-router'
 import { routeNames } from '@/router/route-names'
 import { globalProperties, portalNames } from '@/plugins'
 import { EElComponentSize, EElComponentType, ELayouts } from '@/types/enums'
-import type { ERoles } from '@/views/auth/auth'
+import type { ERoles } from '@/views/auth/auth.enums'
 
 declare module 'vue-router' {
   interface RouteMeta {
