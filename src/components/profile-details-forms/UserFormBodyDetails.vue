@@ -10,16 +10,18 @@
     :size="$elComponentSize.large"
     @submit.prevent="submit"
   >
-    <el-form-item label="Age" prop="age">
-      <el-input v-model.number="localFormModel.age" type="number" placeholder="Enter your age" />
-    </el-form-item>
+    <div class="flex gap-5 pb-1">
+      <el-form-item class="flex-1" label="Select your sex" prop="sex">
+        <el-select v-model="localFormModel.sex" placeholder="Select your sex">
+          <el-option label="Male" value="male" />
+          <el-option label="Female" value="female" />
+        </el-select>
+      </el-form-item>
 
-    <el-form-item label="Select your sex" prop="sex">
-      <el-select v-model="localFormModel.sex" placeholder="Select your sex">
-        <el-option label="Male" value="male" />
-        <el-option label="Female" value="female" />
-      </el-select>
-    </el-form-item>
+      <el-form-item class="flex-1" label="Age" prop="age">
+        <el-input v-model.number="localFormModel.age" type="number" placeholder="Enter your age" />
+      </el-form-item>
+    </div>
 
     <el-form-item label="Select your activity level" prop="activityLevel">
       <el-select v-model="localFormModel.activityLevel" placeholder="How active are you on daily basis?">
@@ -50,7 +52,7 @@
           :type="$elComponentType.primary"
           :size="$elComponentSize.large"
         >
-          Submit
+          {{ submitButtonText }}
         </el-button>
       </el-form-item>
     </slot>
@@ -58,15 +60,18 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   bodyFormData: Partial<IBodyDetails>
-}>()
+  submitButtonText: string
+}>(), {
+  submitButtonText: 'Submit'
+})
 
 const emit = defineEmits<{
   (e: 'submit', localFormModel: Partial<IBodyDetails>): Partial<IBodyDetails>
 }>()
 
-const formRef = ref()
+const formRef = ref<TElementPlus['FormInstance']| null>(null)
 
 interface IActivityLevel {
   label: string
