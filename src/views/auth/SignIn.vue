@@ -60,7 +60,7 @@ function toggleAuthPage () {
   router.push({ name: routeNames.signup })
 }
 
-const formRef = templateRef<TElementPlus['FormInstance']>('formRef')
+const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 
 const formModel: ISignInPayload = reactive({
   email: '',

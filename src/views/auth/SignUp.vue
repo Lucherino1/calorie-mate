@@ -21,7 +21,6 @@
           <div class="flex justify-between items-center w-full">
             <el-button
               class="flex-1"
-              :loading="isLoading"
               :icon="IconArrowLeft"
               @click="toggleStep()"
             >
@@ -30,6 +29,7 @@
             <el-button
               native-type="submit"
               class="flex-1"
+              :loading="isLoading"
               :type="$elComponentType.primary"
               :size="$elComponentSize.large"
             >
