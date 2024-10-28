@@ -16,8 +16,3 @@ export enum ELayouts {
   default = 'default',
   blank = 'blank'
 }
-
-export enum ERoles {
-  user = 'user',
-  admin = 'admin',
-}
