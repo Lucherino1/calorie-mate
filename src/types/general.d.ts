@@ -21,3 +21,11 @@ type TTableHeadings<T = Record<string, any>> = Array<{
 }>
 
 type TRouteNames = keyof typeof import('@/router/route-names').routeNames
+
+interface IProfileFields {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  confirmPassword: string
+}
