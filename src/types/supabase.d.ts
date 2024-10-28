@@ -6,7 +6,7 @@ type TJson =
   | { [key: string]: TJson | undefined }
   | TJson[]
 
-interface IDatabase<B, T, M> {
+interface IDatabase {
   public: {
     Tables: {
       dashboard: {
@@ -67,34 +67,34 @@ interface IDatabase<B, T, M> {
       }
       profiles: {
         Row: {
-          bodyDetails: B
+          bodyDetails: IBodyDetails
           email: string
           firstName: string
           id: string
           lastName: string
           role: string
-          targetNutritionDetails: T
-          targetNutritionDetailsByMeal: M
+          targetNutritionDetails: INutritionDetails
+          targetNutritionDetailsByMeal: ITargetNutritionDetailsByMeal
         }
         Insert: {
-          bodyDetails: B
+          bodyDetails: IBodyDetails
           email: string
           firstName: string
           id: string
           lastName: string
           role?: string
-          targetNutritionDetails: T
-          targetNutritionDetailsByMeal: M
+          targetNutritionDetails: INutritionDetails
+          targetNutritionDetailsByMeal: ITargetNutritionDetailsByMeal
         }
         Update: {
-          bodyDetails?: B
+          bodyDetails?: IBodyDetails
           email?: string
           firstName?: string
           id?: string
           lastName?: string
           role?: string
-          targetNutritionDetails?: T
-          targetNutritionDetailsByMeal?: M
+          targetNutritionDetails?: INutritionDetails
+          targetNutritionDetailsByMeal?: ITargetNutritionDetailsByMeal
         }
         Relationships: []
       }
