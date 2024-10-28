@@ -25,7 +25,7 @@
         </li>
       </ul>
     </div>
-    <div class="px-5 py-5 mt-auto flex flex-col w-full">
+    <div v-if="user" class="px-5 py-5 mt-auto flex flex-col w-full">
       <el-button :loading="isLoading" @click="logout">Logout</el-button>
     </div>
   </aside>
@@ -42,17 +42,21 @@ import IconApprove from '~icons/icon/approve'
 import IconAboutUs from '~icons/icon/about-us'
 
 import type { FunctionalComponent } from 'vue'
+import type { ERoles } from '@/views/auth/auth.enums'
 
 const { signout, user } = useAuthStore()
 const isLoading = ref(false)
 
-interface ISidebarMenuList {
+interface ISidebarMenuItem {
   label: string
-  icon?: FunctionalComponent
-  routeName: TRouteNames
+  routeName: string
+  icon: FunctionalComponent
+  requiresAuth?: boolean
+  roles?: keyof typeof ERoles
+  hiddenWhenLoggedIn?: boolean
 }
 
-const menuList: ISidebarMenuList[] = [
+const menuConfig: ISidebarMenuItem[] = [
   {
     label: 'Dashboard',
     routeName: 'dashboard',
@@ -61,27 +65,33 @@ const menuList: ISidebarMenuList[] = [
   {
     label: 'Profile',
     routeName: 'profileSettings',
-    icon: IconProfile
+    icon: IconProfile,
+    requiresAuth: true
   },
   {
     label: 'Sign In',
     routeName: 'signin',
-    icon: IconSignIn
+    icon: IconSignIn,
+    hiddenWhenLoggedIn: true
   },
   {
     label: 'Adjust Meal',
     routeName: 'updateMeal',
-    icon: IconAdjustMeal
+    icon: IconAdjustMeal,
+    requiresAuth: true
   },
   {
     label: 'Receipts and products',
     routeName: 'recipesAndProducts',
-    icon: IconRecipesAndProducts
+    icon: IconRecipesAndProducts,
+    requiresAuth: true
   },
   {
     label: 'Approve products and recipes',
     routeName: 'productRecipeApproval',
-    icon: IconApprove
+    icon: IconApprove,
+    requiresAuth: true,
+    roles: 'admin'
   },
   {
     label: 'Health & Nutrition Calculators',
@@ -96,17 +106,14 @@ const menuList: ISidebarMenuList[] = [
 ]
 
 const filteredMenuList = computed(() => {
-  if (!user) {
-    return menuList.filter(item =>
-      ['signin', 'calculators', 'aboutUs'].includes(item.routeName)
-    )
-  }
+  return menuConfig.filter(item => {
+    if (item.requiresAuth && !user) return false
 
-  if (user.role === 'admin') {
-    return menuList
-  }
+    if (item.hiddenWhenLoggedIn && user) return false
 
-  return menuList.filter(item => !['signin', 'productRecipeApproval'].includes(item.routeName))
+    if (item.roles && (!user || !item.roles.includes(user.role))) return false
+    return true
+  })
 })
 
 async function logout () {
