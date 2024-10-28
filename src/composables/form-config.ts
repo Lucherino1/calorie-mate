@@ -15,12 +15,12 @@ export function useElFormRules (model: FormRules) {
   return reactive(model)
 }
 
-export function useRequiredRule ({ required = true } = {}) {
-  return { required, message: 'This field is required', trigger: 'change' } as FormItemRule
+export function useRequiredRule ({ required = true } = {}): TElementPlus['FormItemRule'] {
+  return { required, message: 'This field is required', trigger: 'change' }
 }
 
-export function useEmailRule () {
-  return { type: 'email', message: 'Invalid email', trigger: ['change', 'blur'] } as FormItemRule
+export function useEmailRule (): TElementPlus['FormItemRule'] {
+  return { type: 'email', message: 'Invalid email', trigger: ['change', 'blur'] }
 }
 
 export function useMinLenRule (min: number): FormItemRule {
@@ -31,9 +31,9 @@ export function useMaxLenRule (max: number): FormItemRule {
   return { max, message: `Max length is ${max}`, trigger: 'change' }
 }
 
-export function useConfirmPasswordRule (formModel: { password: string }): FormItemRule {
+export function useConfirmPasswordRule (formModel: { password: string }): TElementPlus['FormItemRule'] {
   return {
-    validator: (rule: FormItemRule, value: string, callback: (error?: Error) => void) => {
+    validator: (rule, value: string, callback) => {
       if (value !== formModel.password) {
         callback(new Error('Passwords do not match'))
       } else {
@@ -41,12 +41,12 @@ export function useConfirmPasswordRule (formModel: { password: string }): FormIt
       }
     },
     trigger: 'change'
-  } as FormItemRule
+  }
 }
 
-export function useCurrentWeightRule (minWeight: number = 35, maxWeight: number = 700): FormItemRule {
+export function useCurrentWeightRule (minWeight = 35, maxWeight = 700): TElementPlus['FormItemRule'] {
   return {
-    validator: (rule: FormItemRule, value: number, callback: (error?: Error) => void) => {
+    validator: (rule, value: number, callback) => {
       if (value < minWeight) {
         callback(new Error(`Your starting weight should be at least ${minWeight} kg.`))
       } else if (value > maxWeight) {
@@ -56,12 +56,12 @@ export function useCurrentWeightRule (minWeight: number = 35, maxWeight: number 
       }
     },
     trigger: ['change', 'blur']
-  } as FormItemRule
+  }
 }
 
-export function useGoalWeightRule (minWeight: number = 35, maxWeight: number = 700): FormItemRule {
+export function useGoalWeightRule (minWeight = 35, maxWeight = 700): TElementPlus['FormItemRule'] {
   return {
-    validator: (rule: FormItemRule, value: number, callback: (error?: Error) => void) => {
+    validator: (rule, value: number, callback) => {
       if (value < minWeight) {
         callback(new Error("That's too low!"))
       } else if (value > maxWeight) {
@@ -71,12 +71,12 @@ export function useGoalWeightRule (minWeight: number = 35, maxWeight: number = 7
       }
     },
     trigger: ['change', 'blur']
-  } as FormItemRule
+  }
 }
 
-export function useHeightRangeRule (minHeight: number = 50, maxHeight: number = 300): FormItemRule {
+export function useHeightRangeRule (minHeight = 50, maxHeight = 300): TElementPlus['FormItemRule'] {
   return {
-    validator: (rule: FormItemRule, value: number, callback: (error?: Error) => void) => {
+    validator: (rule, value: number, callback) => {
       if (value < minHeight || value > maxHeight) {
         callback(new Error("That can't be right! We bet your height is between 50cm and 300cm."))
       } else {
@@ -84,12 +84,12 @@ export function useHeightRangeRule (minHeight: number = 50, maxHeight: number = 
       }
     },
     trigger: ['change', 'blur']
-  } as FormItemRule
+  }
 }
 
-export function useMinAgeRule (minAge: number = 16): FormItemRule {
+export function useMinAgeRule (minAge = 16): TElementPlus['FormItemRule'] {
   return {
-    validator: (rule: FormItemRule, value: number, callback: (error?: Error) => void) => {
+    validator: (rule, value: number, callback) => {
       if (value < minAge) {
         callback(new Error('A young growing body cannot be subjected to calorie counting.'))
       } else {
@@ -97,5 +97,5 @@ export function useMinAgeRule (minAge: number = 16): FormItemRule {
       }
     },
     trigger: ['change', 'blur']
-  } as FormItemRule
+  }
 }
