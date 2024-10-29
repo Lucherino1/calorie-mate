@@ -1,5 +1,5 @@
 <template>
-  <AppLayout :loading="pageLoading" :layout="route.meta.layout">
+  <AppLayout :loading="userProfileLoading" :layout="route.meta.layout">
     <router-view #default="{ Component }">
       <transition name="fade" mode="out-in">
         <component :is="Component" />
@@ -9,10 +9,11 @@
 </template>
 
 <script lang="ts" setup>
-import AppLayout from '@/layouts/AppLayout.vue'
 import { useRoute } from 'vue-router'
-import { storeToRefs } from 'pinia'
+import AppLayout from '@/layouts/AppLayout.vue'
 
+const authStore = useAuthStore()
 const route = useRoute()
-const { pageLoading } = storeToRefs(useGeneralStore())
+
+const { userProfileLoading } = storeToRefs(authStore)
 </script>

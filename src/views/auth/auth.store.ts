@@ -4,6 +4,7 @@ import { routeNames } from '@/router/route-names'
 import { showWarningNotification } from '@/helpers'
 
 export const useAuthStore = defineStore('authStore', () => {
+  const userProfileLoading = ref(false)
   const user = ref<TNullable<IUser>>(null)
 
   const signup = async (payload: ISignUpPayload) => {
@@ -52,17 +53,24 @@ export const useAuthStore = defineStore('authStore', () => {
     window.location.href = router.resolve({ name: routeNames.signin }).href
   }
 
-  const getUserProfile = async (userId?: string): Promise<IUser | null> => {
-    const id = userId || (await authService.getUser())?.id
-    if (!id) return null
+  const getUserProfile = async (userId?: string) => {
+    try {
+      const id = userId || (await authService.getUser())?.id
 
-    const { data, error } = await authService.getUserById(id)
-    if (error) {
-      if (!userId) await signout()
-      throw new Error(error.message || 'User Data Retrieval failed')
+      if (!id) return null
+
+      const { data, error } = await authService.getUserById(id)
+      user.value = data
+
+      if (error) {
+        if (!userId) await signout()
+        throw new Error(error.message || 'User Data Retrieval failed')
+      }
+
+      return data
+    } catch (error) {
+      showWarningNotification((error as Error).message, 'User Data Retrieval failed')
     }
-
-    return data
   }
 
   return {
@@ -70,6 +78,7 @@ export const useAuthStore = defineStore('authStore', () => {
     signup,
     signin,
     signout,
-    getUserProfile
+    getUserProfile,
+    userProfileLoading
   }
 })
