@@ -1,6 +1,6 @@
 import { roundToNearestTen } from '@/helpers'
 
-class CalculateNutritionService {
+class NutritionService {
   calculateBMR = (weight: number, height: number, age: number, sex: TSex): number => {
     const bmr = sex === 'male'
       ? 88.362 + 13.397 * weight + 4.799 * height - 5.677 * age
@@ -62,4 +62,4 @@ class CalculateNutritionService {
   }
 }
 
-export const calculateNutritionService = new CalculateNutritionService()
+export const nutritionService = new NutritionService()
