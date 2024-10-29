@@ -11,7 +11,8 @@ export const authRoutes: RouteRecordRaw[] = [
     name: authRouteNames.signin,
     component: () => import('@/views/auth/SignIn.vue'),
     meta: {
-      layout: 'blank'
+      layout: 'blank',
+      isProtectedDuringSession: true
     }
   },
   {
@@ -19,7 +20,8 @@ export const authRoutes: RouteRecordRaw[] = [
     name: authRouteNames.signup,
     component: () => import('@/views/auth/SignUp.vue'),
     meta: {
-      layout: 'blank'
+      layout: 'blank',
+      isProtectedDuringSession: true
     }
   }
 ]

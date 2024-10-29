@@ -2,14 +2,17 @@ import 'vue-router'
 import { routeNames } from '@/router/route-names'
 import { globalProperties, portalNames } from '@/plugins'
 import { EElComponentSize, EElComponentType, ELayouts } from '@/types/enums'
+import type { ERoles } from '@/views/auth/auth.enums'
 
 declare module 'vue-router' {
   interface RouteMeta {
     // todo: this is just an example. Please setup your own route meta params.
     label?: string
+    roles?: keyof typeof ERoles,
     layout?: keyof typeof ELayouts,
-    parentName?: string
-    requireAuth?: boolean
+    parentName?: string,
+    requireAuth?: boolean,
+    isProtectedDuringSession?: boolean
   }
 }
 

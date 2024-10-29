@@ -45,3 +45,7 @@ label {
 *::-webkit-scrollbar-button {
   display: none;
 }
+
+.auth-container {
+  @apply mx-auto w-full
+}

@@ -2,6 +2,8 @@ type TIndexedObject<T = any> = {
   [key: string]: T
 }
 
+type TNullable<T> = null | T
+
 type TCallbackFn<T extends unknown[] = [], R = void> = (...args: T) => R
 
 type TFormatterFunction<T> = (row: T) => (number | string)

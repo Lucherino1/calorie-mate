@@ -1,5 +1,5 @@
 <template>
-  <component :is="layouts[props.layout]">
+  <component :is="layouts[props.layout] " :loading="loading">
     <slot />
   </component>
 </template>
@@ -11,6 +11,7 @@ import DefaultLayout from '@/layouts/DefaultLayout.vue'
 
 const props = withDefaults(defineProps<{
   layout?: keyof typeof ELayouts
+  loading: boolean
 }>(), {
   layout: 'default'
 })
