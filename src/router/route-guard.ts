@@ -28,14 +28,13 @@ export const initializeSession = async (
   from: RouteLocationNormalized,
   next: NavigationGuardNext
 ) => {
-  const generalStore = useGeneralStore()
-  const { pageLoading } = storeToRefs(generalStore)
-
   const store = useAuthStore()
+  const { userProfileLoading } = storeToRefs(store)
+
   const { user } = storeToRefs(store)
   const { getUserProfile } = store
 
-  pageLoading.value = true
+  userProfileLoading.value = true
 
   if (!store.user) {
     const userData = await getUserProfile()
@@ -43,8 +42,8 @@ export const initializeSession = async (
       user.value = userData
     }
   }
-  pageLoading.value = false
   next()
+  userProfileLoading.value = false
 }
 
 export const sessionAccessGuard = async (
