@@ -89,7 +89,7 @@
             <el-date-picker
               v-model="value1"
               type="date"
-              placeholder="Pick a day"
+              start-placeholder
               :size="$elComponentSize.large"
             />
           </div>
@@ -247,7 +247,7 @@ onMounted(() => {
 
 // date picker
 
-const value1 = ref('')
+const value1 = ref(Date.now())
 </script>
 
 <style lang="scss" scoped>
