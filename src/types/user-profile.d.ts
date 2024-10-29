@@ -8,3 +8,11 @@ interface IBodyDetails{
   currentWeight: number
   goalWeight: number
 }
+
+interface IProfileFields {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  confirmPassword: string
+}
