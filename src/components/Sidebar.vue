@@ -41,7 +41,6 @@ import IconHealthAndNutrition from '~icons/icon/health-and-nutrition'
 import IconApprove from '~icons/icon/approve'
 import IconAboutUs from '~icons/icon/about-us'
 
-import type { FunctionalComponent } from 'vue'
 import type { ERoles } from '@/views/auth/auth.enums'
 
 const { signout, user } = useAuthStore()
@@ -50,7 +49,7 @@ const isLoading = ref(false)
 interface ISidebarMenuItem {
   label: string
   routeName: string
-  icon: FunctionalComponent
+  icon: Component
   requiresAuth?: boolean
   roles?: keyof typeof ERoles
   hiddenWhenLoggedIn?: boolean
