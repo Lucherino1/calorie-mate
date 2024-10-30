@@ -2,7 +2,7 @@
 
 .el-input-number {
   &__decrease {
-    @apply rounded-l-2xl hover:rounded-xl overflow-hidden hover:text-white hover:bg-primary hover:duration-300 #{!important};
+    @apply rounded-l-2xl hover:rounded-xl hover:text-white hover:bg-primary hover:duration-300 #{!important};
   }
   &__increase, el-icon {
     @apply rounded-r-2xl hover:rounded-xl hover:text-white hover:bg-primary hover:duration-300 #{!important};
