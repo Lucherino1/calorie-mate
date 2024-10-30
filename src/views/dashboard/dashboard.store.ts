@@ -1,3 +1,4 @@
+import { showWarningNotification } from '@/helpers'
 import { defineStore } from 'pinia'
 
 export const useDashboardStore = defineStore('dashboardStore', () => {
@@ -17,7 +18,7 @@ export const useDashboardStore = defineStore('dashboardStore', () => {
 
     const { data, error } = await dashboardService.getUserDashboard(selectedDate)
     if (error) {
-      console.error('Error fetching user dashboard:', error.message)
+      showWarningNotification('Oops! Something went wrong. Please try again later.')
       dashboardPageLoading.value = false
       return
     }
@@ -30,6 +31,7 @@ export const useDashboardStore = defineStore('dashboardStore', () => {
         const newDashboard = await dashboardService.createEmptyDashboard(selectedDate, userId.value)
         userDashboard.value = newDashboard
       } catch (error) {
+        showWarningNotification('Oops! Something went wrong. Please try again later.')
         console.error('Error creating a new dashboard:', error)
       }
     }
