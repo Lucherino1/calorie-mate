@@ -9,5 +9,3 @@ interface IDashboard {
     type: TMealType
   }[]
 }
-
-type TProgressColor = 'success' | 'warning' | 'exception'
