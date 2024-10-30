@@ -31,17 +31,14 @@ export const initializeSession = async (
   const store = useAuthStore()
   const { userProfileLoading } = storeToRefs(store)
 
-  const { user } = storeToRefs(store)
   const { getUserProfile } = store
 
   userProfileLoading.value = true
 
   if (!store.user) {
-    const userData = await getUserProfile()
-    if (userData) {
-      user.value = userData
-    }
+    await getUserProfile()
   }
+
   next()
   userProfileLoading.value = false
 }
