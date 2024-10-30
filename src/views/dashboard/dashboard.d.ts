@@ -10,6 +10,4 @@ interface IDashboard {
   }[]
 }
 
-interface ICurrentWeight {
-  currentWeight: number | undefined
-}
+type TProgressColor = 'success' | 'warning' | 'exception'
