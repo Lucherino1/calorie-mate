@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.fullscreen="dashboardPageLoading" class="app-container app-container--dashboard">
+  <div v-loading.fullscreen="dashboardPageLoading" class="app-container--dashboard">
     <div class="flex flex-col gap-5">
       <p class="font-bold text-gray-light text-[34px] leading-10">
         Hello, <span class="text-primary-dark">{{ user.firstName }}!</span>
@@ -108,15 +108,15 @@ import { showNotification } from '@/helpers'
 import { EProgressColorStatus } from '@/views/dashboard/dashboard.enums'
 
 const date = ref(new Date().toISOString().split('T')[0])
-const userDashboard = ref<IDashboard | null>(null)
+const userDashboard = ref<IDashboard>(null)
 const dashboardPageLoading = ref(false)
 
 const authStore = useAuthStore()
-const { user } = storeToRefs(authStore)
+const user = authStore.user
 
 const getUserDashboard = async (selectedDate: string) => {
   dashboardPageLoading.value = true
-  userDashboard.value = await dashboardService.getUserDashboard(selectedDate, user.value.id)
+  userDashboard.value = await dashboardService.getUserDashboard(selectedDate, user.id)
   dashboardPageLoading.value = false
 }
 
@@ -133,17 +133,15 @@ const handleDateChange = (newDate: string) => {
 
 const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 
-const formRules = reactive({
-  currentWeight: [useRequiredRule(), useCurrentWeightRule()]
-})
+const formRules = { currentWeight: [useRequiredRule(), useCurrentWeightRule()] }
 
-const bodyDetailsFormModel = reactive<IBodyDetails>({ ...user.value.bodyDetails })
+const bodyDetailsFormModel = { ...user.bodyDetails }
 
 const isEditWeightMode = ref(false)
 
 function cancelEditMode () {
   isEditWeightMode.value = false
-  bodyDetailsFormModel.currentWeight = user.value.bodyDetails.currentWeight
+  bodyDetailsFormModel.currentWeight = user.bodyDetails.currentWeight
 }
 
 function submitBodyDetails () {
@@ -151,22 +149,21 @@ function submitBodyDetails () {
     if (isValid) {
       cancelEditMode()
       try {
-        profileService.recalculateTargetNutrition(user.value)
+        await profileService.updateUserBodyDetails(user.id, { ...bodyDetailsFormModel })
 
-        await profileService.updateUserBodyDetails(user.value.id, { ...bodyDetailsFormModel })
-
-        user.value.bodyDetails = bodyDetailsFormModel
+        user.bodyDetails = bodyDetailsFormModel
+        profileService.recalculateTargetNutrition(user)
         showNotification('Calories have been recalculated successfully', 'Recalculation Complete', 'success')
       } catch (error) {
-        console.error(error)
+        showNotification()
       }
     }
   })
 }
 
-const userTargetNutrition = reactive({ ...user.value.targetNutritionDetails })
+const userTargetNutrition = reactive({ ...user.targetNutritionDetails })
 
-const userTargetNutritionByMeal = reactive({ ...user.value.targetNutritionDetailsByMeal })
+const userTargetNutritionByMeal = reactive({ ...user.targetNutritionDetailsByMeal })
 
 const calculatedCalsRemaining = computed(() => {
   return nutritionService.calcRemainingCalories(userDashboard.value, userTargetNutrition.calories)
