@@ -56,6 +56,7 @@
             :size="$elComponentSize.large"
             label-position="top"
             hide-required-asterisk
+            :show-message="false"
             @submit.prevent="submit"
           >
             <el-form-item label="Your weight is:" prop="currentWeight">
@@ -71,7 +72,7 @@
             <transition name="fade">
               <div v-show="isEditWeightMode" class="flex items-center justify-center">
                 <el-form-item class="flex items-center justify-end">
-                  <el-button :type="$elComponentType.danger" link @click="isEditWeightMode = false">
+                  <el-button :type="$elComponentType.danger" link @click="cancelEditMode()">
                     Cancel
                   </el-button>
                   <el-button native-type="submit" :type="$elComponentType.info" link>
@@ -130,15 +131,7 @@ const handleDateChange = (newDate: string) => {
 const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 
 const formRules = reactive({
-  age: [useRequiredRule(), useMinAgeRule()],
-  sex: useRequiredRule(),
-  activityLevel: useRequiredRule(),
-  height: [useRequiredRule(), useHeightRangeRule()],
-  currentWeight: [useRequiredRule(), useCurrentWeightRule()],
-  goalWeight: [
-    useRequiredRule(),
-    useGoalWeightRule()
-  ]
+  currentWeight: [useRequiredRule(), useCurrentWeightRule()]
 })
 
 const bodyDetailsFormModel = reactive<IBodyDetails>({
@@ -152,11 +145,16 @@ const bodyDetailsFormModel = reactive<IBodyDetails>({
 
 const isEditWeightMode = ref(false)
 
-function submit () {
+function cancelEditMode () {
   isEditWeightMode.value = false
+  bodyDetailsFormModel.currentWeight = user.value?.bodyDetails.currentWeight ?? 0
+}
+
+function submit () {
   formRef.value?.validate(async (isValid: boolean) => {
     if (!bodyDetailsFormModel) return
     if (isValid) {
+      cancelEditMode()
       try {
         if (!user.value?.id) {
           return
