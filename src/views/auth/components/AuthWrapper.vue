@@ -1,5 +1,5 @@
 <template>
-  <main class="auth-container">
+  <main class="app-container">
     <div class="flex">
       <div class="flex-1 flex flex-col justify-center items-center">
         <div class="flex flex-col justify-between py-10 h-full w-full max-w-[410px] px-2">
