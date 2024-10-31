@@ -1,0 +1,14 @@
+@use "element-plus/theme-chalk/src/date-picker";
+
+.el-date-editor {
+  .el-input__wrapper {
+    @apply bg-primary #{!important};
+  }
+  
+  .el-input__prefix,
+  .el-input__inner,
+  .el-input__inner::placeholder,
+  .el-input__suffix {
+    @apply text-white font-normal text-base text-center #{!important};
+  }
+}
