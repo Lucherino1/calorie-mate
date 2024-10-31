@@ -1,15 +1,14 @@
 <template>
-  <div v-loading.fullscreen="dashboardPageLoading" class="dashboard-container">
+  <div v-loading.fullscreen="dashboardPageLoading" class="app-container app-container--dashboard">
     <div class="flex flex-col gap-5">
       <p class="font-bold text-gray-light text-[34px] leading-10">
-        Hello, <span class="text-primary-dark">{{ user?.firstName }}!</span>
+        Hello, <span class="text-primary-dark">{{ user.firstName }}!</span>
       </p>
-      <div class="date-picker-wrapper w-full flex justify-between">
+      <div class="w-full flex justify-between">
         <el-date-picker
           v-model="date"
           type="date"
           :clearable="false"
-          start-placeholder="true"
           :size="$elComponentSize.large"
           @change="handleDateChange"
         />
@@ -22,7 +21,7 @@
           <el-progress
             type="dashboard"
             class="py-8"
-            :percentage="nutrientPersentage.calories"
+            :percentage="nutrientPercentage.calories"
             :stroke-width="12"
             :width="220"
           >
@@ -36,7 +35,7 @@
         </div>
       </el-card>
       <div class="flex flex-1 flex-col w-full justify-between">
-        <NutrientCard
+        <DashboardNutrientCardNutrientCard
           v-for="nutrient in nutrientData"
           :key="nutrient.label"
           :label="nutrient.label"
@@ -50,14 +49,13 @@
         <el-card class="flex justify-center text-center items-center min-h-[155px] weight-form-wrapper">
           <el-form
             ref="formRef"
-            class=""
             :model="bodyDetailsFormModel"
             :rules="formRules"
             :size="$elComponentSize.large"
             label-position="top"
             hide-required-asterisk
             :show-message="false"
-            @submit.prevent="submit"
+            @submit.prevent="submitBodyDetails"
           >
             <el-form-item label="Your weight is:" prop="currentWeight">
               <el-input-number
@@ -83,9 +81,7 @@
             </transition>
           </el-form>
         </el-card>
-        <el-card
-          class="w-full h-auto flex-1"
-        >
+        <el-card class="w-full h-auto flex-1">
           <div class="text-[34px] leading-10">
             <p class="card-header">Hydration:</p>
           </div>
@@ -93,7 +89,7 @@
       </div>
     </div>
     <div class="grid grid-cols-4 gap-5 mt-10">
-      <MealCard
+      <DashboardMealCard
         v-for="meal in mealData"
         :key="meal.label"
         :label="meal.label"
@@ -108,14 +104,21 @@
 </template>
 
 <script lang="ts" setup>
+import { showNotification } from '@/helpers'
 import { EProgressColorStatus } from '@/views/dashboard/dashboard.enums'
 
-const dashboardStore = useDashboardStore()
-const { getUserDashboard } = dashboardStore
-const { userDashboard, date, dashboardPageLoading, calsEaten, calsAndItemsEatenByMeal } = storeToRefs(dashboardStore)
+const date = ref(new Date().toISOString().split('T')[0])
+const userDashboard = ref<IDashboard | null>(null)
+const dashboardPageLoading = ref(false)
 
 const authStore = useAuthStore()
 const { user } = storeToRefs(authStore)
+
+const getUserDashboard = async (selectedDate: string) => {
+  dashboardPageLoading.value = true
+  userDashboard.value = await dashboardService.getUserDashboard(selectedDate, user.value.id)
+  dashboardPageLoading.value = false
+}
 
 const handleDateChange = (newDate: string) => {
   const selectedDate = new Date(newDate)
@@ -134,36 +137,26 @@ const formRules = reactive({
   currentWeight: [useRequiredRule(), useCurrentWeightRule()]
 })
 
-const bodyDetailsFormModel = reactive<IBodyDetails>({
-  age: user.value?.bodyDetails.age ?? 0,
-  sex: user.value?.bodyDetails.sex ?? 'male',
-  activityLevel: user.value?.bodyDetails.activityLevel ?? 1.2,
-  height: user.value?.bodyDetails.height ?? 0,
-  currentWeight: user.value?.bodyDetails.currentWeight ?? 0,
-  goalWeight: user.value?.bodyDetails.goalWeight ?? 0
-})
+const bodyDetailsFormModel = reactive<IBodyDetails>({ ...user.value.bodyDetails })
 
 const isEditWeightMode = ref(false)
 
 function cancelEditMode () {
   isEditWeightMode.value = false
-  bodyDetailsFormModel.currentWeight = user.value?.bodyDetails.currentWeight ?? 0
+  bodyDetailsFormModel.currentWeight = user.value.bodyDetails.currentWeight
 }
 
-function submit () {
+function submitBodyDetails () {
   formRef.value?.validate(async (isValid: boolean) => {
-    if (!bodyDetailsFormModel) return
     if (isValid) {
       cancelEditMode()
       try {
-        if (!user.value?.id) {
-          return
-        }
         profileService.recalculateTargetNutrition(user.value)
 
-        await profileService.updateUserBodyDetails(user.value?.id, { ...bodyDetailsFormModel })
+        await profileService.updateUserBodyDetails(user.value.id, { ...bodyDetailsFormModel })
 
         user.value.bodyDetails = bodyDetailsFormModel
+        showNotification('Calories have been recalculated successfully', 'Recalculation Complete', 'success')
       } catch (error) {
         console.error(error)
       }
@@ -171,53 +164,43 @@ function submit () {
   })
 }
 
-const userTargetNutrition = computed(() => {
-  if (user.value?.targetNutritionDetails !== undefined) {
-    return { ...user.value?.targetNutritionDetails }
-  }
-  return {
-    calories: 0,
-    carbs: 0,
-    proteins: 0,
-    fats: 0
-  }
-})
+const userTargetNutrition = reactive({ ...user.value.targetNutritionDetails })
 
-const userTargetNutritionByMeal = computed(() => {
-  if (user.value === undefined) return {}
-  return { ...user.value?.targetNutritionDetailsByMeal }
-})
+const userTargetNutritionByMeal = reactive({ ...user.value.targetNutritionDetailsByMeal })
 
 const calculatedCalsRemaining = computed(() => {
-  return nutritionService.calcRemainingCalories(userDashboard.value, userTargetNutrition.value.calories)
+  return nutritionService.calcRemainingCalories(userDashboard.value, userTargetNutrition.calories)
 })
 
-const nutrientPersentage = computed(() => {
-  return nutritionService.calcNutrientPercentage(userDashboard.value, userTargetNutrition.value)
+const nutrientPercentage = computed(() => {
+  return nutritionService.calcNutrientPercentage(userDashboard.value, userTargetNutrition)
 })
+
+const calsEaten = computed(() => nutritionService.calcTotalNutritious(userDashboard.value))
+const calsAndItemsEatenByMeal = computed(() => nutritionService.calcNutritiousByMeals(userDashboard.value))
 
 const nutrientData = computed(() => {
   return [
     {
       label: 'Carbs',
-      percentage: nutrientPersentage.value.carbs,
-      targetAmount: userTargetNutrition.value.carbs,
+      percentage: nutrientPercentage.value.carbs,
+      targetAmount: userTargetNutrition.carbs,
       consumedAmount: calsEaten.value.carbs,
       image: '/src/assets/images/nutrients/carbs.png',
       progressColorType: EProgressColorStatus.success
     },
     {
       label: 'Proteins',
-      percentage: nutrientPersentage.value.proteins,
-      targetAmount: userTargetNutrition.value.proteins,
+      percentage: nutrientPercentage.value.proteins,
+      targetAmount: userTargetNutrition.proteins,
       consumedAmount: calsEaten.value.proteins,
       image: '/src/assets/images/nutrients/proteins.png',
       progressColorType: EProgressColorStatus.warning
     },
     {
       label: 'Fats',
-      percentage: nutrientPersentage.value.fats,
-      targetAmount: userTargetNutrition.value.fats,
+      percentage: nutrientPercentage.value.fats,
+      targetAmount: userTargetNutrition.fats,
       consumedAmount: calsEaten.value.fats,
       image: '/src/assets/images/nutrients/fats.png',
       progressColorType: EProgressColorStatus.exception
@@ -225,14 +208,16 @@ const nutrientData = computed(() => {
   ]
 })
 
-const mealData = computed(() => {
-  const percentage = nutritionService.calcMealCaloriesPercentage(userDashboard.value, userTargetNutritionByMeal.value)
+const percentage = computed(() => {
+  return nutritionService.calcMealCaloriesPercentage(userDashboard.value, userTargetNutritionByMeal)
+})
 
+const mealData = computed(() => {
   return [
     {
       label: 'Breakfast',
       mealType: 'breakfast',
-      percentage: percentage.breakfast,
+      percentage: percentage.value.breakfast,
       caloriesConsumed: calsAndItemsEatenByMeal.value.breakfast.calories,
       image: '/src/assets/images/meals/breakfast.png',
       countedItems: calsAndItemsEatenByMeal.value.breakfast.itemsCount
@@ -240,7 +225,7 @@ const mealData = computed(() => {
     {
       label: 'Lunch',
       mealType: 'lunch',
-      percentage: percentage.lunch,
+      percentage: percentage.value.lunch,
       caloriesConsumed: calsAndItemsEatenByMeal.value.lunch.calories,
       image: '/src/assets/images/meals/lunch.png',
       countedItems: calsAndItemsEatenByMeal.value.lunch.itemsCount
@@ -248,7 +233,7 @@ const mealData = computed(() => {
     {
       label: 'Dinner',
       mealType: 'dinner',
-      percentage: percentage.dinner,
+      percentage: percentage.value.dinner,
       caloriesConsumed: calsAndItemsEatenByMeal.value.dinner.calories,
       image: '/src/assets/images/meals/dinner.png',
       countedItems: calsAndItemsEatenByMeal.value.dinner.itemsCount
@@ -256,7 +241,7 @@ const mealData = computed(() => {
     {
       label: 'Snacks',
       mealType: 'snacks',
-      percentage: percentage.snacks,
+      percentage: percentage.value.snacks,
       caloriesConsumed: calsAndItemsEatenByMeal.value.snacks.calories,
       image: '/src/assets/images/meals/snack.png',
       countedItems: calsAndItemsEatenByMeal.value.snacks.itemsCount
@@ -272,19 +257,6 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
-.date-picker-wrapper ::v-deep {
-  .el-input__wrapper {
-    @apply bg-primary;
-  }
-
-  .el-input__prefix,
-  .el-input__inner,
-  .el-input__inner::placeholder,
-  .el-input__suffix {
-    @apply text-white font-normal text-base text-center;
-  }
-}
-
 .weight-form-wrapper ::v-deep {
   .el-form-item {
     @apply mb-1;
