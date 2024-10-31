@@ -2,7 +2,7 @@
   <div v-loading.fullscreen="dashboardPageLoading" class="app-container--dashboard">
     <div class="flex flex-col gap-5">
       <p class="font-bold text-gray-light text-[34px] leading-10">
-        Hello, <span class="text-primary-dark">{{ user.firstName }}!</span>
+        Hello, <span class="text-primary-dark">{{ authStore.user.firstName }}!</span>
       </p>
       <div class="w-full flex justify-between">
         <el-date-picker
@@ -112,11 +112,10 @@ const userDashboard = ref<IDashboard>(null)
 const dashboardPageLoading = ref(false)
 
 const authStore = useAuthStore()
-const user = authStore.user
 
 const getUserDashboard = async (selectedDate: string) => {
   dashboardPageLoading.value = true
-  userDashboard.value = await dashboardService.getUserDashboard(selectedDate, user.id)
+  userDashboard.value = await dashboardService.getUserDashboard(selectedDate, authStore.user.id)
   dashboardPageLoading.value = false
 }
 
@@ -135,13 +134,13 @@ const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 
 const formRules = { currentWeight: [useRequiredRule(), useCurrentWeightRule()] }
 
-const bodyDetailsFormModel = { ...user.bodyDetails }
+const bodyDetailsFormModel = { ...authStore.user.bodyDetails }
 
 const isEditWeightMode = ref(false)
 
 function cancelEditMode () {
   isEditWeightMode.value = false
-  bodyDetailsFormModel.currentWeight = user.bodyDetails.currentWeight
+  bodyDetailsFormModel.currentWeight = authStore.user.bodyDetails.currentWeight
 }
 
 function submitBodyDetails () {
@@ -149,10 +148,10 @@ function submitBodyDetails () {
     if (isValid) {
       cancelEditMode()
       try {
-        await profileService.updateUserBodyDetails(user.id, { ...bodyDetailsFormModel })
+        await profileService.updateUserBodyDetails(authStore.user.id, { ...bodyDetailsFormModel })
 
-        user.bodyDetails = bodyDetailsFormModel
-        profileService.recalculateTargetNutrition(user)
+        authStore.user.bodyDetails = bodyDetailsFormModel
+        profileService.recalculateTargetNutrition(authStore.user)
         showNotification('Calories have been recalculated successfully', 'Recalculation Complete', 'success')
       } catch (error) {
         showNotification()
@@ -161,16 +160,12 @@ function submitBodyDetails () {
   })
 }
 
-const userTargetNutrition = reactive({ ...user.targetNutritionDetails })
-
-const userTargetNutritionByMeal = reactive({ ...user.targetNutritionDetailsByMeal })
-
 const calculatedCalsRemaining = computed(() => {
-  return nutritionService.calcRemainingCalories(userDashboard.value, userTargetNutrition.calories)
+  return nutritionService.calcRemainingCalories(userDashboard.value, authStore.user.targetNutritionDetails.calories)
 })
 
 const nutrientPercentage = computed(() => {
-  return nutritionService.calcNutrientPercentage(userDashboard.value, userTargetNutrition)
+  return nutritionService.calcNutrientPercentage(userDashboard.value, authStore.user.targetNutritionDetails)
 })
 
 const calsEaten = computed(() => nutritionService.calcTotalNutritious(userDashboard.value))
@@ -181,21 +176,21 @@ const nutrientData = computed(() => {
     {
       label: 'Carbs',
       percentage: nutrientPercentage.value.carbs,
-      targetAmount: userTargetNutrition.carbs,
+      targetAmount: authStore.user.targetNutritionDetails.carbs,
       consumedAmount: calsEaten.value.carbs,
       progressColorType: EProgressColorStatus.success
     },
     {
       label: 'Proteins',
       percentage: nutrientPercentage.value.proteins,
-      targetAmount: userTargetNutrition.proteins,
+      targetAmount: authStore.user.targetNutritionDetails.proteins,
       consumedAmount: calsEaten.value.proteins,
       progressColorType: EProgressColorStatus.warning
     },
     {
       label: 'Fats',
       percentage: nutrientPercentage.value.fats,
-      targetAmount: userTargetNutrition.fats,
+      targetAmount: authStore.user.targetNutritionDetails.fats,
       consumedAmount: calsEaten.value.fats,
       progressColorType: EProgressColorStatus.exception
     }
@@ -203,7 +198,7 @@ const nutrientData = computed(() => {
 })
 
 const percentage = computed(() => {
-  return nutritionService.calcMealCaloriesPercentage(userDashboard.value, userTargetNutritionByMeal)
+  return nutritionService.calcMealCaloriesPercentage(userDashboard.value, authStore.user.targetNutritionDetailsByMeal)
 })
 
 const mealData = computed(() => {

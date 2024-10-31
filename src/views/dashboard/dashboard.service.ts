@@ -1,6 +1,6 @@
 class DashboardService {
   async getUserDashboard (date?: string, userId?: string): Promise<IDashboard> {
-    const { data, error } = await useSupabase.from('dashboard').select('*').eq('date', `${date}`).eq('userId', `${userId}`).single()
+    const { data, error } = await useSupabase.from('dashboard').select('*').eq('date', `${date}`).eq('userId', `${userId}`)
 
     if (error) throw new Error(error.message)
 
@@ -8,7 +8,7 @@ class DashboardService {
       return await this.createEmptyDashboard(date, userId)
     }
 
-    return data
+    return data[0]
   }
 
   async createEmptyDashboard (date: string, userId: string): Promise<IDashboard> {
