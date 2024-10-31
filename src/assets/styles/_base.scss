@@ -46,6 +46,14 @@ label {
   display: none;
 }
 
-.auth-container {
-  @apply mx-auto w-full
+.app-container {
+  @apply mx-auto w-full;
+
+  &--dashboard {
+    @apply p-5 md:p-10 xl:p-[50px];
+  }
+}
+
+.card-header {
+  @apply font-bold text-lg mb-2 text-primary-dark
 }

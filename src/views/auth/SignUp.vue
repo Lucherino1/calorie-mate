@@ -96,23 +96,23 @@ function createSignUpPayload (
 
   const validatedBodyDetails = bodyDetailsFormData as IBodyDetails
 
-  const bmr = nutritionService.calculateBMR(
+  const bmr = nutritionService.calcBMR(
     validatedBodyDetails.currentWeight,
     validatedBodyDetails.height,
     validatedBodyDetails.age,
     validatedBodyDetails.sex
   )
 
-  const tdee = nutritionService.calculateTDEE(bmr, validatedBodyDetails.activityLevel)
-  const goalCalories = nutritionService.calculateGoalCalories(
+  const tdee = nutritionService.calcTDEE(bmr, validatedBodyDetails.activityLevel)
+  const goalCalories = nutritionService.calcGoalCalories(
     validatedBodyDetails.currentWeight,
     validatedBodyDetails.goalWeight,
     tdee
   )
 
-  const targetNutritionDetails = nutritionService.calculateTargetNutritionDetails(goalCalories)
+  const targetNutritionDetails = nutritionService.calcTargetNutritionDetails(goalCalories)
   const targetNutritionDetailsByMeal =
-  nutritionService.calculateTargetNutritionDetailsByMeal(targetNutritionDetails)
+  nutritionService.calcTargetNutritionDetailsByMeal(targetNutritionDetails)
 
   const payload: ISignUpPayload = {
     email: profileFormData.email,

@@ -6,7 +6,8 @@ export const updateMealRouteNames = {
 
 export const updateMealRoutes: RouteRecordRaw[] = [
   {
-    path: '/update-meal',
+    path: '/update-meal/:mealType?',
+    props: true,
     name: updateMealRouteNames.updateMeal,
     component: () => import('@/views/update-meal/UpdateMeal.vue'),
     meta: {
