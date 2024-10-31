@@ -1,10 +1,10 @@
-import { showNotification } from '@/helpers'
-
 class DashboardService {
   async getUserDashboard (date?: string, userId?: string): Promise<IDashboard> {
     const { data, error } = await useSupabase.from('dashboard').select('*').eq('date', `${date}`).eq('userId', `${userId}`).single()
 
-    if (error || !data) {
+    if (error) throw new Error(error.message)
+
+    if (!data) {
       return await this.createEmptyDashboard(date, userId)
     }
 
@@ -23,15 +23,13 @@ class DashboardService {
         { products: [], recipes: [], type: 'snacks' }
       ]
     }
-    try {
-      const { data, error } = await useSupabase.from('dashboard').insert([newDashboard]).select()
-      if (error) {
-        throw new Error(error.message)
-      }
-      return data[0]
-    } catch (error) {
-      showNotification(error.message, 'Please try again later.')
+
+    const { data, error } = await useSupabase.from('dashboard').insert([newDashboard]).select().single()
+    if (error) {
+      throw new Error(error.message)
     }
+
+    return data
   }
 }
 
