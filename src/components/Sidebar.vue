@@ -1,5 +1,5 @@
 <template>
-  <aside class="h-screen bg-white flex flex-col">
+  <aside class="min-h-screen h-auto bg-white flex flex-col">
     <div class="pt-14 pb-12 font-poppins text-[26px]  text-primary-dark text-center border-b">
       <h1><b>CALORIE</b> MATE</h1>
     </div>
