@@ -1,31 +1,6 @@
-// temporary design to remove errors
+import type { EProductType, ERecipeType } from './products-and-recipes.enums'
 
-enum ERecipeType {
-  sweet = 'sweet',
-  soup = 'soup',
-  salad = 'salad',
-  mainCourse = 'mainCourse',
-  appetizer = 'appetizer',
-  dessert = 'dessert',
-  beverage = 'beverage',
-  snack = 'snack',
-  sideDish = 'sideDish',
-}
-
-enum EProductType {
-  vegetable = 'vegetable',
-  fruit = 'fruit',
-  meat = 'meat',
-  dairy = 'dairy',
-  grain = 'grain',
-  seafood = 'seafood',
-  nut = 'nut',
-  spice = 'spice',
-  beverage = 'beverage',
-  condiment = 'condiment',
-}
-
-interface IProduct {
+interface IUserProduct {
   id: string
   name: string
   userId: string
@@ -40,7 +15,7 @@ interface IProduct {
   isVegan: boolean
 }
 
-interface IRecipe {
+interface IUserRecipe {
   id: string
   name: string
   userId: string
