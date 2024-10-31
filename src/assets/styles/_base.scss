@@ -47,11 +47,11 @@ label {
 }
 
 .app-container {
-  @apply mx-auto w-full
-}
+  @apply mx-auto w-full;
 
-.app-container--dashboard {
-  @apply p-5 md:p-10 xl:p-[50px]
+  &--dashboard {
+    @apply p-5 md:p-10 xl:p-[50px];
+  }
 }
 
 .card-header {
