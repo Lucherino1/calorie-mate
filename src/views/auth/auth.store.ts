@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import { router } from '@/router'
 import { routeNames } from '@/router/route-names'
-import { showWarningNotification } from '@/helpers'
+import { showNotification } from '@/helpers'
 
 export const useAuthStore = defineStore('authStore', () => {
   const userProfileLoading = ref(false)
-  const user = ref<TNullable<IUser>>(null)
+  const user = ref<IUser>(null)
 
   const signup = async (payload: ISignUpPayload) => {
     try {
@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('authStore', () => {
 
       router.push({ name: routeNames.signin })
     } catch (error) {
-      showWarningNotification((error as Error).message, 'Signup Error')
+      showNotification((error as Error).message, 'Signup Error')
     }
   }
 
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('authStore', () => {
 
       router.push({ name: routeNames.dashboard })
     } catch (error) {
-      showWarningNotification((error as Error).message, 'Sign In Error')
+      showNotification((error as Error).message, 'Sign In Error')
     }
   }
 
@@ -47,7 +47,7 @@ export const useAuthStore = defineStore('authStore', () => {
 
       user.value = null
     } catch (error) {
-      showWarningNotification((error as Error).message, 'Signout Error')
+      showNotification((error as Error).message, 'Signout Error')
     }
 
     window.location.href = router.resolve({ name: routeNames.signin }).href
@@ -69,7 +69,7 @@ export const useAuthStore = defineStore('authStore', () => {
 
       return data
     } catch (error) {
-      showWarningNotification((error as Error).message, 'User Data Retrieval failed')
+      showNotification((error as Error).message, 'User Data Retrieval failed')
     }
   }
 
