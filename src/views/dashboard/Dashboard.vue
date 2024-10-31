@@ -134,7 +134,7 @@ const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 
 const formRules = { currentWeight: [useRequiredRule(), useCurrentWeightRule()] }
 
-const bodyDetailsFormModel = { ...authStore.user.bodyDetails }
+const bodyDetailsFormModel = reactive({ ...authStore.user.bodyDetails })
 
 const isEditWeightMode = ref(false)
 
