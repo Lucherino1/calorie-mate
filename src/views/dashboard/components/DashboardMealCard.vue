@@ -3,14 +3,9 @@
     <p class="font-bold text-lg">{{ label }}</p>
     <el-progress class="py-[10px]" type="circle" :percentage="percentage">
       <template #default>
-        <div class="w-[55px] h-[55px] mx-auto relative">
-          <img
-            :src="image"
-            class="bg-gray overflow-hidden w-full h-auto object-cover"
-            :alt="label"
-            loading="lazy"
-          >
-          <div class="w-[30px] h-[30px] absolute left-12">
+        <div class="w-full h-full flex justify-center items-center relative">
+          <span class="text-[4rem]">{{ icon }}</span>
+          <div class="w-[30px] h-[30px] absolute -bottom-3 right-1">
             <el-button circle type="info" @click="redirectToUpdateMeal">
               <IconPlus />
             </el-button>
@@ -40,7 +35,7 @@ const props = defineProps<{
   percentage: number
   caloriesConsumed: number
   itemsCount: number
-  image: string
+  icon: string
   mealType: string
 }>()
 

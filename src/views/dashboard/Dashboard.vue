@@ -35,7 +35,7 @@
         </div>
       </el-card>
       <div class="flex flex-1 flex-col w-full justify-between">
-        <DashboardNutrientCardNutrientCard
+        <DashboardNutrientCard
           v-for="nutrient in nutrientData"
           :key="nutrient.label"
           :label="nutrient.label"
@@ -96,7 +96,7 @@
         :percentage="meal.percentage || 0"
         :caloriesConsumed="meal.caloriesConsumed"
         :itemsCount="meal.countedItems"
-        :image="meal.image"
+        :icon="meal.icon"
         :meal-type="meal.mealType"
       />
     </div>
@@ -186,7 +186,6 @@ const nutrientData = computed(() => {
       percentage: nutrientPercentage.value.carbs,
       targetAmount: userTargetNutrition.carbs,
       consumedAmount: calsEaten.value.carbs,
-      image: '/src/assets/images/nutrients/carbs.png',
       progressColorType: EProgressColorStatus.success
     },
     {
@@ -194,7 +193,6 @@ const nutrientData = computed(() => {
       percentage: nutrientPercentage.value.proteins,
       targetAmount: userTargetNutrition.proteins,
       consumedAmount: calsEaten.value.proteins,
-      image: '/src/assets/images/nutrients/proteins.png',
       progressColorType: EProgressColorStatus.warning
     },
     {
@@ -202,7 +200,6 @@ const nutrientData = computed(() => {
       percentage: nutrientPercentage.value.fats,
       targetAmount: userTargetNutrition.fats,
       consumedAmount: calsEaten.value.fats,
-      image: '/src/assets/images/nutrients/fats.png',
       progressColorType: EProgressColorStatus.exception
     }
   ]
@@ -219,7 +216,7 @@ const mealData = computed(() => {
       mealType: 'breakfast',
       percentage: percentage.value.breakfast,
       caloriesConsumed: calsAndItemsEatenByMeal.value.breakfast.calories,
-      image: '/src/assets/images/meals/breakfast.png',
+      icon: '🥞',
       countedItems: calsAndItemsEatenByMeal.value.breakfast.itemsCount
     },
     {
@@ -227,7 +224,7 @@ const mealData = computed(() => {
       mealType: 'lunch',
       percentage: percentage.value.lunch,
       caloriesConsumed: calsAndItemsEatenByMeal.value.lunch.calories,
-      image: '/src/assets/images/meals/lunch.png',
+      icon: '🍲',
       countedItems: calsAndItemsEatenByMeal.value.lunch.itemsCount
     },
     {
@@ -235,7 +232,7 @@ const mealData = computed(() => {
       mealType: 'dinner',
       percentage: percentage.value.dinner,
       caloriesConsumed: calsAndItemsEatenByMeal.value.dinner.calories,
-      image: '/src/assets/images/meals/dinner.png',
+      icon: '🥗',
       countedItems: calsAndItemsEatenByMeal.value.dinner.itemsCount
     },
     {
@@ -243,7 +240,7 @@ const mealData = computed(() => {
       mealType: 'snacks',
       percentage: percentage.value.snacks,
       caloriesConsumed: calsAndItemsEatenByMeal.value.snacks.calories,
-      image: '/src/assets/images/meals/snack.png',
+      icon: '🍎',
       countedItems: calsAndItemsEatenByMeal.value.snacks.itemsCount
     }
   ]
