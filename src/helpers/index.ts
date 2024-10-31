@@ -4,11 +4,11 @@ export const roundToNearestTen = (value: number): number => {
   return Math.round(value / 10) * 10
 }
 
-export function showWarningNotification (message: string, title: string = 'Error') {
+export function showNotification (message: string = 'Please try again later.', title: string = 'Oops! Something went wrong.', type: 'success' | 'warning' | 'info' | 'error' = 'error') {
   ElNotification({
     title,
     message,
-    type: 'error',
+    type,
     showClose: true,
     offset: 50
   })
