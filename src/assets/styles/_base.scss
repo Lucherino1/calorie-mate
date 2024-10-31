@@ -46,12 +46,12 @@ label {
   display: none;
 }
 
-.auth-container {
+.app-container {
   @apply mx-auto w-full
 }
 
-.dashboard-container {
-  @apply p-5 md:p-10 xl:p-[50px] mx-auto w-full
+.app-container--dashboard {
+  @apply p-5 md:p-10 xl:p-[50px]
 }
 
 .card-header {
