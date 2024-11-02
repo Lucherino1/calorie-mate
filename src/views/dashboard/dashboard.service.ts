@@ -4,7 +4,7 @@ class DashboardService {
 
     if (error) throw new Error(error.message)
 
-    if (!data) {
+    if (!data.length) {
       return await this.createEmptyDashboard(date, userId)
     }
 
