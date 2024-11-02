@@ -1,32 +1,34 @@
 <template>
   <aside class="min-h-screen h-auto bg-white flex flex-col">
-    <div class="pt-14 pb-12 font-poppins text-[26px]  text-primary-dark text-center border-b">
-      <h1><b>CALORIE</b> MATE</h1>
-    </div>
-    <div class="flex-1 pl-5 pt-10">
-      <ul class="flex flex-col gap-6">
-        <li
-          v-for="item in filteredMenuList"
-          :key="item.routeName"
-          class="font-medium leading-[30px] w-full
-          text-gray-light hover:font-medium hover:text-primary-dark relative"
-        >
-          <router-link
-            class="w-full truncate flex items-center"
-            :to="{ name: item.routeName }"
-            active-class="sidebar__link--active"
-            exact-active-class="sidebar__link--active"
+    <div class="fixed w-[310px] min-h-screen flex flex-col justify-between">
+      <div class="pt-14 pb-12 font-poppins text-[26px] text-primary-dark text-center border-b">
+        <h1><b>CALORIE</b> MATE</h1>
+      </div>
+      <div class="flex-1 pl-5 pt-10">
+        <ul class="flex flex-col gap-6">
+          <li
+            v-for="item in filteredMenuList"
+            :key="item.routeName"
+            class="font-medium leading-[30px] w-full text-gray-light
+              hover:font-medium hover:text-primary-dark relative"
           >
-            <div class="w-[30px] h-[30px] flex justify-center items-center">
-              <component :is="item.icon" class="menu-icon" />
-            </div>
-            <span class="ml-2">{{ item.label }}</span>
-          </router-link>
-        </li>
-      </ul>
-    </div>
-    <div v-if="user" class="px-5 py-5 mt-auto flex flex-col w-full">
-      <el-button :loading="isLoading" @click="logout">Logout</el-button>
+            <router-link
+              class="w-full truncate flex items-center"
+              :to="{ name: item.routeName }"
+              active-class="sidebar__link--active"
+              exact-active-class="sidebar__link--active"
+            >
+              <div class="w-[30px] h-[30px] flex justify-center items-center">
+                <component :is="item.icon" class="menu-icon" />
+              </div>
+              <span class="ml-2">{{ item.label }}</span>
+            </router-link>
+          </li>
+        </ul>
+      </div>
+      <div v-if="user" class="px-5 py-5 flex flex-col w-full">
+        <el-button :loading="isLoading" @click="logout">Logout</el-button>
+      </div>
     </div>
   </aside>
 </template>
