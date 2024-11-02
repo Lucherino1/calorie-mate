@@ -4,19 +4,12 @@ class ProfileService {
   }
 
   recalculateTargetNutrition = (userProfile: IUser) => {
-    const bmr = nutritionService.calcBMR(
-      userProfile.bodyDetails.currentWeight,
-      userProfile.bodyDetails.height,
-      userProfile.bodyDetails.age,
-      userProfile.bodyDetails.sex
-    )
+    const userBody = userProfile.bodyDetails
 
-    const tdee = nutritionService.calcTDEE(bmr, userProfile.bodyDetails.activityLevel)
-    const goalCalories = nutritionService.calcGoalCalories(
-      userProfile.bodyDetails.currentWeight,
-      userProfile.bodyDetails.goalWeight,
-      tdee
-    )
+    const bmr = nutritionService.calcBMR(userBody.currentWeight, userBody.height, userBody.age, userBody.sex)
+
+    const tdee = nutritionService.calcTDEE(bmr, userBody.activityLevel)
+    const goalCalories = nutritionService.calcGoalCalories(userBody.currentWeight, userBody.goalWeight, tdee)
 
     const targetNutritionDetails = nutritionService.calcTargetNutritionDetails(goalCalories)
     const targetNutritionDetailsByMeal = nutritionService.calcTargetNutritionDetailsByMeal(targetNutritionDetails)
