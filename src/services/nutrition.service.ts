@@ -162,6 +162,14 @@ class NutritionService {
 
       return percentages
     }
+
+  calcNutritionPerGrams = (nutritionDetails: INutritionDetails, grams: number) => {
+    const factor = grams / 100
+    return Object.keys(nutritionDetails).reduce((acc, key) => {
+      acc[key] = Math.round(nutritionDetails[key] * factor)
+      return acc
+    }, {} as INutritionDetails)
+  }
 }
 
 export const nutritionService = new NutritionService()
