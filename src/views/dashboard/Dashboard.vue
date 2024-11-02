@@ -4,6 +4,7 @@
       <p class="font-bold text-gray-light text-[34px] leading-10">
         Hello, <span class="text-primary-dark">{{ authStore.user.firstName }}!</span>
       </p>
+
       <div class="w-full flex justify-between">
         <el-date-picker
           v-model="date"
@@ -14,24 +15,22 @@
         />
       </div>
     </div>
+
     <div class="flex gap-5 mt-10 flex-wrap">
       <el-card class="w-full h-auto flex-1 min-w-[310px]">
         <p class="card-header">Total Calories:</p>
         <div class="flex justify-center items-center">
-          <el-progress
-            type="dashboard"
-            class="py-8"
+          <ProgressCalories
+            :type="'dashboard'"
             :percentage="nutrientPercentage.calories"
             :stroke-width="12"
-            :width="220"
+            :progress-width="220"
           >
-            <template #default>
-              <p class="text-gray-light leading-7">
-                <b class="text-primary-dark">{{ calculatedCalsRemaining }}</b>
-                <br> cal left
-              </p>
-            </template>
-          </el-progress>
+            <p class="text-gray-light leading-7">
+              <b class="text-primary-dark">{{ calculatedCalsRemaining }}</b>
+              <br> kcal left
+            </p>
+          </ProgressCalories>
         </div>
       </el-card>
       <div class="flex flex-1 flex-col w-full justify-between">
@@ -45,6 +44,7 @@
           :progress-color-type="nutrient.progressColorType"
         />
       </div>
+
       <div class="flex-1 gap-5 flex flex-col">
         <el-card class="flex justify-center text-center items-center min-h-[155px] weight-form-wrapper">
           <el-form
@@ -81,6 +81,7 @@
             </transition>
           </el-form>
         </el-card>
+
         <el-card class="w-full h-auto flex-1">
           <div class="text-[34px] leading-10">
             <p class="card-header">Hydration:</p>
@@ -88,6 +89,7 @@
         </el-card>
       </div>
     </div>
+
     <div class="grid grid-cols-4 gap-5 mt-10">
       <DashboardMealCard
         v-for="meal in mealData"
@@ -98,6 +100,7 @@
         :itemsCount="meal.countedItems"
         :icon="meal.icon"
         :meal-type="meal.mealType"
+        :selected-date="date.toString()"
       />
     </div>
   </div>
