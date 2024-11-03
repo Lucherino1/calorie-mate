@@ -13,10 +13,12 @@
         </div>
       </template>
     </el-progress>
+
     <p class="font-semibold text-lg">
       {{ caloriesConsumed }}
       <span class="font-thin"> kcal</span>
     </p>
+
     <p class="text-sm text-gray-500">
       {{ itemsCount }}
       <span>{{ countedItemsText }}</span>
@@ -37,7 +39,6 @@ const props = defineProps<{
   itemsCount: number
   icon: string
   mealType: string
-  selectedDate: string
 }>()
 
 const countedItemsText = computed(() => {
@@ -46,6 +47,6 @@ const countedItemsText = computed(() => {
 
 const redirectToUpdateMeal = () => {
   router.push(
-    { name: routeNames.updateMeal, params: { mealType: props.mealType }, query: { date: props.selectedDate } })
+    { name: routeNames.updateMeal, params: { mealType: props.mealType } })
 }
 </script>
