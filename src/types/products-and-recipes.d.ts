@@ -10,6 +10,7 @@ interface IProduct {
     carbs: number
     proteins: number
   }
+  grams?: number
   type: TProductType
   isVegan: boolean
 }
@@ -21,6 +22,7 @@ interface IRecipe {
   description: string
   image: string
   portionWeight: number
+  portions?: number
   type: TProductType
   isVegan: boolean
   ingredients: IProduct[]
