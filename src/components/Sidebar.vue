@@ -38,7 +38,6 @@ import IconHome from '~icons/icon/home'
 import IconProfile from '~icons/icon/profile'
 import IconSignIn from '~icons/icon/sign-in'
 import IconRecipesAndProducts from '~icons/icon/recipes-and-products'
-import IconAdjustMeal from '~icons/icon/adjust-meal'
 import IconHealthAndNutrition from '~icons/icon/health-and-nutrition'
 import IconApprove from '~icons/icon/approve'
 import IconAboutUs from '~icons/icon/about-us'
@@ -75,12 +74,6 @@ const menuConfig: ISidebarMenuItem[] = [
     routeName: 'signin',
     icon: IconSignIn,
     hiddenWhenLoggedIn: true
-  },
-  {
-    label: 'Adjust Meal',
-    routeName: 'updateMeal',
-    icon: IconAdjustMeal,
-    requiresAuth: true
   },
   {
     label: 'Receipts and products',
