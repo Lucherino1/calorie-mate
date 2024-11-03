@@ -18,6 +18,17 @@ class ProfileService {
     userProfile.targetNutritionDetailsByMeal = targetNutritionDetailsByMeal
     return userProfile
   }
+
+  updateUserTargetNutrition = async (userId: string, targetNutritionDetails: INutritionDetails) => {
+    return useSupabase.from('profiles').update({ targetNutritionDetails }).eq('id', userId)
+  }
+
+  updateUserTargetNutritionByMeal = async (
+    userId: string,
+    targetNutritionDetailsByMeal: ITargetNutritionDetailsByMeal
+  ) => {
+    return useSupabase.from('profiles').update({ targetNutritionDetailsByMeal }).eq('id', userId)
+  }
 }
 
 export const profileService = new ProfileService()
