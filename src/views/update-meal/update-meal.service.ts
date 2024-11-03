@@ -86,6 +86,42 @@ class UpdateMealService {
       throw new Error('No data found for the specified date or meal type')
     }
   }
+
+  calculateTotalNutrients (products: IProduct[], recipes: IRecipe[]) {
+    const totalNutrients = {
+      calories: 0,
+      proteins: 0,
+      fats: 0,
+      carbs: 0
+    }
+
+    products.forEach(product => {
+      const grams = product.grams || 100
+      const scale = grams / 100
+
+      Object.keys(totalNutrients).forEach(key => {
+        totalNutrients[key] += Math.round((product.nutritionDetails[key] || 0) * scale)
+      })
+    })
+
+    recipes.forEach(recipe => {
+      const portionCount = recipe.portions || 1
+      recipe.ingredients.forEach(ingredient => {
+        const grams = ingredient.grams || 100
+        const scale = grams / 100
+
+        Object.keys(totalNutrients).forEach(key => {
+          totalNutrients[key] += Math.round(((ingredient.nutritionDetails[key] || 0) * scale) * portionCount)
+        })
+      })
+    })
+
+    return totalNutrients
+  }
+
+  calculateCaloriesPercentage (targetCalories: number, totalCalories: number) {
+    return targetCalories ? Math.round(totalCalories / targetCalories * 100) : 0
+  }
 }
 
 export const updateMealService = new UpdateMealService()
