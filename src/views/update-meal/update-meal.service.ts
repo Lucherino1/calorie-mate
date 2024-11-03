@@ -16,7 +16,7 @@ class UpdateMealService {
     userId: string,
     date: string,
     mealType: TMealType,
-    newItem: IUpdateProduct,
+    newItem: IProduct | IRecipe,
     mealComponent: TMealComponent
   ): Promise<IMeals[]> => {
     const mealData = await this.getUserMeals(userId, date, mealType)
