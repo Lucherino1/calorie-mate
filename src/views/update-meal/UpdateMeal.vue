@@ -161,7 +161,6 @@ const getAllRecipes = async () => {
 watch(activeTab, (newTab) => {
   if (newTab === 'recipes' && !allRecipes.value.length) {
     getAllRecipes()
-    console.log(userMeals.value)
   }
 })
 
