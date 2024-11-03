@@ -141,31 +141,32 @@ class NutritionService {
       dinner: { calories: 0, itemsCount: 0 },
       snacks: { calories: 0, itemsCount: 0 }
     }
+
     if (!dashboard) return totalMealsData
 
-    dashboard.meals.forEach((meal) => {
+    dashboard.meals.forEach(meal => {
       const products = meal.products || []
       const recipes = meal.recipes || []
 
-      const productCals = products.reduce((sum, product) => {
+      const productCalories = products.reduce((sum, product) => {
         const grams = product.grams || 100
-        const updatedProduct = this.calcIngredientNutrition(product, grams / 100).nutritionDetails
-        return sum + updatedProduct.calories
+        const calories = this.calcIngredientNutrition(product, grams / 100).nutritionDetails.calories
+        return sum + calories
       }, 0)
 
-      const recipeCals = recipes.reduce((sum, recipe) => {
+      const recipeCalories = recipes.reduce((sum, recipe) => {
         const portionCount = recipe.portions || 1
-        const ingredients = recipe.ingredients || []
-        const ingredientsCals = ingredients.reduce((acc, item) => {
-          const updatedIngredient = this.calcIngredientNutrition(item, portionCount).nutritionDetails
-          return acc + updatedIngredient.calories
-        }, 0)
-        return sum + ingredientsCals
+        const recipeCalories = recipe.ingredients?.reduce((ingredientSum, item) => {
+          const calories = this.calcIngredientNutrition(item, portionCount).nutritionDetails.calories
+          return ingredientSum + calories
+        }, 0) || 0
+        return sum + recipeCalories
       }, 0)
+      const totalItemsCount = products.length + recipes.reduce((count, recipe) => count + (recipe.portions || 1), 0)
 
       if (totalMealsData[meal.type]) {
-        totalMealsData[meal.type].calories += productCals + recipeCals
-        totalMealsData[meal.type].itemsCount += products.length + recipes.length
+        totalMealsData[meal.type].calories += productCalories + recipeCalories
+        totalMealsData[meal.type].itemsCount += totalItemsCount
       }
     })
 
