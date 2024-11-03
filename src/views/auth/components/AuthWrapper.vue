@@ -12,6 +12,7 @@
             </div>
             Back
           </router-link>
+
           <div>
             <h2 class="text-4xl leading-[56px] font-bold text-primary-dark">{{ titleText }}</h2>
             <slot />
@@ -29,6 +30,7 @@
           </p>
         </div>
       </div>
+
       <div
         class="flex-1 flex justify-center items-center px-[5px] bg-[url('/public/auth-bg.jpg')]
         bg-cover bg-center h-screen rounded-bl-[120px] font-poppins"
@@ -44,6 +46,7 @@
           <div class="flex justify-center items-center text-center mb-[100px]">
             <h1 class="text-5xl text-white"><b>CALORIE</b> MATE</h1>
           </div>
+
           <router-link
             :to="{ name: routeNames.aboutUs }"
             class="inline-block"
