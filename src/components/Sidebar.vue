@@ -76,7 +76,7 @@ const menuConfig: ISidebarMenuItem[] = [
     hiddenWhenLoggedIn: true
   },
   {
-    label: 'Receipts and products',
+    label: 'Recipes and products',
     routeName: 'recipesAndProducts',
     icon: IconRecipesAndProducts,
     requiresAuth: true
