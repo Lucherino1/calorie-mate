@@ -4,13 +4,14 @@
       <div class="flex min-w-[320px] items-center justify-between">
         <div class="flex justify-center items-center">
           <div>
-            <p class="text-wrap truncate font-bold text-base text-primary-dark">{{ product.name }}</p>
-            <span class="text-sm text-gray-light">- {{ product.type }}</span>
+            <div class="flex justify-center items-center">
+              <p class="text-wrap truncate font-bold text-base text-primary-dark">{{ product.name }}</p>
+              <span v-if="product.isVegan" class="flex items-center fill-success w-[20px] h-[20px] ml-2">
+                <IconVegan class="w-full h-full" />
+              </span>
+            </div>
+            <span class="text-sm text-gray-light capitalize">{{ product.type }}</span>
           </div>
-
-          <span v-if="product.isVegan" class="flex items-center fill-success w-[20px] h-[20px] ml-1">
-            <IconVegan class="w-full h-full" />
-          </span>
         </div>
         <el-input-number
           v-model="grams"
