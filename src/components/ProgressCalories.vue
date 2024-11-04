@@ -1,7 +1,6 @@
 <template>
   <el-progress
     :type="type"
-    class="py-8"
     :percentage="percentage"
     :stroke-width="strokeWidth"
     :width="progressWidth"
@@ -18,7 +17,7 @@ type TProgressType = 'dashboard' | 'circle'
 defineProps<{
   type: TProgressType
   percentage: number
-  strokeWidth: number
+  strokeWidth?: number
   progressWidth: number
 }>()
 </script>
