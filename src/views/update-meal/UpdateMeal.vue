@@ -3,17 +3,20 @@
     <div class="flex h-full">
       <div class="flex-col flex gap-5 w-full">
         <div class="flex items-center text-center justify-between">
-          <h1 class="font-bold text-primary-dark text-[34px] leading-10">
-            Update your {{ mealType }}
-          </h1>
+          <div class="flex flex-col gap-5">
+            <BackButton :button-text="'Back to dashboard'" :route-name="$routeNames.dashboard" />
+            <h1 class="font-bold text-primary-dark text-[34px] leading-10">
+              Update your {{ mealType }}
+            </h1>
+          </div>
 
           <el-card class="px-2">
-            <div class="flex text-center items-center gap-5">
+            <div class="flex text-center items-center gap-5 ">
               <p class="capitalize font-bold text-primary-dark">TOTAL:</p>
               <el-progress type="circle" :width="80" :percentage="totalCaloriesPercentage">
                 <template #default>
                   <div class="flex items-center justify-center text-center">
-                    <span class="text-sm">
+                    <span class="text-sm text-primary-dark">
                       <b>{{ totalNutrients.calories }}</b><br>
                       <p>kcal</p>
                     </span>
@@ -68,7 +71,7 @@
                 v-if="!productsInMeal.length"
                 class="text-2xl text-gray-light font-bold mt-5"
                 :image-size="200"
-                description="No product added at the moment."
+                description="No products added at the moment."
               />
             </el-tab-pane>
 
@@ -82,7 +85,7 @@
               <el-empty
                 v-if="!recipesInMeal.length"
                 class="text-2xl text-gray-light font-bold mt-5"
-                description="No recipe added at the moment."
+                description="No recipes added at the moment."
                 :image-size="200"
               />
             </el-tab-pane>
@@ -100,12 +103,19 @@ const props = defineProps<{
   mealType?: TMealType
 }>()
 
+const route = useRoute()
+
 const dashboardStore = useDashboardStore()
 
 const authStore = useAuthStore()
 
 const pageLoading = ref(false)
 const activeTab = ref('products')
+
+const date = computed(() => {
+  if (dashboardStore.date) return dashboardStore.date
+  return route.query.selectedDate.toString()
+})
 
 const userMeals = ref<IMeals>(null)
 
@@ -131,7 +141,8 @@ const totalCaloriesPercentage = computed(() => {
 
 const getUserMeals = async () => {
   try {
-    const userMeal = await updateMealService.getUserMeals(authStore.user.id, dashboardStore.date, props.mealType)
+    const userMeal = await updateMealService.getUserMeals(authStore.user.id, date.value, props.mealType)
+
     userMeals.value = userMeal
     productsInMeal.value = userMeal.products.map(userProduct => ({ ...userProduct })).reverse()
     recipesInMeal.value = userMeal.recipes.map(userRecipe => ({ ...userRecipe })).reverse()
@@ -194,6 +205,6 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 .nutrition-list__item {
-  @apply max-w-[80px] flex flex-col gap-2;
+  @apply max-w-[80px] flex flex-col gap-2 text-primary-dark;
 }
 </style>

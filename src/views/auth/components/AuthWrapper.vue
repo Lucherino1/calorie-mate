@@ -3,15 +3,7 @@
     <div class="flex">
       <div class="flex-1 flex flex-col justify-center items-center">
         <div class="flex flex-col justify-between py-10 h-full w-full max-w-[410px] px-2">
-          <router-link
-            :to="{ name: routeNames.aboutUs }"
-            class="flex items-center gap-1 text-gray-light hover:text-gray-dark transition-colors duration-300"
-          >
-            <div class="w-6 h-6 flex justify-center items-center">
-              <IconArrowLeft />
-            </div>
-            Back
-          </router-link>
+          <BackButton :button-text="'Back'" :route-name="$routeNames.aboutUs" />
 
           <div>
             <h2 class="text-4xl leading-[56px] font-bold text-primary-dark">{{ titleText }}</h2>
