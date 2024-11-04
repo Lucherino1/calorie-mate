@@ -43,25 +43,29 @@
           <ul class="flex lg:gap-10 xl:gap-14 mt-5">
             <li class="text-center">
               <p class="text-gray-light">
-                Carbs:<br><b class="text-primary-dark text-xl">{{ calcedNutrition.carbs }}</b> g
+                Carbs:<br><b class="text-primary-dark text-xl">{{ calcedNutrition.carbs }}</b>
+                <span class="text-primary-dark"> g</span>
               </p>
             </li>
 
             <li class="text-center">
               <p class="text-gray-light">
-                Proteins:<br><b class="text-primary-dark text-xl">{{ calcedNutrition.proteins }}</b> g
+                Proteins:<br><b class="text-primary-dark text-xl">{{ calcedNutrition.proteins }}</b>
+                <span class="text-primary-dark"> g</span>
               </p>
             </li>
 
             <li class="text-center">
               <p class="text-gray-light">
-                Fats:<br><b class="text-primary-dark text-xl">{{ calcedNutrition.fats }}</b> g
+                Fats:<br><b class="text-primary-dark text-xl">{{ calcedNutrition.fats }}</b>
+                <span class="text-primary-dark"> g</span>
               </p>
             </li>
 
             <li class="text-center">
               <p class="text-gray-light">
-                Calories:<br><b class="text-primary-dark text-xl">{{ calcedNutrition.calories }}</b> g
+                Calories:<br><b class="text-primary-dark text-xl">{{ calcedNutrition.calories }}</b>
+                <span class="text-primary-dark"> g</span>
               </p>
             </li>
           </ul>
