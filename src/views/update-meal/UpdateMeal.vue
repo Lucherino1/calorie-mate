@@ -7,18 +7,15 @@
             Update your {{ mealType }}
           </h1>
 
-          <el-card>
+          <el-card class="px-2">
             <div class="flex text-center items-center gap-10">
               <p class="capitalize font-bold text-primary-dark">TOTAL:</p>
               <el-progress type="circle" :width="80" :percentage="totalCaloriesPercentage">
                 <template #default>
                   <div class="flex items-center justify-center text-center">
-                    <span v-if="totalCaloriesPercentage > 100" class="text-base">
-                      <b>+{{ Math.abs(totalCaloriesPercentage) }}</b>%
-                      <p>Over</p>
-                    </span>
-                    <span v-else class="text-base">
-                      <b>{{ totalCaloriesPercentage }}</b>%
+                    <span class="text-sm">
+                      <b>{{ totalNutrients.calories }}</b><br>
+                      <p>kcal</p>
                     </span>
                   </div>
                 </template>
@@ -38,11 +35,6 @@
                 <li class="nutrition-list__item">
                   <p class="truncate">Fats:</p>
                   <span class="truncate"><b>{{ totalNutrients.fats }}</b> g</span>
-                </li>
-
-                <li class="nutrition-list__item">
-                  <p class="truncate">Calories:</p>
-                  <span class="truncate"><b>{{ totalNutrients.calories }}</b> kcal</span>
                 </li>
               </ul>
             </div>
@@ -100,9 +92,11 @@ const totalNutrients = computed(() => {
 })
 
 const totalCaloriesPercentage = computed(() => {
-  if (!authStore.user || !authStore.user.targetNutritionDetailsByMeal[props.mealType]) return 0
+  const targetNutrition = authStore.user.targetNutritionDetailsByMeal[props.mealType]
 
-  const targetCalories = authStore.user.targetNutritionDetailsByMeal[props.mealType].calories
+  if (!authStore.user || !targetNutrition) return 0
+
+  const targetCalories = targetNutrition.calories
   return updateMealService.calculateCaloriesPercentage(targetCalories, totalNutrients.value.calories)
 })
 
