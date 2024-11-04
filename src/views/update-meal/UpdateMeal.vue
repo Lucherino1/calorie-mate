@@ -1,87 +1,76 @@
 <template>
-  <div v-loading.fullscreen="pageLoading" class="app-container--dashboard h-full">
-    <div class="flex h-full">
-      <div class="flex-col flex gap-5 w-full">
-        <div class="flex items-center text-center justify-between">
-          <div class="flex flex-col gap-5">
-            <BackButton :button-text="'Back to dashboard'" :route-name="$routeNames.dashboard" />
-            <h1 class="font-bold text-primary-dark text-[34px] leading-10">
-              Update your {{ mealType }}
-            </h1>
-          </div>
+  <ProductsAndRecipesTabsWrapper
+    v-model:active-tab="activeTab"
+    :page-title="`Update your ${mealType}`"
+    :loading="pageLoading"
+  >
+    <template #header>
+      <el-card class="px-2">
+        <div class="flex text-center items-center gap-5 ">
+          <p class="capitalize font-bold text-primary-dark">TOTAL:</p>
+          <ProgressCalories
+            :type="'circle'"
+            :percentage="totalCaloriesPercentage || 0"
+            :progress-width="80"
+          >
+            <template #default>
+              <div class="flex items-center justify-center text-center">
+                <span class="text-sm text-primary-dark">
+                  <b>{{ totalNutrients.calories }}</b><br>
+                  <p>kcal</p>
+                </span>
+              </div>
+            </template>
+          </ProgressCalories>
 
-          <el-card class="px-2">
-            <div class="flex text-center items-center gap-5 ">
-              <p class="capitalize font-bold text-primary-dark">TOTAL:</p>
-              <ProgressCalories
-                :type="'circle'"
-                :percentage="totalCaloriesPercentage || 0"
-                :progress-width="80"
-              >
-                <template #default>
-                  <div class="flex items-center justify-center text-center">
-                    <span class="text-sm text-primary-dark">
-                      <b>{{ totalNutrients.calories }}</b><br>
-                      <p>kcal</p>
-                    </span>
-                  </div>
-                </template>
-              </ProgressCalories>
+          <ul class="flex flex-wrap text-center gap-8 text-gray-dark text-base">
+            <li class="nutrition-list__item">
+              <p class="truncate">Carbs:</p>
+              <span class="truncate">
+                <b>{{ totalNutrients.carbs }}/
+                  {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].carbs }}
+                </b> g
+              </span>
+            </li>
 
-              <ul class="flex flex-wrap text-center gap-8 text-gray-dark text-base">
-                <li class="nutrition-list__item">
-                  <p class="truncate">Carbs:</p>
-                  <span class="truncate">
-                    <b>{{ totalNutrients.carbs }}/
-                      {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].carbs }}
-                    </b> g
-                  </span>
-                </li>
+            <li class="nutrition-list__item">
+              <p class="truncate">Proteins:</p>
+              <span class="truncate"><b>{{ totalNutrients.proteins }}/
+                {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].proteins }}
+              </b> g
+              </span>
+            </li>
 
-                <li class="nutrition-list__item">
-                  <p class="truncate">Proteins:</p>
-                  <span class="truncate"><b>{{ totalNutrients.proteins }}/
-                    {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].proteins }}
-                  </b> g
-                  </span>
-                </li>
-
-                <li class="nutrition-list__item">
-                  <p class="truncate">Fats:</p>
-                  <span class="truncate"><b>{{ totalNutrients.fats }}/
-                    {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].fats }}
-                  </b> g
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </el-card>
+            <li class="nutrition-list__item">
+              <p class="truncate">Fats:</p>
+              <span class="truncate"><b>{{ totalNutrients.fats }}/
+                {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].fats }}
+              </b> g
+              </span>
+            </li>
+          </ul>
         </div>
+      </el-card>
+    </template>
 
-        <div class="mx-0">
-          <el-tabs v-model="activeTab" stretch class="min-h-[500px] flex">
-            <el-tab-pane label="Products" name="products" class=" pb-10 overflow-y-scroll">
-              <UpdateMealProductsTab
-                v-model:products-in-meal="productsInMeal"
-                :meal-type="mealType"
-                :all-products="allProducts"
-                :user-meals="userMeals"
-              />
-            </el-tab-pane>
+    <template #products>
+      <UpdateMealProductsTab
+        v-model:products-in-meal="productsInMeal"
+        :meal-type="mealType"
+        :all-products="allProducts"
+        :user-meals="userMeals"
+      />
+    </template>
 
-            <el-tab-pane class="pb-10 overflow-y-scroll" label="Recipes" name="recipes">
-              <UpdateMealRecipesTab
-                v-model:recipes-in-meal="recipesInMeal"
-                :meal-type="mealType"
-                :all-recipes="allRecipes"
-                :user-meals="userMeals"
-              />
-            </el-tab-pane>
-          </el-tabs>
-        </div>
-      </div>
-    </div>
-  </div>
+    <template #recipes>
+      <UpdateMealRecipesTab
+        v-model:recipes-in-meal="recipesInMeal"
+        :meal-type="mealType"
+        :all-recipes="allRecipes"
+        :user-meals="userMeals"
+      />
+    </template>
+  </ProductsAndRecipesTabsWrapper>
 </template>
 
 <script lang="ts" setup>
