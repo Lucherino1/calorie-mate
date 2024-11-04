@@ -43,6 +43,7 @@ const props = defineProps<{
   icon: string
   mealType: string
   caloriesLimit: number
+  selectedDate: string
 }>()
 
 const countedItemsText = computed(() => {
@@ -51,6 +52,10 @@ const countedItemsText = computed(() => {
 
 const redirectToUpdateMeal = () => {
   router.push(
-    { name: routeNames.updateMeal, params: { mealType: props.mealType } })
+    {
+      name: routeNames.updateMeal,
+      params: { mealType: props.mealType },
+      query: { date: props.selectedDate.toString() }
+    })
 }
 </script>

@@ -109,6 +109,7 @@
         :itemsCount="meal.countedItems"
         :icon="meal.icon"
         :meal-type="meal.mealType"
+        :selected-date="SelectedDate"
       />
     </div>
   </div>
@@ -118,7 +119,11 @@
 import { showNotification } from '@/helpers'
 import { EProgressColorStatus } from '@/views/dashboard/dashboard.enums'
 
+const route = useRoute()
+
 const dashboardStore = useDashboardStore()
+
+const SelectedDate = ref(new Date().toISOString().split('T')[0])
 
 const userDashboard = ref<IDashboard>(null)
 const dashboardPageLoading = ref(false)
@@ -138,7 +143,9 @@ const handleDateChange = (newDate: string) => {
   const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
   const day = String(selectedDate.getDate()).padStart(2, '0')
 
-  dashboardStore.date = `${year}-${month}-${day}`
+  SelectedDate.value = `${year}-${month}-${day}`
+  route.query.date = selectedDate.toString()
+  dashboardStore.date = SelectedDate.value
   getUserDashboard(dashboardStore.date)
 }
 
