@@ -105,6 +105,7 @@
         :label="meal.label"
         :percentage="meal.percentage || 0"
         :caloriesConsumed="meal.caloriesConsumed"
+        :caloriesLimit="meal.caloriesLimit"
         :itemsCount="meal.countedItems"
         :icon="meal.icon"
         :meal-type="meal.mealType"
@@ -229,6 +230,7 @@ const mealData = computed(() => {
       mealType: 'breakfast',
       percentage: percentage.value.breakfast,
       caloriesConsumed: calsAndItemsEatenByMeal.value.breakfast.calories,
+      caloriesLimit: authStore.user.targetNutritionDetailsByMeal.breakfast.calories,
       icon: '🥞',
       countedItems: calsAndItemsEatenByMeal.value.breakfast.itemsCount
     },
@@ -237,6 +239,7 @@ const mealData = computed(() => {
       mealType: 'lunch',
       percentage: percentage.value.lunch,
       caloriesConsumed: calsAndItemsEatenByMeal.value.lunch.calories,
+      caloriesLimit: authStore.user.targetNutritionDetailsByMeal.lunch.calories,
       icon: '🍲',
       countedItems: calsAndItemsEatenByMeal.value.lunch.itemsCount
     },
@@ -245,6 +248,7 @@ const mealData = computed(() => {
       mealType: 'dinner',
       percentage: percentage.value.dinner,
       caloriesConsumed: calsAndItemsEatenByMeal.value.dinner.calories,
+      caloriesLimit: authStore.user.targetNutritionDetailsByMeal.dinner.calories,
       icon: '🥗',
       countedItems: calsAndItemsEatenByMeal.value.dinner.itemsCount
     },
@@ -253,6 +257,7 @@ const mealData = computed(() => {
       mealType: 'snacks',
       percentage: percentage.value.snacks,
       caloriesConsumed: calsAndItemsEatenByMeal.value.snacks.calories,
+      caloriesLimit: authStore.user.targetNutritionDetailsByMeal.snacks.calories,
       icon: '🍎',
       countedItems: calsAndItemsEatenByMeal.value.snacks.itemsCount
     }

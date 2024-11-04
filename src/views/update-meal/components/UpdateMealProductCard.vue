@@ -1,5 +1,5 @@
 <template>
-  <el-card class="px-2">
+  <el-card class="px-2 lg:px-0">
     <div class="flex items-center justify-between min-h-[80px]">
       <div class="flex min-w-[320px] items-center justify-between">
         <div class="flex justify-center items-center">
@@ -22,7 +22,7 @@
         </el-input-number>
       </div>
 
-      <ul class="flex flex-wrap text-center gap-6 text-gray-dark text-base">
+      <ul class="flex text-center gap-5 text-gray-dark text-base">
         <li class="nutrition-list__item">
           <p class="truncate">Carbs:</p>
           <span class="truncate"><b>{{ calculatedNutrition.carbs }}</b> g</span>

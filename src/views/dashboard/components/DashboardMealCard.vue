@@ -14,10 +14,13 @@
       </template>
     </el-progress>
 
-    <p class="font-semibold text-lg">
+    <p class="font-semibold text-lg justify-center flex items-center">
       {{ caloriesConsumed }}
-      <span class="font-thin"> kcal</span>
+      <span class="font-thin text-gray-dark">/</span>
+      <span class="text-base leading-7">{{ caloriesLimit }}</span>
     </p>
+
+    <span class="font-thin"> kcal</span>
 
     <p class="text-sm text-gray-500">
       {{ itemsCount }}
@@ -39,6 +42,7 @@ const props = defineProps<{
   itemsCount: number
   icon: string
   mealType: string
+  caloriesLimit: number
 }>()
 
 const countedItemsText = computed(() => {

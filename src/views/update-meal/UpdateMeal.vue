@@ -8,7 +8,7 @@
           </h1>
 
           <el-card class="px-2">
-            <div class="flex text-center items-center gap-10">
+            <div class="flex text-center items-center gap-5">
               <p class="capitalize font-bold text-primary-dark">TOTAL:</p>
               <el-progress type="circle" :width="80" :percentage="totalCaloriesPercentage">
                 <template #default>
@@ -26,21 +26,27 @@
                   <p class="truncate">Carbs:</p>
                   <span class="truncate">
                     <b>{{ totalNutrients.carbs }}/
-                      {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].carbs }}</b> g
+                      <span class="text-sm">
+                        {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].carbs }}
+                      </span></b> g
                   </span>
                 </li>
 
                 <li class="nutrition-list__item">
                   <p class="truncate">Proteins:</p>
                   <span class="truncate"><b>{{ totalNutrients.proteins }}/
-                    {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].proteins }}</b> g
+                    <span class="text-sm">
+                      {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].proteins }}
+                    </span></b> g
                   </span>
                 </li>
 
                 <li class="nutrition-list__item">
                   <p class="truncate">Fats:</p>
                   <span class="truncate"><b>{{ totalNutrients.fats }}/
-                    {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].fats }}</b> g
+                    <span class="text-sm">
+                      {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].fats }}
+                    </span></b> g
                   </span>
                 </li>
               </ul>
