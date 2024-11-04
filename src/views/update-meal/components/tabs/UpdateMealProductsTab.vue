@@ -25,13 +25,19 @@
       </el-select>
     </div>
 
-    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-scroll">
+    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-scroll-auto">
       <UpdateMealProductCard
         v-for="product in productsInMeal"
         :key="product.id"
         :product="product"
         @update-product="handleProductUpdate"
         @remove-product="handleProductRemove"
+      />
+      <el-empty
+        v-if="!productsInMeal.length"
+        class="text-2xl text-gray-light font-bold mt-10"
+        :image-size="200"
+        description="No products added at the moment."
       />
     </div>
 
