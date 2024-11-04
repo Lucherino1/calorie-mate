@@ -26,16 +26,17 @@
 
             <div class="flex flex-col gap-2">
               <div class="flex items-center gap-2">
-                <span class="text-lg text-gray-500">Portions:</span>
+                <span class="text-base text-gray-500">Amount:</span>
                 <el-input-number
+                  ref="recipeInput"
                   v-model="portions"
                   :min="1"
-                  :size="$elComponentSize.large"
+                  :size="$elComponentSize.default"
                   @input="handleInputChange"
                 />
               </div>
-              <p class="text-gray-light text-right">
-                Portion weight: <b class="text-gray-dark text-xl">{{ recipe.portionWeight }}</b>g
+              <p class="text-gray-light text-right text-sm">
+                Portion weight: <b class="text-gray-dark text-base">{{ recipe.portionWeight }}</b>g
               </p>
             </div>
           </div>
@@ -120,6 +121,8 @@ const emit = defineEmits<{
   (e: 'remove-recipe', recipeId: string)
 }>()
 
+const recipeInput = ref<HTMLInputElement | null>(null)
+
 const originalRecipe = ref({ ...props.recipe })
 const localRecipe = ref({ ...props.recipe })
 const portions = ref(localRecipe.value.portions)
@@ -146,4 +149,11 @@ const popoverRef = ref()
 const onClickOutside = () => {
   unref(popoverRef).popperRef?.delayHide?.()
 }
+
+onMounted(async () => {
+  await nextTick()
+  if (recipeInput.value) {
+    recipeInput.value.focus()
+  }
+})
 </script>
