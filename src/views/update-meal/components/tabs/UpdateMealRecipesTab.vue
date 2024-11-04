@@ -55,7 +55,7 @@ import { showNotification } from '@/helpers'
 const props = defineProps<{
   mealType: TMealType
   allRecipes: IRecipe[]
-  userMeals?: IMeals // добавлено поле для передачи текущих данных о приемах пищи
+  userMeals?: IMeals
 }>()
 
 const recipesInMeal = defineModel<IRecipe[]>('recipesInMeal')
