@@ -54,6 +54,7 @@ import { showNotification } from '@/helpers'
 const props = defineProps<{
   mealType: TMealType
   allProducts: IProduct[]
+  userMeals: IMeals
 }>()
 
 const productsInMeal = defineModel<IProduct[]>('productsInMeal')
@@ -92,7 +93,14 @@ async function addProductToMeal (product: IProduct) {
 
     productsInMeal.value.unshift(newProduct)
     try {
-      await updateMealService.updateMeal(authStore.user.id, dashboardStore.date, props.mealType, { ...newProduct }, 'products')
+      await updateMealService.updateMeal(
+        authStore.user.id,
+        dashboardStore.date,
+        props.mealType,
+        { ...newProduct },
+        'products',
+        props.userMeals
+      )
     } catch (error) {
       showNotification()
     }
@@ -104,7 +112,14 @@ async function handleProductUpdate (updatedProduct: IProduct) {
   if (index !== -1) productsInMeal.value[index] = updatedProduct
 
   try {
-    await updateMealService.updateMeal(authStore.user.id, dashboardStore.date, props.mealType, updatedProduct, 'products')
+    await updateMealService.updateMeal(
+      authStore.user.id,
+      dashboardStore.date,
+      props.mealType,
+      updatedProduct,
+      'products',
+      props.userMeals
+    )
   } catch (error) {
     showNotification()
   }

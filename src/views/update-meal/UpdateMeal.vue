@@ -61,6 +61,7 @@
                 v-model:products-in-meal="productsInMeal"
                 :meal-type="mealType"
                 :all-products="allProducts"
+                :user-meals="userMeals"
               />
 
               <el-empty
@@ -76,6 +77,7 @@
                 v-model:recipes-in-meal="recipesInMeal"
                 :meal-type="mealType"
                 :all-recipes="allRecipes"
+                :user-meals="userMeals"
               />
               <el-empty
                 v-if="!recipesInMeal.length"

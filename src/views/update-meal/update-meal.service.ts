@@ -17,17 +17,17 @@ class UpdateMealService {
     date: string,
     mealType: TMealType,
     newItem: IProduct | IRecipe,
-    mealComponent: TMealComponent
+    mealComponent: TMealComponent,
+    currentMealData?: IMeals
   ): Promise<IMeals[]> => {
-    const mealData = await this.getUserMeals(userId, date, mealType)
+    const mealData = currentMealData || await this.getUserMeals(userId, date, mealType)
 
     if (mealData) {
-      const updatedItems = mealData[mealComponent].map((item) =>
+      const updatedItems = mealData[mealComponent].map(item =>
         item.id === newItem.id ? newItem : item
       )
 
-      const itemExists = mealData[mealComponent].some((item) => item.id === newItem.id)
-      if (!itemExists) {
+      if (!mealData[mealComponent].some(item => item.id === newItem.id)) {
         updatedItems.push(newItem)
       }
 
@@ -36,8 +36,7 @@ class UpdateMealService {
         [mealComponent]: updatedItems
       }
 
-      const mealsData = await this.getUserMeals(userId, date)
-      const updatedMeals = mealsData.map((meal: IMeals) => (meal.type === mealType ? updatedMeal : meal))
+      const updatedMeals = [updatedMeal]
 
       const { data: updateData, error } = await useSupabase
         .from('dashboard')

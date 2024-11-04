@@ -52,12 +52,12 @@ import { showNotification } from '@/helpers'
 const props = defineProps<{
   mealType: TMealType
   allRecipes: IRecipe[]
+  userMeals?: IMeals // добавлено поле для передачи текущих данных о приемах пищи
 }>()
 
 const recipesInMeal = defineModel<IRecipe[]>('recipesInMeal')
 
 const dashboardStore = useDashboardStore()
-
 const authStore = useAuthStore()
 
 const recipesPerPage = ref(5)
@@ -90,7 +90,14 @@ async function addRecipeToMeal (recipe: IRecipe) {
 
     recipesInMeal.value.unshift(newRecipe)
     try {
-      await updateMealService.updateMeal(authStore.user.id, dashboardStore.date, props.mealType, newRecipe, 'recipes')
+      await updateMealService.updateMeal(
+        authStore.user.id,
+        dashboardStore.date,
+        props.mealType,
+        newRecipe,
+        'recipes',
+        props.userMeals
+      )
     } catch (error) {
       showNotification()
     }
@@ -102,7 +109,14 @@ async function handleRecipeUpdate (updatedRecipe: IRecipe) {
   if (index !== -1) recipesInMeal.value[index] = updatedRecipe
 
   try {
-    await updateMealService.updateMeal(authStore.user.id, dashboardStore.date, props.mealType, updatedRecipe, 'recipes')
+    await updateMealService.updateMeal(
+      authStore.user.id,
+      dashboardStore.date,
+      props.mealType,
+      updatedRecipe,
+      'recipes',
+      props.userMeals
+    )
   } catch (error) {
     showNotification()
   }
