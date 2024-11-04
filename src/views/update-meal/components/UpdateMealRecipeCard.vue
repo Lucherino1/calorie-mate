@@ -23,14 +23,19 @@
             <p class="text-gray-500 mt-1">{{ recipe.description }}</p>
           </div>
 
-          <div class="flex items-center gap-2">
-            <span class="text-lg text-gray-500">Portions:</span>
-            <el-input-number
-              v-model="portions"
-              :min="1"
-              :size="$elComponentSize.large"
-              @input="handleInputChange"
-            />
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-lg text-gray-500">Portions:</span>
+              <el-input-number
+                v-model="portions"
+                :min="1"
+                :size="$elComponentSize.large"
+                @input="handleInputChange"
+              />
+            </div>
+            <p class="text-gray-light text-right">
+              Portion weight: <b class="text-gray-dark text-xl">{{ recipe.portionWeight }}</b>g
+            </p>
           </div>
         </div>
 
@@ -56,12 +61,6 @@
           <li class="text-center">
             <p class="text-gray-light">
               Calories:<br><b class="text-gray-dark text-xl">{{ calcedNutrition.calories }}</b> g
-            </p>
-          </li>
-
-          <li class="text-center">
-            <p class="text-gray-light">
-              Portion weight:<br><b class="text-gray-dark text-xl">{{ recipe.portionWeight }}</b> g
             </p>
           </li>
         </ul>
