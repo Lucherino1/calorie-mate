@@ -21,20 +21,27 @@
                 </template>
               </el-progress>
 
-              <ul class="flex flex-wrap text-center gap-6 text-gray-dark text-base">
+              <ul class="flex flex-wrap text-center gap-8 text-gray-dark text-base">
                 <li class="nutrition-list__item">
                   <p class="truncate">Carbs:</p>
-                  <span class="truncate"><b>{{ totalNutrients.carbs }}</b> g</span>
+                  <span class="truncate">
+                    <b>{{ totalNutrients.carbs }}/
+                      {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].carbs }}</b> g
+                  </span>
                 </li>
 
                 <li class="nutrition-list__item">
                   <p class="truncate">Proteins:</p>
-                  <span class="truncate"><b>{{ totalNutrients.proteins }}</b> g</span>
+                  <span class="truncate"><b>{{ totalNutrients.proteins }}/
+                    {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].proteins }}</b> g
+                  </span>
                 </li>
 
                 <li class="nutrition-list__item">
                   <p class="truncate">Fats:</p>
-                  <span class="truncate"><b>{{ totalNutrients.fats }}</b> g</span>
+                  <span class="truncate"><b>{{ totalNutrients.fats }}/
+                    {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].fats }}</b> g
+                  </span>
                 </li>
               </ul>
             </div>
@@ -49,6 +56,13 @@
                 :meal-type="mealType"
                 :all-products="allProducts"
               />
+
+              <el-empty
+                v-if="!productsInMeal.length"
+                class="text-2xl text-gray-light font-bold mt-5"
+                :image-size="200"
+                description="No product added at the moment."
+              />
             </el-tab-pane>
 
             <el-tab-pane class="px-10 pb-10 overflow-y-scroll" label="Recipes" name="recipes">
@@ -56,6 +70,12 @@
                 v-model:recipes-in-meal="recipesInMeal"
                 :meal-type="mealType"
                 :all-recipes="allRecipes"
+              />
+              <el-empty
+                v-if="!recipesInMeal.length"
+                class="text-2xl text-gray-light font-bold mt-5"
+                description="No recipe added at the moment."
+                :image-size="200"
               />
             </el-tab-pane>
           </el-tabs>
@@ -166,6 +186,6 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 .nutrition-list__item {
-  @apply max-w-[80px] flex flex-col gap-5;
+  @apply max-w-[80px] flex flex-col gap-2;
 }
 </style>
