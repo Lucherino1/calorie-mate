@@ -16,10 +16,7 @@
           :value="recipe.name"
           @click="addRecipeToMeal(recipe)"
         >
-          <div class="flex justify-between w-full">
-            <p class="font-semibold">{{ recipe.name }}</p>
-            <p>portion weight: <b>{{ recipe.portionWeight }}</b> g</p>
-          </div>
+          <p class="font-semibold">{{ recipe.name }}</p>
         </el-option>
         <template #empty>No recipes match</template>
       </el-select>
@@ -32,6 +29,12 @@
         :recipe="recipe"
         @update-recipe="handleRecipeUpdate"
         @remove-recipe="handleRecipeRemove"
+      />
+      <el-empty
+        v-if="!recipesInMeal.length"
+        class="text-2xl text-gray-light font-bold mt-10"
+        description="No recipes added at the moment."
+        :image-size="200"
       />
     </div>
 
