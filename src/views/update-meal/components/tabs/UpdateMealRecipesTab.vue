@@ -1,5 +1,5 @@
 <template>
-  <div class="max-h-[600px] rounded-lg">
+  <div class="rounded-lg">
     <div class="mt-5">
       <el-select
         v-model="searchQuery"
@@ -25,7 +25,7 @@
       </el-select>
     </div>
 
-    <div class="mt-8 flex flex-col gap-5">
+    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-scroll">
       <UpdateMealRecipeCard
         v-for="recipe in recipesInMeal"
         :key="recipe.id"
@@ -90,14 +90,7 @@ async function addRecipeToMeal (recipe: IRecipe) {
 
     recipesInMeal.value.unshift(newRecipe)
     try {
-      await updateMealService.updateMeal(
-        authStore.user.id,
-        dashboardStore.date,
-        props.mealType,
-        newRecipe,
-        'recipes',
-        props.userMeals
-      )
+      await updateMealService.updateMeal(authStore.user.id, dashboardStore.date, props.mealType, newRecipe, 'recipes')
     } catch (error) {
       showNotification()
     }

@@ -1,5 +1,5 @@
 <template>
-  <div class="max-h-[600px] rounded-lg">
+  <div class="rounded-lg">
     <div class="mt-5">
       <el-select
         v-model="searchQuery"
@@ -25,7 +25,7 @@
       </el-select>
     </div>
 
-    <div class="mt-8 flex flex-col gap-5">
+    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-scroll">
       <UpdateMealProductCard
         v-for="product in productsInMeal"
         :key="product.id"
@@ -93,14 +93,7 @@ async function addProductToMeal (product: IProduct) {
 
     productsInMeal.value.unshift(newProduct)
     try {
-      await updateMealService.updateMeal(
-        authStore.user.id,
-        dashboardStore.date,
-        props.mealType,
-        { ...newProduct },
-        'products',
-        props.userMeals
-      )
+      await updateMealService.updateMeal(authStore.user.id, dashboardStore.date, props.mealType, { ...newProduct }, 'products')
     } catch (error) {
       showNotification()
     }
