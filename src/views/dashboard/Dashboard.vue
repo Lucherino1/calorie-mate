@@ -20,13 +20,12 @@
       <el-card class="w-full h-auto flex-1 min-w-[310px]">
         <p class="card-header">Total Calories:</p>
         <div class="flex justify-center items-center">
-          <el-progress
-            :type="'dashboard'"
+          <ProgressCalories
             class="py-8"
+            :type="'dashboard'"
             :percentage="nutrientPercentage.calories || 0"
             :stroke-width="12"
             :progress-width="220"
-            :width="220"
           >
             <template #default>
               <p class="text-gray-light leading-9">
@@ -37,7 +36,7 @@
                 {{ calculatedCalsRemaining < 0 ? 'kcal over' : 'kcal left' }}
               </p>
             </template>
-          </el-progress>
+          </ProgressCalories>
         </div>
       </el-card>
       <div class="flex flex-1 flex-col w-full justify-between">
