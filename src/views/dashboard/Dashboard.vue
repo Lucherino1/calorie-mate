@@ -4,9 +4,10 @@
       <p class="font-bold text-gray-light text-[34px] leading-10">
         Hello, <span class="text-primary-dark">{{ authStore.user.firstName }}!</span>
       </p>
+
       <div class="w-full flex justify-between">
         <el-date-picker
-          v-model="date"
+          v-model="dashboardStore.date"
           type="date"
           :clearable="false"
           :size="$elComponentSize.large"
@@ -14,24 +15,28 @@
         />
       </div>
     </div>
+
     <div class="flex gap-5 mt-10 flex-wrap">
       <el-card class="w-full h-auto flex-1 min-w-[310px]">
         <p class="card-header">Total Calories:</p>
         <div class="flex justify-center items-center">
-          <el-progress
-            type="dashboard"
+          <ProgressCalories
             class="py-8"
-            :percentage="nutrientPercentage.calories"
+            :type="'dashboard'"
+            :percentage="nutrientPercentage.calories || 0"
             :stroke-width="12"
-            :width="220"
+            :progress-width="220"
           >
             <template #default>
-              <p class="text-gray-light leading-7">
-                <b class="text-primary-dark">{{ calculatedCalsRemaining }}</b>
-                <br> cal left
+              <p class="text-gray-light leading-9">
+                <b class="text-primary-dark">
+                  {{ calculatedCalsRemaining < 0 ? `+${Math.abs(calculatedCalsRemaining)}` : calculatedCalsRemaining }}
+                </b>
+                <br>
+                {{ calculatedCalsRemaining < 0 ? 'kcal over' : 'kcal left' }}
               </p>
             </template>
-          </el-progress>
+          </ProgressCalories>
         </div>
       </el-card>
       <div class="flex flex-1 flex-col w-full justify-between">
@@ -45,6 +50,7 @@
           :progress-color-type="nutrient.progressColorType"
         />
       </div>
+
       <div class="flex-1 gap-5 flex flex-col">
         <el-card class="flex justify-center text-center items-center min-h-[155px] weight-form-wrapper">
           <el-form
@@ -67,6 +73,7 @@
                 <template #suffix>kg</template>
               </el-input-number>
             </el-form-item>
+
             <transition name="fade">
               <div v-show="isEditWeightMode" class="flex items-center justify-center">
                 <el-form-item class="flex items-center justify-end">
@@ -81,6 +88,7 @@
             </transition>
           </el-form>
         </el-card>
+
         <el-card class="w-full h-auto flex-1">
           <div class="text-[34px] leading-10">
             <p class="card-header">Hydration:</p>
@@ -88,6 +96,7 @@
         </el-card>
       </div>
     </div>
+
     <div class="grid grid-cols-4 gap-5 mt-10">
       <DashboardMealCard
         v-for="meal in mealData"
@@ -95,9 +104,11 @@
         :label="meal.label"
         :percentage="meal.percentage || 0"
         :caloriesConsumed="meal.caloriesConsumed"
+        :caloriesLimit="meal.caloriesLimit"
         :itemsCount="meal.countedItems"
         :icon="meal.icon"
         :meal-type="meal.mealType"
+        :selected-date="SelectedDate"
       />
     </div>
   </div>
@@ -107,7 +118,12 @@
 import { showNotification } from '@/helpers'
 import { EProgressColorStatus } from '@/views/dashboard/dashboard.enums'
 
-const date = ref(new Date().toISOString().split('T')[0])
+const route = useRoute()
+
+const dashboardStore = useDashboardStore()
+
+const SelectedDate = ref(new Date().toISOString().split('T')[0])
+
 const userDashboard = ref<IDashboard>(null)
 const dashboardPageLoading = ref(false)
 
@@ -126,15 +142,17 @@ const handleDateChange = (newDate: string) => {
   const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
   const day = String(selectedDate.getDate()).padStart(2, '0')
 
-  date.value = `${year}-${month}-${day}`
-  getUserDashboard(date.value)
+  SelectedDate.value = `${year}-${month}-${day}`
+  route.query.date = selectedDate.toString()
+  dashboardStore.date = SelectedDate.value
+  getUserDashboard(dashboardStore.date)
 }
 
 const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 
 const formRules = { currentWeight: [useRequiredRule(), useCurrentWeightRule()] }
 
-const bodyDetailsFormModel = reactive({ ...authStore.user.bodyDetails })
+const bodyDetailsFormModel = authStore.user.bodyDetails
 
 const isEditWeightMode = ref(false)
 
@@ -143,19 +161,28 @@ function cancelEditMode () {
   bodyDetailsFormModel.currentWeight = authStore.user.bodyDetails.currentWeight
 }
 
-function submitBodyDetails () {
+async function submitBodyDetails () {
   formRef.value?.validate(async (isValid: boolean) => {
-    if (isValid) {
-      cancelEditMode()
-      try {
-        await profileService.updateUserBodyDetails(authStore.user.id, { ...bodyDetailsFormModel })
+    if (!isValid) return
 
-        authStore.user.bodyDetails = bodyDetailsFormModel
-        profileService.recalculateTargetNutrition(authStore.user)
-        showNotification('Calories have been recalculated successfully', 'Recalculation Complete', 'success')
-      } catch (error) {
-        showNotification()
-      }
+    cancelEditMode()
+    try {
+      await profileService.updateUserBodyDetails(authStore.user.id, { ...bodyDetailsFormModel })
+
+      authStore.user.bodyDetails = bodyDetailsFormModel
+      const {
+        targetNutritionDetails,
+        targetNutritionDetailsByMeal
+      } = profileService.recalculateTargetNutrition(authStore.user)
+
+      await Promise.all([
+        profileService.updateUserTargetNutrition(authStore.user.id, { ...targetNutritionDetails }),
+        profileService.updateUserTargetNutritionByMeal(authStore.user.id, { ...targetNutritionDetailsByMeal })
+      ])
+
+      showNotification('Calories have been recalculated successfully', 'Recalculation Complete', 'success')
+    } catch (error) {
+      showNotification()
     }
   })
 }
@@ -169,6 +196,7 @@ const nutrientPercentage = computed(() => {
 })
 
 const calsEaten = computed(() => nutritionService.calcTotalNutritious(userDashboard.value))
+
 const calsAndItemsEatenByMeal = computed(() => nutritionService.calcNutritiousByMeals(userDashboard.value))
 
 const nutrientData = computed(() => {
@@ -208,6 +236,7 @@ const mealData = computed(() => {
       mealType: 'breakfast',
       percentage: percentage.value.breakfast,
       caloriesConsumed: calsAndItemsEatenByMeal.value.breakfast.calories,
+      caloriesLimit: authStore.user.targetNutritionDetailsByMeal.breakfast.calories,
       icon: '🥞',
       countedItems: calsAndItemsEatenByMeal.value.breakfast.itemsCount
     },
@@ -216,6 +245,7 @@ const mealData = computed(() => {
       mealType: 'lunch',
       percentage: percentage.value.lunch,
       caloriesConsumed: calsAndItemsEatenByMeal.value.lunch.calories,
+      caloriesLimit: authStore.user.targetNutritionDetailsByMeal.lunch.calories,
       icon: '🍲',
       countedItems: calsAndItemsEatenByMeal.value.lunch.itemsCount
     },
@@ -224,6 +254,7 @@ const mealData = computed(() => {
       mealType: 'dinner',
       percentage: percentage.value.dinner,
       caloriesConsumed: calsAndItemsEatenByMeal.value.dinner.calories,
+      caloriesLimit: authStore.user.targetNutritionDetailsByMeal.dinner.calories,
       icon: '🥗',
       countedItems: calsAndItemsEatenByMeal.value.dinner.itemsCount
     },
@@ -232,6 +263,7 @@ const mealData = computed(() => {
       mealType: 'snacks',
       percentage: percentage.value.snacks,
       caloriesConsumed: calsAndItemsEatenByMeal.value.snacks.calories,
+      caloriesLimit: authStore.user.targetNutritionDetailsByMeal.snacks.calories,
       icon: '🍎',
       countedItems: calsAndItemsEatenByMeal.value.snacks.itemsCount
     }
@@ -239,8 +271,8 @@ const mealData = computed(() => {
 })
 
 onBeforeMount(() => {
-  if (date.value) {
-    getUserDashboard(date.value)
+  if (dashboardStore.date) {
+    getUserDashboard(dashboardStore.date)
   }
 })
 </script>

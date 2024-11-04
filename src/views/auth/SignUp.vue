@@ -45,6 +45,7 @@
 <script setup lang="ts">
 import UserFormBodyDetails from '@/components/profile-details-forms/UserFormBodyDetails.vue'
 import UserFormProfile from '@/components/profile-details-forms/UserFormProfile.vue'
+import { showNotification } from '@/helpers'
 import { routeNames } from '@/router/route-names'
 import IconArrowLeft from '~icons/icon/arrow-left'
 
@@ -90,7 +91,7 @@ function createSignUpPayload (
   profileFormData: IProfileFields
 ): ISignUpPayload | null {
   if (Object.values(bodyDetailsFormData).some(value => value == null)) {
-    console.error('Some fields in bodyDetailsFormData are missing')
+    showNotification()
     return null
   }
 
