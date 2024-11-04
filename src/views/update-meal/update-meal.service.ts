@@ -4,12 +4,24 @@ class UpdateMealService {
 
     if (error) throw new Error(error.message)
 
-    if (data && mealType) {
-      const filteredMeals = data[0]?.meals.filter((meal: IMeals) => meal.type === mealType)
-      return filteredMeals.length ? filteredMeals[0] : null
+    if (data && data.length > 0) {
+      if (mealType) {
+        const filteredMeals = data[0]?.meals.filter((meal: IMeals) => meal.type === mealType)
+
+        return filteredMeals.length ? filteredMeals[0] : this.createNewMeal(mealType)
+      }
+      return data[0]?.meals || []
     }
 
-    return data ? data[0]?.meals : []
+    return this.createNewMeal(mealType)
+  }
+
+  createNewMeal = (mealType: TMealType): IMeals => {
+    return {
+      type: mealType,
+      products: [],
+      recipes: []
+    }
   }
 
   updateMeal = async (
