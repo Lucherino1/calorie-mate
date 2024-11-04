@@ -97,7 +97,8 @@ const totalCaloriesPercentage = computed(() => {
   if (!authStore.user || !targetNutrition) return 0
 
   const targetCalories = targetNutrition.calories
-  return updateMealService.calculateCaloriesPercentage(targetCalories, totalNutrients.value.calories)
+  const percentage = updateMealService.calculateCaloriesPercentage(targetCalories, totalNutrients.value.calories)
+  return Math.min(percentage, 100)
 })
 
 const getUserMeals = async () => {
