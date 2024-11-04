@@ -5,7 +5,7 @@
     :loading="pageLoading"
   >
     <template #products>
-      <div class="product-table-container">
+      <div>
         <el-table
           :data="paginatedProducts"
           style="width: 100%"
@@ -175,10 +175,3 @@ onMounted(() => {
   getPaginatedRecipes(currentRecipePage.value)
 })
 </script>
-
-<style scoped>
-.product-table-container,
-.recipe-table-container {
-  margin-bottom: 20px;
-}
-</style>
