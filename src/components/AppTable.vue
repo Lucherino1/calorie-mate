@@ -1,4 +1,4 @@
-<template>
+=<template>
   <el-table :data="tableData" class="w-full">
     <el-table-column
       v-for="header of prop.headers"
@@ -15,7 +15,12 @@
 
       <template #default="{ row }">
         <slot :name="header.value" :row="row">
-          {{ row[header.value] }}
+          <span v-if="header.formatter">
+            {{ header.formatter(row) }}
+          </span>
+          <span v-else>
+            {{ row[header.value] }}
+          </span>
         </slot>
       </template>
     </el-table-column>

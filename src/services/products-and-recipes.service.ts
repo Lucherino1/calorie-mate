@@ -31,26 +31,71 @@ class ProductsAndRecipesService {
     return data
   }
 
-  getPaginatedProducts = async (limit: number, offset: number) => {
-    const { data, count, error } = await useSupabase
+  getPaginatedProducts = async (limit: number, offset: number, typeFilter?: string) => {
+    let query = useSupabase
       .from('products')
       .select('*', { count: 'exact' })
       .range(offset, offset + limit - 1)
+
+    if (typeFilter) {
+      query = query.eq('type', typeFilter)
+    }
+
+    const { data, count, error } = await query
 
     if (error) throw new Error(error.message)
 
     return { data, count }
   }
 
-  getPaginatedRecipes = async (limit: number, offset: number) => {
-    const { data, count, error } = await useSupabase
+  getPaginatedRecipes = async (limit: number, offset: number, typeFilter?: string) => {
+    let query = useSupabase
       .from('recipes')
       .select('*', { count: 'exact' })
       .range(offset, offset + limit - 1)
 
+    if (typeFilter) {
+      query = query.eq('type', typeFilter)
+    }
+
+    const { data, count, error } = await query
+
     if (error) throw new Error(error.message)
 
     return { data, count }
+  }
+
+  async searchProducts (searchQuery: string, typeFilter?: string, limit?: number, offset?: number) {
+    let query = useSupabase
+      .from('products')
+      .select('*', { count: 'exact' })
+      .ilike('name', `%${searchQuery}%`)
+
+    if (typeFilter) {
+      query = query.eq('type', typeFilter)
+    }
+
+    if (limit !== undefined && offset !== undefined) {
+      query = query.range(offset, offset + limit - 1)
+    }
+
+    const { data, count, error } = await query
+
+    if (error) throw new Error(error.message)
+
+    return { data, count }
+  }
+
+  async updateProduct (productId: string, updatedProductData: Partial<IProduct>) {
+    const { data, error } = await useSupabase
+      .from('products')
+      .update(updatedProductData)
+      .eq('id', productId)
+
+    console.log(updatedProductData)
+    if (error) throw new Error(error.message)
+
+    return data
   }
 }
 

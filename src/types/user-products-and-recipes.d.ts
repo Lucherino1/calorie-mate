@@ -1,4 +1,5 @@
-import type { EProductType, ERecipeType } from './products-and-recipes.enums'
+type TProductType = keyof typeof import('@/types/products-and-recipes.enums').EProductType
+type TRecipesType = keyof typeof import('@/types/products-and-recipes.enums').ERecipeType
 
 interface IUserProduct {
   id: string
@@ -11,7 +12,7 @@ interface IUserProduct {
     carbs: number
     proteins: number
   }
-  type: keyof typeof EProductType
+  type: TProductType
   isVegan: boolean
 }
 
@@ -23,7 +24,7 @@ interface IUserRecipe {
   description: string
   image: string
   portionWeight: number
-  type: keyof typeof ERecipeType
+  type: TRecipesType
   isVegan: boolean
   ingredients: IProduct[]
 }

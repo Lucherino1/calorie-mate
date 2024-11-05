@@ -1,3 +1,4 @@
+import orderBy from 'lodash/orderBy'
 import { ElNotification } from 'element-plus'
 
 export const roundToNearestTen = (value: number): number => {
@@ -12,4 +13,8 @@ export function showNotification (message: string = 'Please try again later.', t
     showClose: true,
     offset: 50
   })
+}
+
+export function sortArrayBySortFieldAndOrder<T> (arr: T[], sortField: string, sortOrder: 'asc' | 'desc') {
+  return orderBy(arr, [sortField], [`${sortOrder}`])
 }

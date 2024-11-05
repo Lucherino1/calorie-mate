@@ -208,6 +208,12 @@ class NutritionService {
 
       return percentages
     }
+
+  calcCaloriesByCPF = (product: IProduct) => {
+    const { proteins, fats, carbs } = product.nutritionDetails
+    const calories = (proteins * 4) + (fats * 9) + (carbs * 4)
+    return calories
+  }
 }
 
 export const nutritionService = new NutritionService()

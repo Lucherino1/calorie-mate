@@ -14,7 +14,7 @@
 
         <div class="mx-0">
           <el-tabs v-model="modelValue" stretch class="min-h-[500px] flex">
-            <el-tab-pane label="Products" name="products" class="pb-10 overflow-y-scroll">
+            <el-tab-pane label="Products" name="products" class="pb-10 w-full overflow-y-scroll">
               <slot name="products" />
             </el-tab-pane>
 
