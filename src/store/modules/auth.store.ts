@@ -6,6 +6,7 @@ import { showNotification } from '@/helpers'
 export const useAuthStore = defineStore('authStore', () => {
   const userProfileLoading = ref(false)
   const user = ref<IUser>(null)
+  const isUserAdmin = computed(() => user.value?.role === 'admin')
 
   const signup = async (payload: ISignUpPayload) => {
     try {
@@ -79,6 +80,7 @@ export const useAuthStore = defineStore('authStore', () => {
     signin,
     signout,
     getUserProfile,
-    userProfileLoading
+    userProfileLoading,
+    isUserAdmin
   }
 })

@@ -25,10 +25,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-
 const props = defineProps<{
-  imgSrc: string
+  imgSrc: string | undefined
 }>()
 
 const intersectionTargetRef = ref<HTMLElement | null>(null)

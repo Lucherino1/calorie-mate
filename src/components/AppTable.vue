@@ -6,6 +6,9 @@
       :prop="header.value"
       :sortable="header.sort"
       :label="header.label"
+      :fixed="header.fixed"
+      :width="header.width"
+      :align="header.align"
     >
       <template #header>
         <slot :name="`header_${header.value}`">

@@ -49,11 +49,21 @@ label {
 .app-container {
   @apply mx-auto w-full;
 
-  &--dashboard {
+  &--main {
     @apply p-5 md:p-10 xl:px-5 2xl:p-[50px];
   }
 }
 
-.card-header {
-  @apply font-bold text-lg mb-2 text-primary-dark
+.section-header {
+  @apply font-bold text-lg mb-2 text-primary-dark;
+}
+
+
+.multi-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: var(--mt-lines, 3);
+  -webkit-box-orient: vertical;
+  white-space: initial;
+  overflow: hidden;
+  word-break: break-word;
 }

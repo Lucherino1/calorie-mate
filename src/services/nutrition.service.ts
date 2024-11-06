@@ -181,12 +181,11 @@ class NutritionService {
   calcNutrientPercentage = (dashboard: IDashboard, targetNutrition: INutritionDetails) => {
     const totalNutrition = this.calcTotalNutritious(dashboard)
 
-    return {
-      calories: roundToNearestTen((totalNutrition.calories / targetNutrition.calories) * 100),
-      fats: roundToNearestTen((totalNutrition.fats / targetNutrition.fats) * 100),
-      carbs: roundToNearestTen((totalNutrition.carbs / targetNutrition.carbs) * 100),
-      proteins: roundToNearestTen((totalNutrition.proteins / targetNutrition.proteins) * 100)
-    }
+    return ['calories', 'fats', 'carbs', 'proteins'].reduce((result, nutrient) => {
+      const percentage = (totalNutrition[nutrient] / targetNutrition[nutrient]) * 100
+      result[nutrient] = roundToNearestTen(Math.min(percentage, 100))
+      return result
+    }, {} as Record<keyof INutritionDetails, number>)
   }
 
   calcMealCaloriesPercentage =
@@ -212,7 +211,36 @@ class NutritionService {
   calcCaloriesByCPF = (product: IProduct) => {
     const { proteins, fats, carbs } = product.nutritionDetails
     const calories = (proteins * 4) + (fats * 9) + (carbs * 4)
-    return calories
+    return Math.round(calories)
+  }
+
+  // calculate nutritious from recipes
+
+  calcTotalRecipeCarbs (recipe: IRecipe): number {
+    return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.carbs, 0)
+  }
+
+  calcTotalRecipeProteins (recipe: IRecipe): number {
+    return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.proteins, 0)
+  }
+
+  calcTotalRecipeFats (recipe: IRecipe): number {
+    return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.fats, 0)
+  }
+
+  calcTotalRecipeCalories (recipe: IRecipe): number {
+    return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.calories, 0)
+  }
+
+  calcPortionsDivision = (ingredients: IProduct[], portionCount: number) => {
+    return ingredients.reduce((totals, ingredient) => {
+      const { calories, proteins, carbs, fats } = ingredient.nutritionDetails
+      totals.calories += Math.round((calories || 0) / portionCount)
+      totals.proteins += Math.round((proteins || 0) / portionCount)
+      totals.carbs += Math.round((carbs || 0) / portionCount)
+      totals.fats += Math.round((fats || 0) / portionCount)
+      return totals
+    }, { calories: 0, proteins: 0, carbs: 0, fats: 0 } as INutritionDetails)
   }
 }
 

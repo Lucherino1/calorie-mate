@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.fullscreen="loading" class="app-container--dashboard h-full">
+  <div v-loading.fullscreen="loading" class="app-container--main h-full">
     <div class="flex h-full">
       <div class="flex-col flex gap-5 w-full">
         <div class="flex items-center text-center justify-between">
@@ -9,6 +9,7 @@
               {{ pageTitle }}
             </h1>
           </div>
+
           <slot name="header" />
         </div>
 

@@ -2,7 +2,7 @@ type TProductType = keyof typeof import('@/types/products-and-recipes.enums').EP
 type TRecipesType = keyof typeof import('@/types/products-and-recipes.enums').ERecipeType
 
 interface IProduct {
-  id: string
+  id?: string
   name: string
   nutritionDetails: {
     calories: number
@@ -16,9 +16,9 @@ interface IProduct {
 }
 
 interface IRecipe {
-  id: string
+  id?: string
   name: string
-  userId: string
+  userId?: string
   description: string
   image: string
   portionWeight: number

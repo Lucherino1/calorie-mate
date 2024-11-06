@@ -25,7 +25,7 @@
       </el-select>
     </div>
 
-    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-scroll-auto">
+    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-auto">
       <UpdateMealProductCard
         v-for="product in productsInMeal"
         :key="product.id"
@@ -39,17 +39,6 @@
         :image-size="200"
         description="No products added at the moment."
       />
-    </div>
-
-    <div v-if="productsInMeal.length > productsPerPage" class="mt-5 w-full flex items-center justify-center">
-      <el-button
-        class="min-w-[600px]"
-        type="primary"
-        :size="$elComponentSize.large"
-        @click="loadMoreProducts"
-      >
-        See more
-      </el-button>
     </div>
   </div>
 </template>
@@ -68,12 +57,6 @@ const productsInMeal = defineModel<IProduct[]>('productsInMeal')
 const dashboardStore = useDashboardStore()
 
 const authStore = useAuthStore()
-
-const productsPerPage = ref(10)
-
-function loadMoreProducts () {
-  productsPerPage.value += 10
-}
 
 const searchQuery = ref('')
 const filteredProducts = ref<IProduct[]>([])

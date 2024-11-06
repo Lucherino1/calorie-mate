@@ -83,12 +83,9 @@
     </el-form>
 
     <template #footer>
-      <div class="flex justify-between">
+      <div class="flex justify-end gap-4">
         <el-button @click="$emit('close')">Cancel</el-button>
         <div>
-          <el-button :type="$elComponentType.danger" @click="handleDelete">
-            Delete
-          </el-button>
           <el-button :type="$elComponentType.primary" @click="handleSave">
             Save
           </el-button>
@@ -103,6 +100,7 @@ import { EProductType } from '@/types/products-and-recipes.enums'
 
 const props = defineProps<{
   title: string
+  isCreating: boolean
 }>()
 
 const product = defineModel<IProduct>('product')
@@ -113,18 +111,11 @@ const productTypes = ref<TProductType[]>(Object.values(EProductType))
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'save', product: IProduct): void
-  (e: 'delete', productId: string): void
 }>()
 
 function handleSave () {
   if (product.value) {
     emit('save', product.value)
-  }
-}
-
-function handleDelete () {
-  if (product.value) {
-    emit('delete', product.value.id)
   }
 }
 

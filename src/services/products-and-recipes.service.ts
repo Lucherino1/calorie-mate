@@ -1,39 +1,34 @@
 class ProductsAndRecipesService {
-  getGlobalProducts = async () => {
+  async getGlobalProducts () {
     const { data, error } = await useSupabase.from('products').select('*')
-
     if (error) throw new Error(error.message)
-
     return data
   }
 
-  getGlobalRecipes = async () => {
+  async getGlobalRecipes () {
     const { data, error } = await useSupabase.from('recipes').select('*')
-
     if (error) throw new Error(error.message)
-
     return data
   }
 
-  getUserProduct = async () => {
+  async getUserProduct () {
     const { data, error } = await useSupabase.from('user-products').select('*')
-
     if (error) throw new Error(error.message)
-
     return data
   }
 
-  getUserRecipes = async () => {
+  async getUserRecipes () {
     const { data, error } = await useSupabase.from('user-recipes').select('*')
-
     if (error) throw new Error(error.message)
-
     return data
   }
 
-  getPaginatedProducts = async (limit: number, offset: number, typeFilter?: string) => {
+  async getPaginatedProducts (limit: number, offset: number, typeFilter?: string) {
+    const authStore = useAuthStore()
+    const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
+
     let query = useSupabase
-      .from('products')
+      .from(tableName)
       .select('*', { count: 'exact' })
       .range(offset, offset + limit - 1)
 
@@ -42,15 +37,17 @@ class ProductsAndRecipesService {
     }
 
     const { data, count, error } = await query
-
     if (error) throw new Error(error.message)
 
     return { data, count }
   }
 
-  getPaginatedRecipes = async (limit: number, offset: number, typeFilter?: string) => {
+  async getPaginatedRecipes (limit: number, offset: number, typeFilter?: string) {
+    const authStore = useAuthStore()
+    const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
+
     let query = useSupabase
-      .from('recipes')
+      .from(tableName)
       .select('*', { count: 'exact' })
       .range(offset, offset + limit - 1)
 
@@ -59,15 +56,17 @@ class ProductsAndRecipesService {
     }
 
     const { data, count, error } = await query
-
     if (error) throw new Error(error.message)
 
     return { data, count }
   }
 
-  async searchProducts (searchQuery: string, typeFilter?: string, limit?: number, offset?: number) {
+  async searchRecipes (searchQuery: string, typeFilter?: string, limit?: number, offset?: number) {
+    const authStore = useAuthStore()
+    const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
+
     let query = useSupabase
-      .from('products')
+      .from(tableName)
       .select('*', { count: 'exact' })
       .ilike('name', `%${searchQuery}%`)
 
@@ -80,19 +79,113 @@ class ProductsAndRecipesService {
     }
 
     const { data, count, error } = await query
+    if (error) throw new Error(error.message)
 
+    return { data, count }
+  }
+
+  async searchProducts (searchQuery: string, typeFilter?: string, limit?: number, offset?: number) {
+    const authStore = useAuthStore()
+    const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
+
+    let query = useSupabase
+      .from(tableName)
+      .select('*', { count: 'exact' })
+      .ilike('name', `%${searchQuery}%`)
+
+    if (typeFilter) {
+      query = query.eq('type', typeFilter)
+    }
+
+    if (limit !== undefined && offset !== undefined) {
+      query = query.range(offset, offset + limit - 1)
+    }
+
+    const { data, count, error } = await query
     if (error) throw new Error(error.message)
 
     return { data, count }
   }
 
   async updateProduct (productId: string, updatedProductData: Partial<IProduct>) {
+    const authStore = useAuthStore()
+    const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
+
     const { data, error } = await useSupabase
-      .from('products')
+      .from(tableName)
       .update(updatedProductData)
       .eq('id', productId)
 
-    console.log(updatedProductData)
+    if (error) throw new Error(error.message)
+
+    return data
+  }
+
+  async updateRecipe (recipeId: string, updatedRecipeData: Partial<IRecipe>) {
+    const authStore = useAuthStore()
+    const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
+
+    const { data, error } = await useSupabase
+      .from(tableName)
+      .update(updatedRecipeData)
+      .eq('id', recipeId)
+
+    if (error) throw new Error(error.message)
+
+    return data
+  }
+
+  async deleteProduct (productId: string) {
+    const authStore = useAuthStore()
+    const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
+
+    const { data, error } = await useSupabase
+      .from(tableName)
+      .delete()
+      .eq('id', productId)
+
+    if (error) throw new Error(error.message)
+
+    return data
+  }
+
+  async deleteRecipe (recipeId: string) {
+    const authStore = useAuthStore()
+    const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
+
+    const { data, error } = await useSupabase
+      .from(tableName)
+      .delete()
+      .eq('id', recipeId)
+
+    if (error) throw new Error(error.message)
+
+    return data
+  }
+
+  async createProduct (product: Partial<IProduct>) {
+    const authStore = useAuthStore()
+    const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
+
+    const { data, error } = await useSupabase
+      .from(tableName)
+      .insert(product)
+      .single()
+
+    if (error) throw new Error(error.message)
+
+    return data
+  }
+
+  async createRecipe (recipe: Partial<IRecipe>) {
+    const authStore = useAuthStore()
+    const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
+
+    const { data, error } = await useSupabase
+      .from(tableName)
+      .insert(recipe)
+      .single()
+
     if (error) throw new Error(error.message)
 
     return data

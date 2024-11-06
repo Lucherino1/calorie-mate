@@ -1,5 +1,5 @@
 <template>
-  <el-card class="flex flex-col items-center text-center">
+  <el-card class="flex flex-col items-center text-center text-primary-dark">
     <p class="font-bold text-lg">{{ label }}</p>
     <el-progress class="py-[10px]" type="circle" :percentage="percentage">
       <template #default>

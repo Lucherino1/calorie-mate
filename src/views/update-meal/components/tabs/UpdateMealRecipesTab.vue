@@ -22,7 +22,7 @@
       </el-select>
     </div>
 
-    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-scroll">
+    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-auto">
       <UpdateMealRecipeCard
         v-for="recipe in recipesInMeal"
         :key="recipe.id"
@@ -36,15 +36,6 @@
         description="No recipes added at the moment."
         :image-size="200"
       />
-    </div>
-
-    <div v-if="recipesInMeal.length > recipesPerPage" class="mt-5">
-      <el-button
-        type="primary"
-        @click="loadMoreRecipes"
-      >
-        See more
-      </el-button>
     </div>
   </div>
 </template>
@@ -62,12 +53,6 @@ const recipesInMeal = defineModel<IRecipe[]>('recipesInMeal')
 
 const dashboardStore = useDashboardStore()
 const authStore = useAuthStore()
-
-const recipesPerPage = ref(5)
-
-function loadMoreRecipes () {
-  recipesPerPage.value += 5
-}
 
 const searchQuery = ref('')
 const filteredRecipes = ref<IRecipe[]>([])

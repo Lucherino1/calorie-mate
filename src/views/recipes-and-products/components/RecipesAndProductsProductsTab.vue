@@ -5,7 +5,8 @@
         <ModalUpsertProduct
           v-model:product="editableProduct"
           v-model:visible="isEditDialogVisible"
-          :title="'Edit product'"
+          :title="isCreating ? 'Add New Product' : 'Edit Product'"
+          :isCreating="isCreating"
           @close="isEditDialogVisible = false"
           @save="saveProduct"
           @delete="deleteProduct"
@@ -20,7 +21,6 @@
             clearable
             @input="handleSearchInput"
           />
-
           <el-select
             v-model="selectedType"
             clearable
@@ -36,6 +36,9 @@
               :value="type"
             />
           </el-select>
+          <el-button :type="$elComponentType.primary" @click="openCreateDialog">
+            Add New Product
+          </el-button>
         </div>
 
         <div class="overflow-x-auto w-full">
@@ -64,11 +67,17 @@
 
             <template #actions="{ row }">
               <el-button
-
                 :size="$elComponentSize.small"
                 @click="openEditDialog(row)"
               >
                 Edit
+              </el-button>
+              <el-button
+                :type="$elComponentType.danger"
+                :size="$elComponentSize.small"
+                @click="deleteProduct(row.id)"
+              >
+                Delete
               </el-button>
             </template>
           </AppTable>
@@ -120,24 +129,28 @@ const productHeaders: TTableHeadings<IProduct> = [
     label: 'Calories (kcal)',
     value: 'nutritionDetails.calories',
     sort: true,
+    align: 'center',
     formatter: (row) => Math.round(row.nutritionDetails.calories)
   },
   {
     label: 'Carbs (g)',
     value: 'nutritionDetails.carbs',
     sort: true,
+    align: 'center',
     formatter: (row) => Math.round(row.nutritionDetails.carbs)
   },
   {
     label: 'Proteins (g)',
     value: 'nutritionDetails.proteins',
     sort: true,
+    align: 'center',
     formatter: (row) => Math.round(row.nutritionDetails.proteins)
   },
   {
     label: 'Fats (g)',
     value: 'nutritionDetails.fats',
     sort: true,
+    align: 'center',
     formatter: (row) => Math.round(row.nutritionDetails.fats)
   },
   {
@@ -147,11 +160,13 @@ const productHeaders: TTableHeadings<IProduct> = [
   {
     label: 'Vegan',
     value: 'isVegan',
-    sort: true
+    sort: true,
+    align: 'center'
   },
   {
     label: '',
-    value: 'actions'
+    value: 'actions',
+    align: 'center'
   }
 ]
 
@@ -218,10 +233,32 @@ async function searchProducts (page: number = 1) {
 const debouncedSearchProducts = debounce(searchProducts, 500)
 
 const isEditDialogVisible = ref(false)
-const editableProduct = ref<IProduct>(null)
+const isCreating = ref(false)
+const editableProduct = ref<IProduct | null>(null)
 
 function openEditDialog (row: IProduct) {
   editableProduct.value = cloneDeep(row)
+  isCreating.value = false
+  isEditDialogVisible.value = true
+}
+
+function openCreateDialog () {
+  const authStore = useAuthStore()
+
+  editableProduct.value = {
+    name: '',
+    type: productTypes.value[0],
+    isVegan: false,
+    nutritionDetails: {
+      calories: 0,
+      carbs: 0,
+      proteins: 0,
+      fats: 0
+    },
+    ...(authStore.isUserAdmin ? {} : { userId: authStore.user.id })
+  }
+
+  isCreating.value = true
   isEditDialogVisible.value = true
 }
 
@@ -229,25 +266,36 @@ async function saveProduct () {
   if (!editableProduct.value) return
 
   try {
-    await productsAndRecipesService.updateProduct(editableProduct.value.id, editableProduct.value)
-    const index = products.value.findIndex(product => product.id === editableProduct.value.id)
+    if (isCreating.value) {
+      await productsAndRecipesService.createProduct(editableProduct.value)
 
-    if (index !== -1) {
-      products.value[index] = { ...editableProduct.value }
+      products.value.push(editableProduct.value)
+      showNotification('Product created successfully', 'Success', 'success')
+    } else {
+      await productsAndRecipesService.updateProduct(editableProduct.value.id, editableProduct.value)
+
+      const index = products.value.findIndex(product => product.id === editableProduct.value.id)
+      if (index !== -1) {
+        products.value[index] = { ...editableProduct.value }
+      }
+      showNotification('Product updated successfully', 'Success', 'success')
     }
 
-    showNotification('Product updated successfully', 'Well done', 'success')
     isEditDialogVisible.value = false
   } catch (error) {
     showNotification(error.message, 'error')
   }
 }
 
-function deleteProduct (productId: string) {
-  products.value = products.value.filter(product => product.id !== productId)
-
-  showNotification('Product deleted successfully', 'success')
-  isEditDialogVisible.value = false
+async function deleteProduct (productId: string) {
+  try {
+    await productsAndRecipesService.deleteProduct(productId)
+    products.value = products.value.filter(product => product.id !== productId)
+    showNotification('Product deleted successfully', 'Success', 'success')
+    isEditDialogVisible.value = false
+  } catch (error) {
+    showNotification(error.message, 'error')
+  }
 }
 
 function handleSearchInput () {
