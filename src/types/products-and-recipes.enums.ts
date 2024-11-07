@@ -8,6 +8,7 @@ export enum ERecipeType {
   beverage = 'beverage',
   snack = 'snack',
   sideDish = 'sideDish',
+  other = 'other'
 }
 
 export enum EProductType {
@@ -21,4 +22,5 @@ export enum EProductType {
   spice = 'spice',
   beverage = 'beverage',
   condiment = 'condiment',
+  other = 'other'
 }
