@@ -78,7 +78,7 @@
                       <el-option
                         v-for="type in recipeTypes"
                         :key="type"
-                        :label="type"
+                        :label="normalizeStringLabel(type)"
                         :value="type"
                       />
                     </el-select>
@@ -233,7 +233,7 @@ import { Delete } from '@element-plus/icons-vue'
 import IconAdjustMeal from '~icons/icon/adjust-meal'
 import IconInfo from '~icons/icon/info'
 import IconClose from '~icons/icon/close'
-import { showNotification } from '@/helpers'
+import { normalizeStringLabel, showNotification } from '@/helpers'
 import { ERecipeType } from '@/types/products-and-recipes.enums'
 
 const props = defineProps<{
