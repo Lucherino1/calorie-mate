@@ -1,6 +1,7 @@
 <template>
   <ProductsAndRecipesTabsWrapper
     v-model:active-tab="activeTab"
+    :back-button="true"
     :page-title="`Update your ${mealType}`"
     :loading="pageLoading"
   >

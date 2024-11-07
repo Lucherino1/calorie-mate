@@ -90,20 +90,28 @@ async function addProductToMeal (product: IProduct) {
 }
 
 async function handleProductUpdate (updatedProduct: IProduct) {
-  const index = productsInMeal.value.findIndex(product => product.id === updatedProduct.id)
-  if (index !== -1) productsInMeal.value[index] = updatedProduct
+  const updatedProductsInMeal = [...productsInMeal.value]
+  console.log(updatedProductsInMeal)
+  const index = updatedProductsInMeal.findIndex(product => product.id === updatedProduct.id)
 
-  try {
-    await updateMealService.updateMeal(
-      authStore.user.id,
-      dashboardStore.date,
-      props.mealType,
-      updatedProduct,
-      'products',
-      props.userMeals
-    )
-  } catch (error) {
-    showNotification()
+  if (index !== -1) {
+    updatedProductsInMeal[index] = { ...updatedProduct }
+    productsInMeal.value = updatedProductsInMeal
+    try {
+      await updateMealService.updateMeal(
+        authStore.user.id,
+        dashboardStore.date,
+        props.mealType,
+        updatedProduct,
+        'products',
+        props.userMeals
+      )
+    } catch (error) {
+      console.log(error)
+      showNotification()
+    }
+  } else {
+    showNotification('Product not found in meal', 'Error', 'error')
   }
 }
 

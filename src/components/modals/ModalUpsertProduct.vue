@@ -34,7 +34,7 @@
                 <el-option
                   v-for="type in productTypes"
                   :key="type"
-                  :label="type"
+                  :label="normalizeStringLabel(type)"
                   :value="type"
                 />
               </el-select>
@@ -105,7 +105,7 @@
 <script lang="ts" setup>
 import { EProductType } from '@/types/products-and-recipes.enums'
 import IconClose from '~icons/icon/close'
-import { showNotification } from '@/helpers'
+import { showNotification, normalizeStringLabel } from '@/helpers'
 
 const props = defineProps<{
   title: string

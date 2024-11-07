@@ -24,15 +24,15 @@ class UpdateMealService {
     }
   }
 
-  updateMeal = async (
+  async updateMeal (
     userId: string,
     date: string,
     mealType: TMealType,
     newItem: IProduct | IRecipe,
     mealComponent: TMealComponent,
     currentMealData?: IMeals
-  ): Promise<IMeals[]> => {
-    const mealData = currentMealData || await this.getUserMeals(userId, date, mealType)
+  ): Promise<IMeals[]> {
+    const mealData = currentMealData || (await this.getUserMeals(userId, date, mealType))
 
     if (mealData) {
       const updatedItems = mealData[mealComponent].map(item =>
@@ -48,9 +48,10 @@ class UpdateMealService {
         [mealComponent]: updatedItems
       }
 
-      const updatedMeals = [updatedMeal]
+      const mealsData = await this.getUserMeals(userId, date)
+      const updatedMeals = mealsData.map((meal: IMeals) => (meal.type === mealType ? updatedMeal : meal))
 
-      const { data: updateData, error } = await useSupabase
+      const { error } = await useSupabase
         .from('dashboard')
         .update({ meals: updatedMeals })
         .eq('userId', userId)
@@ -58,7 +59,7 @@ class UpdateMealService {
 
       if (error) throw new Error(error.message)
 
-      return updateData
+      return updatedMeals
     } else {
       throw new Error('No data found for the specified date or meal type')
     }

@@ -32,7 +32,7 @@
               v-for="type in productTypes"
               :key="type"
               class="capitalize"
-              :label="type"
+              :label="normalizeStringLabel(type)"
               :value="type"
             />
           </el-select>
