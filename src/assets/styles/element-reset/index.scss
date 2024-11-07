@@ -54,7 +54,6 @@
 @use "element-plus/theme-chalk/src/popover";
 @use "element-plus/theme-chalk/src/empty";
 @use "element-plus/theme-chalk/src/pagination";
-@use "element-plus/theme-chalk/src/dialog";
 @use "element-plus/theme-chalk/src/overlay";
 @use "element-plus/theme-chalk/src/tooltip";
 @use "element-plus/theme-chalk/src/upload";
@@ -64,4 +63,6 @@
 @import './_form';
 @import './select';
 @import './input-number';
-@import './date-picker'
+@import './date-picker';
+@import './upload';
+@import './_dialog';

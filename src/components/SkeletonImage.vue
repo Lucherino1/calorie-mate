@@ -19,12 +19,13 @@
     >
 
     <slot v-if="imageHasError" name="placeholder">
-      <p>Error image</p>
+      <IconErrorRecipe class="fill-gray-dark" />
     </slot>
   </div>
 </template>
 
 <script lang="ts" setup>
+import IconErrorRecipe from '~icons/icon/error-recipe'
 const props = defineProps<{
   imgSrc: string | undefined
 }>()

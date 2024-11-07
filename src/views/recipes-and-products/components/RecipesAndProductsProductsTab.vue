@@ -59,11 +59,7 @@
                 <IconVegan />
               </span>
               <span v-else />
-            </template>
-
-            <template #type="{ row }">
-              <span class="capitalize">{{ row.type }}</span>
-            </template>
+            </template>=
 
             <template #actions="{ row }">
               <el-button
@@ -100,7 +96,7 @@ import debounce from 'lodash/debounce'
 import cloneDeep from 'lodash/cloneDeep'
 
 import { EProductType } from '@/types/products-and-recipes.enums'
-import { showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
+import { normalizeStringLabel, showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
 import IconVegan from '~icons/icon/vegan'
 import IconSearchFood from '~icons/icon/search-food'
 
@@ -155,7 +151,8 @@ const productHeaders: TTableHeadings<IProduct> = [
   },
   {
     label: 'Type',
-    value: 'type'
+    value: 'type',
+    formatter: (row) => normalizeStringLabel(row.type)
   },
   {
     label: 'Vegan',
@@ -267,9 +264,9 @@ async function saveProduct () {
 
   try {
     if (isCreating.value) {
-      await productsAndRecipesService.createProduct(editableProduct.value)
+      const createdProduct = await productsAndRecipesService.createProduct(editableProduct.value)
 
-      products.value.push(editableProduct.value)
+      products.value.push(createdProduct)
       showNotification('Product created successfully', 'Success', 'success')
     } else {
       await productsAndRecipesService.updateProduct(editableProduct.value.id, editableProduct.value)

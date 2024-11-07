@@ -13,6 +13,7 @@ interface IProduct {
   grams?: number
   type: TProductType
   isVegan: boolean
+  isUnderReview?: boolean
 }
 
 interface IRecipe {

@@ -2,6 +2,7 @@
   <el-dialog
     v-model="isModalVisible"
     :modal="true"
+    :close-icon="IconClose"
     plain
     center
     :z-index="2000"
@@ -9,12 +10,17 @@
     close-on-press-escape
     :title="props.title"
     width="700px"
-    class="rounded-xl"
+    class="rounded-xl pb-0"
   >
-    <el-form :model="product">
+    <el-form
+      ref="formRef"
+      :model="product"
+      :rules="formRules"
+      @submit.prevent="handleSave"
+    >
       <div class="flex gap-28 justify-center items-start py-10">
         <div class="flex flex-col gap-4 max-w-[300px]">
-          <el-form-item>
+          <el-form-item prop="name">
             <div class="flex gap-2">
               <p class="font-semibold">Name:</p>
               <el-input v-model="product.name" />
@@ -78,25 +84,28 @@
           <p class="text-right text- font-semibold">
             Total Calories: {{ totalCalories }} kcal
           </p>
+          <div class="flex justify-end items-center gap-4 mt-5">
+            <el-checkbox v-model="submitForReview" label="Submit for review" :size="$elComponentSize.large" />
+            <el-button @click="$emit('close')">Cancel</el-button>
+            <div>
+              <el-button
+                :type="$elComponentType.primary"
+                native-type="submit"
+              >
+                Save
+              </el-button>
+            </div>
+          </div>
         </div>
       </div>
     </el-form>
-
-    <template #footer>
-      <div class="flex justify-end gap-4">
-        <el-button @click="$emit('close')">Cancel</el-button>
-        <div>
-          <el-button :type="$elComponentType.primary" @click="handleSave">
-            Save
-          </el-button>
-        </div>
-      </div>
-    </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
 import { EProductType } from '@/types/products-and-recipes.enums'
+import IconClose from '~icons/icon/close'
+import { showNotification } from '@/helpers'
 
 const props = defineProps<{
   title: string
@@ -113,10 +122,27 @@ const emit = defineEmits<{
   (e: 'save', product: IProduct): void
 }>()
 
-function handleSave () {
-  if (product.value) {
-    emit('save', product.value)
+const authStore = useAuthStore()
+
+const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
+const formRules = useElFormRules(
+  {
+    name: [useRequiredRule()]
   }
+)
+
+const submitForReview = ref(false)
+
+function handleSave () {
+  formRef.value?.validate(async (isValid) => {
+    if (isValid) {
+      if (!authStore.isUserAdmin) product.value.isUnderReview = submitForReview.value
+
+      emit('save', product.value)
+    } else {
+      showNotification('Please fill in all required fields.', '', 'warning')
+    }
+  })
 }
 
 const totalCalories = computed(() => {

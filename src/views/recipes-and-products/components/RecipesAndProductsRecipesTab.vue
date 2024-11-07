@@ -1,6 +1,6 @@
 <template>
   <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center">
-    <el-card class="w-full xl:max-w-[800px] 2xl:max-w-full">
+    <el-card class="max-w-[600px] lg:max-w-[700px] xl:max-w-[900px] 2xl:max-w-full">
       <div class="flex flex-col items-center justify-between">
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
@@ -42,78 +42,85 @@
         </div>
 
         <div class="overflow-x-auto w-full">
-          <AppTable
-            v-loading="tableLoading"
-            :headers="recipeHeaders"
-            :table-data="sortedRecipes"
-            @sort-change="handleSortChange"
-          >
-            <template #image="{ row }">
-              <div class="w-[100px] h-[100px] rounded-xl overflow-hidden">
-                <SkeletonImage :img-src="row.image">
-                  <template #placeholder>
-                    <IconErrorRecipe class="fill-gray-dark" />
+          <div class="min-w-[1200px]">
+            <AppTable
+              v-loading="tableLoading"
+              :headers="recipeHeaders"
+              :table-data="sortedRecipes"
+              @sort-change="handleSortChange"
+            >
+              <template #image="{ row }">
+                <div class="w-[100px] h-[100px] rounded-xl overflow-hidden">
+                  <SkeletonImage :img-src="row.image">
+                    <template #placeholder>
+                      <IconErrorRecipe class="fill-gray-dark" />
+                    </template>
+                  </SkeletonImage>
+                </div>
+              </template>
+
+              <template #name="{ row }">
+                <span class="">
+                  <b>{{ row.name }}</b>
+                </span>
+              </template>
+
+              <template #nutrition="{ row }">
+                <div>
+                  <p><b>Calories:</b> {{ calculateTotalCalories(row) }} kcal</p>
+                  <p><b>Carbs:</b> {{ calculateTotalCarbs(row) }}g</p>
+                  <p><b>Proteins:</b> {{ calculateTotalProteins(row) }}g</p>
+                  <p><b>Fats:</b> {{ calculateTotalFats(row) }}g</p>
+                </div>
+              </template>
+
+              <template #ingredients="{ row }">
+                <el-popover
+                  placement="top"
+                  width="auto"
+                  trigger="click"
+                >
+                  <ul class="flex gap-5 w-auto">
+                    <li v-for="(ingredient, index) in row.ingredients" :key="index">
+                      <b>{{ ingredient.name }}</b>: <br>
+                      {{ ingredient.nutritionDetails.carbs }}g carbs, <br>
+                      {{ ingredient.nutritionDetails.proteins }}g proteins, <br>
+                      {{ ingredient.nutritionDetails.fats }}g fats, <br>
+                      {{ ingredient.nutritionDetails.calories }} kcal <br>
+                    </li>
+                  </ul>
+                  <template #reference>
+                    <el-button size="small">show</el-button>
                   </template>
-                </SkeletonImage>
-              </div>
-            </template>
+                </el-popover>
+              </template>
 
-            <template #name="{ row }">
-              <span class="">
-                <b>{{ row.name }}</b>
-              </span>
-            </template>
+              <template #isVegan="{ row }">
+                <span v-if="row.isVegan" class="fill-success">
+                  <IconVegan class="w-[30px] h-[30px]" />
+                </span>
+                <span v-else />
+              </template>
 
-            <template #type="{ row }">
-              <span class="capitalize">{{ row.type }}</span>
-            </template>
-
-            <template #nutrition="{ row }">
-              <div>
-                <p><b>Carbs:</b> {{ calculateTotalCarbs(row) }}g</p>
-                <p><b>Proteins:</b> {{ calculateTotalProteins(row) }}g</p>
-                <p><b>Fats:</b> {{ calculateTotalFats(row) }}g</p>
-                <p><b>Calories:</b> {{ calculateTotalCalories(row) }} kcal</p>
-              </div>
-            </template>
-
-            <template #ingredients="{ row }">
-              <el-popover
-                placement="top"
-                width="auto"
-                trigger="click"
-              >
-                <ul class="flex gap-5 w-auto">
-                  <li v-for="(ingredient, index) in row.ingredients" :key="index">
-                    <b>{{ ingredient.name }}</b>: <br>
-                    {{ ingredient.nutritionDetails.carbs }}g carbs, <br>
-                    {{ ingredient.nutritionDetails.proteins }}g proteins, <br>
-                    {{ ingredient.nutritionDetails.fats }}g fats, <br>
-                    {{ ingredient.nutritionDetails.calories }} kcal <br>
-                  </li>
-                </ul>
-                <template #reference>
-                  <el-button size="small">show</el-button>
-                </template>
-              </el-popover>
-            </template>
-
-            <template #actions="{ row }">
-              <el-button
-                :size="$elComponentSize.small"
-                @click="openEditDialog(row)"
-              >
-                Edit
-              </el-button>
-              <el-button
-                :type="$elComponentType.danger"
-                :size="$elComponentSize.small"
-                @click="deleteRecipe(row.id)"
-              >
-                Delete
-              </el-button>
-            </template>
-          </AppTable>
+              <template #edit="{ row }">
+                <el-button
+                  :size="$elComponentSize.small"
+                  @click="openEditDialog(row)"
+                >
+                  Edit
+                </el-button>
+              </template>
+              <template #delete="{ row }">
+                <el-button
+                  :type="$elComponentType.danger"
+                  :size="$elComponentSize.small"
+                  @click="deleteRecipe(row.id)"
+                >
+                  Delete
+                </el-button>
+              </template>
+            </AppTable>
+          </div>
         </div>
 
         <el-pagination
@@ -133,7 +140,7 @@ import debounce from 'lodash/debounce'
 import cloneDeep from 'lodash/cloneDeep'
 
 import { ERecipeType } from '@/types/products-and-recipes.enums'
-import { showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
+import { normalizeStringLabel, showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
 import IconSearchFood from '~icons/icon/search-food'
 import IconErrorRecipe from '~icons/icon/error-recipe'
 
@@ -167,38 +174,57 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
   },
   {
     label: 'Description',
-    value: 'description'
+    value: 'description',
+    width: 150
   },
   {
-    label: 'Total Nutrition',
+    label: 'Nutrition',
     value: 'nutrition',
     sort: true
   },
   {
-    label: 'Portion Weight (g)',
+    label: 'Weight (g)',
     value: 'portionWeight',
-    sort: true
+    sort: true,
+    align: 'center',
+    width: 130
   },
   {
     label: 'Type',
-    value: 'type'
+    value: 'type',
+    align: 'center',
+    formatter: (row) => normalizeStringLabel(row.type)
+  },
+  {
+    label: 'Vegan',
+    value: 'isVegan',
+    sort: true,
+    align: 'center'
   },
   {
     label: 'Ingredients',
     value: 'ingredients',
+    align: 'center',
     formatter: (row) => Math.round(nutritionService.calcTotalRecipeCalories(row))
   },
   {
     label: '',
-    value: 'actions'
+    value: 'edit',
+    align: 'center'
+  },
+  {
+    label: '',
+    value: 'delete',
+    align: 'center'
   }
+
 ]
 
 const sortField = ref<string>(null)
 const sortOrder = ref<'asc' | 'desc'>(null)
 
 function handleSortChange () {
-  return sortArrayBySortFieldAndOrder(recipes.value, sortField.value, sortOrder.value)
+  return sortArrayBySortFieldAndOrder(recipes.value, 'nutritionDetails.calories', sortOrder.value)
 }
 
 const sortedRecipes = computed(() => {
@@ -210,19 +236,19 @@ const sortedRecipes = computed(() => {
 })
 
 function calculateTotalCarbs (recipe: IRecipe): number {
-  return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.carbs, 0)
+  return recipe.ingredients.reduce((sum, ingredient) => sum + Math.round(ingredient.nutritionDetails.carbs), 0)
 }
 
 function calculateTotalProteins (recipe: IRecipe): number {
-  return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.proteins, 0)
+  return recipe.ingredients.reduce((sum, ingredient) => sum + Math.round(ingredient.nutritionDetails.proteins), 0)
 }
 
 function calculateTotalFats (recipe: IRecipe): number {
-  return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.fats, 0)
+  return recipe.ingredients.reduce((sum, ingredient) => sum + Math.round(ingredient.nutritionDetails.fats), 0)
 }
 
 function calculateTotalCalories (recipe: IRecipe): number {
-  return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.calories, 0)
+  return recipe.ingredients.reduce((sum, ingredient) => sum + Math.round(ingredient.nutritionDetails.calories), 0)
 }
 
 async function getPaginatedRecipes (page?: number) {
@@ -279,7 +305,7 @@ const editableRecipe = ref<IRecipe>(null)
 
 function openEditDialog (row: IRecipe) {
   editableRecipe.value = cloneDeep(row)
-  console.log(row.ingredients)
+  console.log(row)
   isEditDialogVisible.value = true
 }
 
@@ -288,8 +314,9 @@ async function saveRecipe () {
 
   try {
     if (isCreating.value) {
-      await productsAndRecipesService.createRecipe(editableRecipe.value)
-      recipes.value.push(editableRecipe.value)
+      const createdRecipe = await productsAndRecipesService.createRecipe(editableRecipe.value)
+
+      recipes.value.push(createdRecipe)
       showNotification('Recipe created successfully', 'Success', 'success')
     } else {
       await productsAndRecipesService.updateRecipe(editableRecipe.value.id, editableRecipe.value)
@@ -312,7 +339,6 @@ const isCreating = ref(false)
 
 function openCreateDialog () {
   const authStore = useAuthStore()
-
   editableRecipe.value = {
     name: '',
     description: '',

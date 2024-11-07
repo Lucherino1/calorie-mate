@@ -23,6 +23,22 @@ class ProductsAndRecipesService {
     return data
   }
 
+  async getProductById (id: string) {
+    try {
+      const { data, error } = await useSupabase
+        .from('products')
+        .select('*')
+        .eq('id', id)
+        .single()
+
+      if (error) throw error
+      return data
+    } catch (error) {
+      console.error('Error fetching product:', error.message)
+      throw error
+    }
+  }
+
   async getPaginatedProducts (limit: number, offset: number, typeFilter?: string) {
     const authStore = useAuthStore()
     const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
@@ -170,6 +186,7 @@ class ProductsAndRecipesService {
     const { data, error } = await useSupabase
       .from(tableName)
       .insert(product)
+      .select()
       .single()
 
     if (error) throw new Error(error.message)
@@ -184,7 +201,9 @@ class ProductsAndRecipesService {
     const { data, error } = await useSupabase
       .from(tableName)
       .insert(recipe)
+      .select()
       .single()
+    console.log(data)
 
     if (error) throw new Error(error.message)
 

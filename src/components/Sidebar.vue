@@ -44,7 +44,13 @@ import IconAboutUs from '~icons/icon/about-us'
 
 import type { ERoles } from '@/views/auth/auth.enums'
 
+const authStore = useAuthStore()
 const { signout, user } = useAuthStore()
+
+const recipesAndProductsTitle = computed(() => {
+  return authStore.isUserAdmin ? 'Recipes and Products' : 'My Recipes and Products'
+})
+
 const isLoading = ref(false)
 
 interface ISidebarMenuItem {
@@ -76,7 +82,7 @@ const menuConfig: ISidebarMenuItem[] = [
     hiddenWhenLoggedIn: true
   },
   {
-    label: 'Recipes and products',
+    label: recipesAndProductsTitle.value,
     routeName: 'recipesAndProducts',
     icon: IconRecipesAndProducts,
     requiresAuth: true
