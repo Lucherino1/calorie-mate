@@ -52,7 +52,6 @@ const props = defineProps<{
 const recipesInMeal = defineModel<IRecipe[]>('recipesInMeal')
 
 const dashboardStore = useDashboardStore()
-const authStore = useAuthStore()
 
 const searchQuery = ref('')
 const filteredRecipes = ref<IRecipe[]>([])
@@ -68,38 +67,42 @@ function filterRecipes (searchQuery: string) {
 }
 
 async function addRecipeToMeal (recipe: IRecipe) {
-  const isRecipeAlreadyInMeal = recipesInMeal.value.some(recip => recip.id === recipe.id)
-
-  if (isRecipeAlreadyInMeal) {
+  if (recipesInMeal.value.some(recip => recip.id === recipe.id)) {
     showNotification('You may just change your portion count', 'This recipe is already added to your meal.', 'warning')
-  } else {
-    const defaultPortion = 1
-    const newRecipe: IRecipe = { ...recipe, portions: defaultPortion }
+    return
+  }
 
-    recipesInMeal.value.unshift(newRecipe)
-    try {
-      await updateMealService.updateMeal(authStore.user.id, dashboardStore.date, props.mealType, newRecipe, 'recipes')
-    } catch (error) {
-      showNotification()
-    }
+  const newRecipe: IRecipe = { ...recipe, portions: 1 }
+  recipesInMeal.value.unshift(newRecipe)
+
+  try {
+    await updateMealService.updateMeal({
+      date: dashboardStore.date,
+      mealType: props.mealType,
+      newItem: newRecipe,
+      mealComponent: 'recipes'
+    })
+  } catch (error) {
+    showNotification('Failed to add the recipe to the meal.', 'error')
   }
 }
 
 async function handleRecipeUpdate (updatedRecipe: IRecipe) {
   const index = recipesInMeal.value.findIndex(recipe => recipe.id === updatedRecipe.id)
-  if (index !== -1) recipesInMeal.value[index] = updatedRecipe
+  if (index !== -1) {
+    recipesInMeal.value[index] = updatedRecipe
+  }
 
   try {
-    await updateMealService.updateMeal(
-      authStore.user.id,
-      dashboardStore.date,
-      props.mealType,
-      updatedRecipe,
-      'recipes',
-      props.userMeals
-    )
+    await updateMealService.updateMeal({
+      date: dashboardStore.date,
+      mealType: props.mealType,
+      newItem: updatedRecipe,
+      mealComponent: 'recipes',
+      currentMealData: props.userMeals
+    })
   } catch (error) {
-    showNotification()
+    showNotification('Failed to update the recipe in the meal.', 'error')
   }
 }
 
@@ -107,15 +110,13 @@ async function handleRecipeRemove (recipeId: string) {
   const index = recipesInMeal.value.findIndex(recipe => recipe.id === recipeId)
   if (index !== -1) {
     recipesInMeal.value.splice(index, 1)
-
     try {
-      await updateMealService.removeProduct(
-        authStore.user.id,
-        dashboardStore.date,
-        props.mealType,
-        recipeId,
-        'recipes'
-      )
+      await updateMealService.removeProduct({
+        date: dashboardStore.date,
+        mealType: props.mealType,
+        productId: recipeId,
+        mealComponent: 'recipes'
+      })
     } catch (error) {
       showNotification()
     }

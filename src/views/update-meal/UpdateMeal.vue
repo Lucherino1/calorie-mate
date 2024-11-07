@@ -110,7 +110,7 @@ const totalCaloriesPercentage = computed(() => {
 
 const getUserMeals = async () => {
   try {
-    const userMeal = await updateMealService.getUserMeals(authStore.user.id, dashboardStore.date, props.mealType)
+    const userMeal = await updateMealService.getUserMeals(dashboardStore.date, props.mealType)
 
     userMeals.value = userMeal
 

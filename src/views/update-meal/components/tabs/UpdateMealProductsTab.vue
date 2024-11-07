@@ -56,8 +56,6 @@ const productsInMeal = defineModel<IProduct[]>('productsInMeal')
 
 const dashboardStore = useDashboardStore()
 
-const authStore = useAuthStore()
-
 const searchQuery = ref('')
 const filteredProducts = ref<IProduct[]>([])
 
@@ -82,7 +80,12 @@ async function addProductToMeal (product: IProduct) {
 
     productsInMeal.value.unshift(newProduct)
     try {
-      await updateMealService.updateMeal(authStore.user.id, dashboardStore.date, props.mealType, { ...newProduct }, 'products')
+      await updateMealService.updateMeal({
+        date: dashboardStore.date,
+        mealType: props.mealType,
+        newItem: newProduct,
+        mealComponent: 'products'
+      })
     } catch (error) {
       showNotification()
     }
@@ -91,21 +94,19 @@ async function addProductToMeal (product: IProduct) {
 
 async function handleProductUpdate (updatedProduct: IProduct) {
   const updatedProductsInMeal = [...productsInMeal.value]
-
   const index = updatedProductsInMeal.findIndex(product => product.id === updatedProduct.id)
 
   if (index !== -1) {
     updatedProductsInMeal[index] = { ...updatedProduct }
     productsInMeal.value = updatedProductsInMeal
     try {
-      await updateMealService.updateMeal(
-        authStore.user.id,
-        dashboardStore.date,
-        props.mealType,
-        updatedProduct,
-        'products',
-        props.userMeals
-      )
+      await updateMealService.updateMeal({
+        date: dashboardStore.date,
+        mealType: props.mealType,
+        newItem: updatedProduct,
+        mealComponent: 'products',
+        currentMealData: props.userMeals
+      })
     } catch (error) {
       showNotification()
     }
@@ -116,20 +117,21 @@ async function handleProductUpdate (updatedProduct: IProduct) {
 
 async function handleProductRemove (productId: string) {
   const index = productsInMeal.value.findIndex(product => product.id === productId)
+
   if (index !== -1) {
     productsInMeal.value.splice(index, 1)
 
     try {
-      await updateMealService.removeProduct(
-        authStore.user.id,
-        dashboardStore.date,
-        props.mealType,
+      await updateMealService.removeProduct({
+        date: dashboardStore.date,
+        mealType: props.mealType,
         productId,
-        'products'
-      )
+        mealComponent: 'products'
+      })
     } catch (error) {
       showNotification()
     }
   }
 }
+
 </script>

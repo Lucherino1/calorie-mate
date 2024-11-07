@@ -1,6 +1,8 @@
 class UpdateMealService {
-  getUserMeals = async (userId: string, date: string, mealType?: TMealType) => {
-    const { data, error } = await useSupabase.from('dashboard').select('meals').eq('userId', userId).eq('date', date)
+  getUserMeals = async (date: string, mealType?: TMealType) => {
+    const authStore = useAuthStore()
+
+    const { data, error } = await useSupabase.from('dashboard').select('meals').eq('userId', authStore.user.id).eq('date', date)
 
     if (error) throw new Error(error.message)
 
@@ -24,15 +26,22 @@ class UpdateMealService {
     }
   }
 
-  async updateMeal (
-    userId: string,
-    date: string,
-    mealType: TMealType,
-    newItem: IProduct | IRecipe,
-    mealComponent: TMealComponent,
+  async updateMeal ({
+    date,
+    mealType,
+    newItem,
+    mealComponent,
+    currentMealData
+  }: {
+    date: string
+    mealType: TMealType
+    newItem: IProduct | IRecipe
+    mealComponent: TMealComponent
     currentMealData?: IMeals
-  ): Promise<IMeals[]> {
-    const mealData = currentMealData || (await this.getUserMeals(userId, date, mealType))
+  }): Promise<IMeals[]> {
+    const authStore = useAuthStore()
+
+    const mealData = currentMealData || (await this.getUserMeals(date, mealType))
 
     if (mealData) {
       const updatedItems = mealData[mealComponent].map(item =>
@@ -48,13 +57,13 @@ class UpdateMealService {
         [mealComponent]: updatedItems
       }
 
-      const mealsData = await this.getUserMeals(userId, date)
+      const mealsData = await this.getUserMeals(date)
       const updatedMeals = mealsData.map((meal: IMeals) => (meal.type === mealType ? updatedMeal : meal))
 
       const { error } = await useSupabase
         .from('dashboard')
         .update({ meals: updatedMeals })
-        .eq('userId', userId)
+        .eq('userId', authStore.user.id)
         .eq('date', date)
 
       if (error) throw new Error(error.message)
@@ -65,14 +74,19 @@ class UpdateMealService {
     }
   }
 
-  removeProduct = async (
-    userId: string,
-    date: string,
-    mealType: TMealType,
-    productId: string,
+  removeProduct = async ({
+    date,
+    mealType,
+    productId,
+    mealComponent
+  }: {
+    date: string
+    mealType: TMealType
+    productId: string
     mealComponent: TMealComponent
-  ) => {
-    const mealData = await this.getUserMeals(userId, date, mealType)
+  }) => {
+    const authStore = useAuthStore()
+    const mealData = await this.getUserMeals(date, mealType)
 
     if (mealData) {
       const updatedItems = mealData[mealComponent].filter((item: any) => item.id !== productId)
@@ -82,13 +96,13 @@ class UpdateMealService {
         [mealComponent]: updatedItems
       }
 
-      const mealsData = await this.getUserMeals(userId, date)
+      const mealsData = await this.getUserMeals(date)
       const updatedMeals = mealsData.map((meal: IMeals) => (meal.type === mealType ? updatedMeal : meal))
 
       const { data: updateData, error: updateError } = await useSupabase
         .from('dashboard')
         .update({ meals: updatedMeals })
-        .eq('userId', userId)
+        .eq('userId', authStore.user.id)
         .eq('date', date)
 
       if (updateError) throw new Error(updateError.message)

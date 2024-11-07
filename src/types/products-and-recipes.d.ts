@@ -27,6 +27,7 @@ interface IRecipe {
   type: TRecipesType
   isVegan: boolean
   ingredients: IProduct[]
+  isUnderReview?: boolean
 }
 
 type TMealType = 'breakfast' | 'lunch' | 'dinner' | 'snacks'

@@ -38,7 +38,15 @@ class ProductsAndRecipesService {
     }
   }
 
-  async getPaginatedProducts (limit: number, offset: number, typeFilter?: string) {
+  async getPaginatedProducts ({
+    limit,
+    offset,
+    typeFilter
+  }: {
+    limit: number
+    offset: number
+    typeFilter?: string
+  }) {
     const authStore = useAuthStore()
     const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
 
@@ -57,7 +65,15 @@ class ProductsAndRecipesService {
     return { data, count }
   }
 
-  async getPaginatedRecipes (limit: number, offset: number, typeFilter?: string) {
+  async getPaginatedRecipes ({
+    limit,
+    offset,
+    typeFilter
+  }: {
+    limit: number
+    offset: number
+    typeFilter?: string
+  }) {
     const authStore = useAuthStore()
     const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
 
@@ -76,7 +92,17 @@ class ProductsAndRecipesService {
     return { data, count }
   }
 
-  async searchRecipes (searchQuery: string, typeFilter?: string, limit?: number, offset?: number) {
+  async searchRecipes ({
+    searchQuery,
+    typeFilter,
+    limit,
+    offset
+  }: {
+    searchQuery: string
+    typeFilter?: string
+    limit?: number
+    offset?: number
+  }) {
     const authStore = useAuthStore()
     const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
 
@@ -99,7 +125,17 @@ class ProductsAndRecipesService {
     return { data, count }
   }
 
-  async searchProducts (searchQuery: string, typeFilter?: string, limit?: number, offset?: number) {
+  async searchProducts ({
+    searchQuery,
+    typeFilter,
+    limit,
+    offset
+  }: {
+    searchQuery: string
+    typeFilter?: string
+    limit?: number
+    offset?: number
+  }) {
     const authStore = useAuthStore()
     const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
 

@@ -131,7 +131,7 @@ const authStore = useAuthStore()
 
 const getUserDashboard = async (selectedDate: string) => {
   dashboardPageLoading.value = true
-  userDashboard.value = await dashboardService.getUserDashboard(selectedDate, authStore.user.id)
+  userDashboard.value = await dashboardService.getUserDashboard(selectedDate)
   dashboardPageLoading.value = false
 }
 
@@ -167,7 +167,7 @@ async function submitBodyDetails () {
 
     cancelEditMode()
     try {
-      await profileService.updateUserBodyDetails(authStore.user.id, { ...bodyDetailsFormModel })
+      await profileService.updateUserBodyDetails({ ...bodyDetailsFormModel })
 
       authStore.user.bodyDetails = bodyDetailsFormModel
       const {
@@ -176,8 +176,8 @@ async function submitBodyDetails () {
       } = profileService.recalculateTargetNutrition(authStore.user)
 
       await Promise.all([
-        profileService.updateUserTargetNutrition(authStore.user.id, { ...targetNutritionDetails }),
-        profileService.updateUserTargetNutritionByMeal(authStore.user.id, { ...targetNutritionDetailsByMeal })
+        profileService.updateUserTargetNutrition({ ...targetNutritionDetails }),
+        profileService.updateUserTargetNutritionByMeal({ ...targetNutritionDetailsByMeal })
       ])
 
       showNotification('Calories have been recalculated successfully', 'Recalculation Complete', 'success')

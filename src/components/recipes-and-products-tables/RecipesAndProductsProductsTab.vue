@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center">
+  <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center mt-5">
     <el-card class="w-full xl:max-w-[800px] 2xl:max-w-full">
       <div class="flex flex-col items-center justify-between">
         <ModalUpsertProduct
@@ -11,7 +11,7 @@
           @save="saveProduct"
           @delete="deleteProduct"
         />
-        <div class="flex items-center gap-5 w-full mb-10">
+        <div class="flex items-center justify-end gap-5 w-full mb-10">
           <el-input
             v-model="searchQuery"
             :prefix-icon="IconSearchFood"
@@ -23,6 +23,7 @@
           />
           <el-select
             v-model="selectedType"
+            :size="$elComponentSize.large"
             clearable
             class="max-w-[200px]"
             placeholder="Select product type"
@@ -36,7 +37,11 @@
               :value="type"
             />
           </el-select>
-          <el-button :type="$elComponentType.primary" @click="openCreateDialog">
+          <el-button
+            :type="$elComponentType.primary"
+            :size="$elComponentSize.large"
+            @click="openCreateDialog"
+          >
             Add New Product
           </el-button>
         </div>
@@ -44,21 +49,23 @@
         <div class="overflow-x-auto w-full">
           <AppTable
             v-loading="tableLoading"
+            :height="'550'"
+            :empty-title="'No products added'"
             :headers="productHeaders"
             :table-data="sortedProducts"
             @sort-change="handleSortChange"
           >
             <template #name="{ row }">
-              <span class="">
+              <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="row.name" :multiline="2">
                 <b>{{ row.name }}</b>
-              </span>
+              </TruncatedTooltip>
             </template>
 
             <template #isVegan="{ row }">
               <span v-if="row.isVegan" class="fill-success">
                 <IconVegan />
               </span>
-              <span v-else />
+              <span v-else>No</span>
             </template>=
 
             <template #actions="{ row }">
@@ -191,11 +198,11 @@ async function getPaginatedProducts (page?: number) {
   try {
     tableLoading.value = true
 
-    const { data, count } = await productsAndRecipesService.getPaginatedProducts(
-      pageSize.value,
-      (currentPage.value - 1) * pageSize.value,
-      selectedType.value
-    )
+    const { data, count } = await productsAndRecipesService.getPaginatedProducts({
+      limit: pageSize.value,
+      offset: (currentPage.value - 1) * pageSize.value,
+      typeFilter: selectedType.value
+    })
 
     products.value = data || []
     totalProducts.value = count || 0
@@ -212,10 +219,12 @@ async function searchProducts (page: number = 1) {
     tableLoading.value = true
 
     const offset = (page - 1) * pageSize.value
-    const { data, count } = await productsAndRecipesService.searchProducts(
-      searchQuery.value,
-      selectedType.value,
-      pageSize.value, offset)
+    const { data, count } = await productsAndRecipesService.searchProducts({
+      searchQuery: searchQuery.value,
+      typeFilter: selectedType.value,
+      limit: pageSize.value,
+      offset
+    })
 
     products.value = data || []
     totalProducts.value = count || 0
