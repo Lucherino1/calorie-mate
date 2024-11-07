@@ -329,6 +329,7 @@ async function handleSave () {
 
         emit('save', recipe.value)
 
+        buttonLoading.value = false
         uploadedImageUrl.value = null
       } catch (error) {
         showNotification()

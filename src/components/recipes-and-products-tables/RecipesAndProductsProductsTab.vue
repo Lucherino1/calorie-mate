@@ -5,6 +5,7 @@
         <ModalUpsertProduct
           v-model:product="editableProduct"
           v-model:visible="isEditDialogVisible"
+          :modal-button-loading="modalButtonLoading"
           :title="isCreating ? 'Add New Product' : 'Edit Product'"
           :isCreating="isCreating"
           @close="isEditDialogVisible = false"
@@ -122,6 +123,7 @@ const productPagesCache = ref<{ [key: number]: IProduct[] }>({})
 
 const pageLoading = ref(false)
 const tableLoading = ref(false)
+const modalButtonLoading = ref(false)
 
 const productHeaders: TTableHeadings<IProduct> = [
   {
@@ -270,7 +272,7 @@ function openCreateDialog () {
 
 async function saveProduct () {
   if (!editableProduct.value) return
-
+  modalButtonLoading.value = true
   try {
     if (isCreating.value) {
       const createdProduct = await productsAndRecipesService.createProduct(editableProduct.value)
@@ -287,6 +289,7 @@ async function saveProduct () {
       showNotification('Product updated successfully', 'Success', 'success')
     }
 
+    modalButtonLoading.value = false
     isEditDialogVisible.value = false
   } catch (error) {
     showNotification(error.message, 'error')

@@ -111,7 +111,7 @@
             <el-button @click="$emit('close')">Cancel</el-button>
             <div>
               <el-button
-                :loading="buttonLoading"
+                :loading="modalButtonLoading"
                 :type="$elComponentType.primary"
                 native-type="submit"
               >
@@ -134,6 +134,7 @@ import { normalizeStringLabel, showNotification } from '@/helpers'
 const props = defineProps<{
   title: string
   isCreating: boolean
+  modalButtonLoading: boolean
 }>()
 
 const product = defineModel<IProduct>('product')
@@ -148,8 +149,6 @@ const emit = defineEmits<{
 
 const authStore = useAuthStore()
 
-const buttonLoading = ref(false)
-
 const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 const formRules = useElFormRules(
   {
@@ -162,7 +161,6 @@ const submitForReview = ref(false)
 function handleSave () {
   formRef.value?.validate(async (isValid) => {
     if (isValid) {
-      buttonLoading.value = true
       if (!authStore.isUserAdmin) product.value.isUnderReview = submitForReview.value
 
       emit('save', product.value)
