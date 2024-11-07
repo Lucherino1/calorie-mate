@@ -90,7 +90,7 @@
                     </li>
                   </ul>
                   <template #reference>
-                    <el-button size="small">show</el-button>
+                    <el-button link :size="$elComponentSize.small">show</el-button>
                   </template>
                 </el-popover>
               </template>
@@ -236,19 +236,19 @@ const sortedRecipes = computed(() => {
 })
 
 function calculateTotalCarbs (recipe: IRecipe): number {
-  return recipe.ingredients.reduce((sum, ingredient) => sum + Math.round(ingredient.nutritionDetails.carbs), 0)
+  return Math.round(recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.carbs, 0))
 }
 
 function calculateTotalProteins (recipe: IRecipe): number {
-  return recipe.ingredients.reduce((sum, ingredient) => sum + Math.round(ingredient.nutritionDetails.proteins), 0)
+  return Math.round(recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.proteins, 0))
 }
 
 function calculateTotalFats (recipe: IRecipe): number {
-  return recipe.ingredients.reduce((sum, ingredient) => sum + Math.round(ingredient.nutritionDetails.fats), 0)
+  return Math.round(recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.fats, 0))
 }
 
 function calculateTotalCalories (recipe: IRecipe): number {
-  return recipe.ingredients.reduce((sum, ingredient) => sum + Math.round(ingredient.nutritionDetails.calories), 0)
+  return Math.round(recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.calories, 0))
 }
 
 async function getPaginatedRecipes (page?: number) {
