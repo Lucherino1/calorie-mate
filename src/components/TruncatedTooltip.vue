@@ -77,7 +77,7 @@ watch(() => props.disabled, () => {
 
 function checkVisibility () {
   const el = root.value
-  console.log(el)
+
   if (!el || props.disabled) {
     state.showTooltip = false
     return

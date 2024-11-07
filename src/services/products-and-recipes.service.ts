@@ -34,8 +34,7 @@ class ProductsAndRecipesService {
       if (error) throw error
       return data
     } catch (error) {
-      console.error('Error fetching product:', error.message)
-      throw error
+      throw new Error(error.message)
     }
   }
 
@@ -203,7 +202,6 @@ class ProductsAndRecipesService {
       .insert(recipe)
       .select()
       .single()
-    console.log(data)
 
     if (error) throw new Error(error.message)
 

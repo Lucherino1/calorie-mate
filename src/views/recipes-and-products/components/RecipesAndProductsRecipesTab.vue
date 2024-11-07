@@ -254,7 +254,7 @@ function calculateTotalCalories (recipe: IRecipe): number {
 async function getPaginatedRecipes (page?: number) {
   if (page && recipePagesCache.value[page]) {
     recipes.value = recipePagesCache.value[page]
-    console.log(recipes.value)
+
     return
   }
 
@@ -305,7 +305,7 @@ const editableRecipe = ref<IRecipe>(null)
 
 function openEditDialog (row: IRecipe) {
   editableRecipe.value = cloneDeep(row)
-  console.log(row)
+
   isEditDialogVisible.value = true
 }
 

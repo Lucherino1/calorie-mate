@@ -342,7 +342,6 @@ function handleProductUpdate (updatedProduct: IProduct) {
 }
 
 function handleProductRemove (productId: string) {
-  console.log(productId)
   const index = recipe.value?.ingredients.findIndex(ing => ing.id === productId)
   recipe.value.ingredients.splice(index, 1)
 }

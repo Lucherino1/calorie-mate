@@ -91,7 +91,7 @@ async function addProductToMeal (product: IProduct) {
 
 async function handleProductUpdate (updatedProduct: IProduct) {
   const updatedProductsInMeal = [...productsInMeal.value]
-  console.log(updatedProductsInMeal)
+
   const index = updatedProductsInMeal.findIndex(product => product.id === updatedProduct.id)
 
   if (index !== -1) {
@@ -107,7 +107,6 @@ async function handleProductUpdate (updatedProduct: IProduct) {
         props.userMeals
       )
     } catch (error) {
-      console.log(error)
       showNotification()
     }
   } else {

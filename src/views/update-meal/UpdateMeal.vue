@@ -113,7 +113,7 @@ const getUserMeals = async () => {
     const userMeal = await updateMealService.getUserMeals(authStore.user.id, dashboardStore.date, props.mealType)
 
     userMeals.value = userMeal
-    console.log(userMeals)
+
     productsInMeal.value = userMeal.products.map(userProduct => ({ ...userProduct })).reverse()
     recipesInMeal.value = userMeal.recipes.map(userRecipe => ({ ...userRecipe })).reverse()
     return userMeal
