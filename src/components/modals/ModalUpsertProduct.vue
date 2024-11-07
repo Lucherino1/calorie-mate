@@ -12,8 +12,13 @@
     width="700px"
     class="rounded-xl pb-0"
   >
+    <p class="text-center mx-0 text-sm mb-2">
+      * All nutritional values should be based on 100 g of the product.
+    </p>
+
     <el-form
       ref="formRef"
+      :show-message="false"
       :model="product"
       :rules="formRules"
       @submit.prevent="handleSave"
@@ -53,7 +58,7 @@
           </el-form-item>
         </div>
 
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col justify-end items-end gap-4">
           <el-form-item>
             <div class="flex min-w-[230px] justify-between">
               <p class="font-semibold">Carbs:</p>
@@ -85,10 +90,28 @@
             Total Calories: {{ totalCalories }} kcal
           </p>
           <div class="flex justify-end items-center gap-4 mt-5">
-            <el-checkbox v-model="submitForReview" label="Submit for review" :size="$elComponentSize.large" />
+            <el-checkbox
+              v-if="isCreating"
+              v-model="submitForReview"
+              :size="$elComponentSize.large"
+            >
+              <template #default>
+                <div class="flex justify-center gap-1 items-center text-center">
+                  <p>Submit for review</p>
+
+                  <el-tooltip
+                    content="Submit for admin review to add this product to the public database."
+                    placement="top"
+                  >
+                    <IconInfo class="w-[18px] h-[18px] my-0 fill-primary" />
+                  </el-tooltip>
+                </div>
+              </template>
+            </el-checkbox>
             <el-button @click="$emit('close')">Cancel</el-button>
             <div>
               <el-button
+                :loading="buttonLoading"
                 :type="$elComponentType.primary"
                 native-type="submit"
               >
@@ -105,7 +128,8 @@
 <script lang="ts" setup>
 import { EProductType } from '@/types/products-and-recipes.enums'
 import IconClose from '~icons/icon/close'
-import { showNotification, normalizeStringLabel } from '@/helpers'
+import IconInfo from '~icons/icon/info'
+import { normalizeStringLabel, showNotification } from '@/helpers'
 
 const props = defineProps<{
   title: string
@@ -124,6 +148,8 @@ const emit = defineEmits<{
 
 const authStore = useAuthStore()
 
+const buttonLoading = ref(false)
+
 const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 const formRules = useElFormRules(
   {
@@ -136,6 +162,7 @@ const submitForReview = ref(false)
 function handleSave () {
   formRef.value?.validate(async (isValid) => {
     if (isValid) {
+      buttonLoading.value = true
       if (!authStore.isUserAdmin) product.value.isUnderReview = submitForReview.value
 
       emit('save', product.value)

@@ -1,7 +1,6 @@
 <template>
   <el-dialog
     v-model="isModalVisible"
-    :loading="modalLoading"
     :modal="true"
     plain
     :close-icon="IconClose"
@@ -23,31 +22,45 @@
         <div class="flex flex-col gap-4 flex-1 px-2">
           <div class="flex flex-col justify-center">
             <div class="flex gap-10 justify-start">
-              <div class="w-[150px] h-[150px]">
+              <div class="relative w-[150px] h-[150px] hover:opacity-60">
                 <el-upload
+                  v-model:file-list="fileList"
                   drag
+                  action="#"
                   :show-file-list="false"
                   list-type="picture"
-                  class=""
+                  class="w-[150px] h-[150px]"
                   :limit="1"
                   :auto-upload="false"
-                  :on-remove="HandleImageRemove"
+                  :on-remove="handleImageRemove"
                   :on-change="handleImageChange"
                 >
-                  <img
-                    v-if="uploadedImageUrl"
-                    class="w-[150px] h-[150px] overflow-hidden block object-cover"
-                    :src="uploadedImageUrl"
-                  >
-                  <div
-                    v-else
-                    class="hover:text-primary flex flex-col items-center justify-center
+                  <template #default>
+                    <div v-if="uploadedImageUrl" class="w-[150px] h-[150px]">
+                      <img
+                        class="object-cover w-full h-full"
+                        :src="uploadedImageUrl"
+                      >
+                    </div>
+                    <div
+                      v-else
+                      class="hover:text-primary flex flex-col items-center justify-center
                     text-gray-light text-center w-[150px] h-[150px]"
-                  >
-                    <span><IconAdjustMeal /></span>
-                    <p>Click or drop your <br>image here</p>
-                  </div>
+                    >
+                      <span><IconAdjustMeal /></span>
+                      <p>Click or drop your <br>image here</p>
+                    </div>
+                  </template>
                 </el-upload>
+                <div
+                  v-if="uploadedImageUrl"
+                  class="absolute inset-0 bg-black bg-opacity-50 flex items-center
+                  justify-center opacity-0 hover:opacity-100 transition-opacity"
+                >
+                  <el-icon class="text-white cursor-pointer opacity-100" @click.stop="handleImageRemove">
+                    <Delete />
+                  </el-icon>
+                </div>
               </div>
 
               <div class="flex flex-col justify-start">
@@ -65,7 +78,7 @@
                       <el-option
                         v-for="type in recipeTypes"
                         :key="type"
-                        :label="normalizeStringLabel(type)"
+                        :label="type"
                         :value="type"
                       />
                     </el-select>
@@ -85,14 +98,14 @@
               </div>
             </div>
 
-            <div class="min-w-[400px]">
+            <div class="flex">
               <el-form-item :show-message="false" prop="description">
-                <div class="flex flex-col mx-0 justify-center items-center gap-2">
+                <div class="flex flex-col mx-0 justify-center gap-2">
                   <p class="font-semibold">Description:</p>
                   <el-input
                     v-model="recipe.description"
                     required
-                    class="min-w-[400px] rounded-3xl"
+                    class="min-w-[500px] rounded-3xl"
                     type="textarea"
                     :resize="'none'"
                     :rows="4"
@@ -102,40 +115,29 @@
               </el-form-item>
             </div>
           </div>
-          <div class="flex gap-5">
-            <div class="flex flex-col" />
 
-            <div class="flex">
-              <el-card class="text-primary-dark">
-                <h3 class="font-semibold mb-2 text-sm">Nutritional Details:</h3>
-                <ul class="flex flex-wrap text-center gap-8 text-base">
-                  <li class="">
-                    <p class="truncate">Calories:</p>
-                    <span class="truncate"><b>{{ calcedNutrition.calories }}</b> kcal
-                    </span>
-                  </li>
-
-                  <li class="">
-                    <p class="truncate">Carbs:</p>
-                    <span class="truncate">
-                      <b>{{ calcedNutrition.carbs }}</b> g
-                    </span>
-                  </li>
-
-                  <li class="">
-                    <p class="truncate">Proteins:</p>
-                    <span class="truncate"><b>{{ calcedNutrition.proteins }}</b> g
-                    </span>
-                  </li>
-
-                  <li class="">
-                    <p class="truncate">Fats:</p>
-                    <span class="truncate"><b>{{ calcedNutrition.fats }}</b> g
-                    </span>
-                  </li>
-                </ul>
-              </el-card>
-            </div>
+          <div class="flex justify-start">
+            <el-card class="text-primary-dark">
+              <h3 class="font-semibold text-sm mb-2">Nutritional Details:</h3>
+              <ul class="flex flex-wrap text-center gap-8 text-base">
+                <li class="">
+                  <p class="truncate">Calories:</p>
+                  <span class="truncate"><b>{{ calcedNutrition.calories }}</b> kcal</span>
+                </li>
+                <li class="">
+                  <p class="truncate">Carbs:</p>
+                  <span class="truncate"><b>{{ calcedNutrition.carbs }}</b> g</span>
+                </li>
+                <li class="">
+                  <p class="truncate">Proteins:</p>
+                  <span class="truncate"><b>{{ calcedNutrition.proteins }}</b> g</span>
+                </li>
+                <li class="">
+                  <p class="truncate">Fats:</p>
+                  <span class="truncate"><b>{{ calcedNutrition.fats }}</b> g</span>
+                </li>
+              </ul>
+            </el-card>
           </div>
         </div>
 
@@ -144,7 +146,7 @@
             <h3 class="font-semibold mb-1">Ingredients:</h3>
             <el-select
               v-model="searchQuery"
-              class=" mb-6"
+              class=" mb-6 max-w-[600px]"
               filterable
               :filter-method="filterProducts"
               :size="$elComponentSize.large"
@@ -154,11 +156,12 @@
               <el-option
                 v-for="product in filteredProducts"
                 :key="product.id"
+                class="max-w-[600px]"
                 :label="product.name"
                 :value="product.name"
                 @click="addProductToIngredients(product)"
               >
-                <div class="flex justify-between w-full">
+                <div class="flex justify-between">
                   <span class="font-semibold">{{ product.name }}</span>
                   <p><b>{{ product.nutritionDetails.calories }}</b> kcal</p>
                 </div>
@@ -182,31 +185,38 @@
                 description="No products added at the moment."
               />
             </div>
-
-            <div class="flex justify-center items-center my-5">
+            <p class="font-semibold mt-4">Portion Weight:  {{ portionWeight }}</p>
+            <div class="flex justify-end items-center my-5 w-full">
               <el-form-item>
-                <div class="flex gap-20">
-                  <div class="flex justify-center items-center gap-4">
-                    <p class="font-semibold">Number of portions:</p>
-                    <el-input-number v-model="portions" type="number" :min="1" />
-                  </div>
-
-                  <div class="flex gap-2">
-                    <p class="font-semibold">Portion Weight:</p>
-                    <div>
-                      {{ portionWeight }}
-                    </div>
-                  </div>
-                </div>
-
-                <div class="flex justify-end pt-10 w-full">
-                  <el-button @click="handleCancel">Cancel</el-button>
-                  <el-button
-                    :type="$elComponentType.primary"
-                    native-type="submit"
+                <div class="flex justify-end items-center gap-4 mt-5">
+                  <el-checkbox
+                    v-if="isCreating"
+                    v-model="submitForReview"
+                    :size="$elComponentSize.large"
                   >
-                    Save
-                  </el-button>
+                    <template #default>
+                      <div class="flex justify-center gap-1 items-center text-center">
+                        <p>Submit for review</p>
+
+                        <el-tooltip
+                          content="Submit for admin review to add this recipe to the public database."
+                          placement="top"
+                        >
+                          <IconInfo class="w-[18px] h-[18px] my-0 fill-primary" />
+                        </el-tooltip>
+                      </div>
+                    </template>
+                  </el-checkbox>
+                  <el-button @click="handleCancel">Cancel</el-button>
+                  <div>
+                    <el-button
+                      :loading="buttonLoading"
+                      :type="$elComponentType.primary"
+                      native-type="submit"
+                    >
+                      Save
+                    </el-button>
+                  </div>
                 </div>
               </el-form-item>
             </div>
@@ -218,20 +228,25 @@
 </template>
 
 <script lang="ts" setup>
-import type { UploadFile, UploadProps } from 'element-plus'
-import { ERecipeType } from '@/types/products-and-recipes.enums'
-import { normalizeStringLabel, showNotification } from '@/helpers'
+import type { UploadUserFile, UploadProps, UploadFile } from 'element-plus'
+import { Delete } from '@element-plus/icons-vue'
 import IconAdjustMeal from '~icons/icon/adjust-meal'
+import IconInfo from '~icons/icon/info'
 import IconClose from '~icons/icon/close'
+import { showNotification } from '@/helpers'
+import { ERecipeType } from '@/types/products-and-recipes.enums'
 
 const props = defineProps<{
   title: string
+  isCreating: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'save', recipe: IRecipe): void
 }>()
+
+const authStore = useAuthStore()
 
 const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 const formRules = useElFormRules(
@@ -242,42 +257,43 @@ const formRules = useElFormRules(
   }
 )
 
+const submitForReview = ref(false)
+
 const recipe = defineModel<IRecipe>('recipe')
 const isModalVisible = defineModel<boolean>('visible')
 
-const modalLoading = ref(false)
+const buttonLoading = ref(false)
 
 const allProducts = ref<IProduct[]>([])
 
-const portions = ref(1)
 const recipeTypes = ref<TRecipesType[]>(Object.values(ERecipeType))
 
-const file = ref<UploadFile>(null)
-const uploadedImageUrl = ref<string | null | undefined>(null)
+const fileList = ref<UploadUserFile[]>([])
+const uploadedImageUrl = ref<string>('/')
 
 const searchQuery = ref<string>('')
 const filteredProducts = ref<IProduct[]>([])
 
 const handleImageChange: UploadProps['onChange'] = (uploadFile) => {
-  file.value = uploadFile
   uploadedImageUrl.value = uploadFile.url
 }
 
-const HandleImageRemove: UploadProps['onRemove'] = () => {
-  file.value = null
-  uploadedImageUrl.value = recipe.value.image
+const handleImageRemove: UploadProps['onRemove'] = () => {
+  fileList.value = []
+  uploadedImageUrl.value = null
+  recipe.value.image = null
 }
 
 const uploadImage = async () => {
   try {
-    if (file.value) {
-      const data = await filesService.uploadRecipeImage(file.value)
+    if (fileList.value.length > 0) {
+      const file = fileList.value[0] as UploadFile
 
-      if (!data) {
-        return
+      const data = await filesService.uploadRecipeImage(file)
+
+      if (data) {
+        uploadedImageUrl.value = data.productUrl
       }
-
-      uploadedImageUrl.value = data.productUrl
     }
   } catch (error) {
     showNotification()
@@ -298,17 +314,22 @@ async function handleSave () {
   formRef.value?.validate(async (isValid) => {
     if (isValid) {
       try {
-        modalLoading.value = true
+        buttonLoading.value = true
 
-        if (uploadedImageUrl.value && file.value) {
+        if (fileList.value.length > 0 && uploadedImageUrl.value) {
           await uploadImage()
           recipe.value.image = uploadedImageUrl.value
+        }
+
+        if (!authStore.isUserAdmin) {
+          recipe.value.isUnderReview = submitForReview.value
         }
 
         recipe.value.portionWeight = portionWeight.value
 
         emit('save', recipe.value)
-        modalLoading.value = false
+
+        uploadedImageUrl.value = ''
       } catch (error) {
         showNotification()
       }
@@ -319,7 +340,7 @@ async function handleSave () {
 }
 
 function handleCancel () {
-  file.value = null
+  fileList.value = []
   uploadedImageUrl.value = null
   emit('close')
 }
@@ -359,7 +380,7 @@ const calcedNutrition = computed(() => {
   }, { calories: 0, carbs: 0, proteins: 0, fats: 0 })
 
   return Object.fromEntries(
-    Object.entries(totalNutrition).map(([key, value]) => [key, Math.round(value / portions.value)])
+    Object.entries(totalNutrition).map(([key, value]) => [key, Math.round(value)])
   )
 })
 
@@ -370,12 +391,12 @@ const portionWeight = computed(() => {
     return sum + (ingredient.grams || 0)
   }, 0)
 
-  return Math.round(totalWeight / portions.value)
+  return Math.round(totalWeight)
 })
 
 const getAllProducts = async () => {
   try {
-    modalLoading.value = true
+    buttonLoading.value = true
 
     const [userProducts, products] = await Promise.all([
       productsAndRecipesService.getUserProduct(),
@@ -383,7 +404,7 @@ const getAllProducts = async () => {
     ])
 
     allProducts.value = [...userProducts, ...products]
-    modalLoading.value = false
+    buttonLoading.value = false
   } catch (error) {
     showNotification()
   }
