@@ -290,8 +290,9 @@ const uploadImage = async () => {
       const file = fileList.value[0] as UploadFile
 
       const data = await filesService.uploadRecipeImage(file)
-
+      console.log(data.productUrl)
       if (data) {
+        console.log(data)
         uploadedImageUrl.value = data.productUrl
       }
     }
@@ -328,7 +329,7 @@ async function handleSave () {
         recipe.value.portionWeight = portionWeight.value
 
         emit('save', recipe.value)
-
+        fileList.value = []
         buttonLoading.value = false
         uploadedImageUrl.value = null
       } catch (error) {
@@ -413,7 +414,12 @@ const getAllProducts = async () => {
 
 watch(isModalVisible, (newVal) => {
   if (newVal) {
+    fileList.value = []
+    uploadedImageUrl.value = null
     getAllProducts()
+  } else {
+    fileList.value = []
+    uploadedImageUrl.value = null
   }
 })
 </script>
