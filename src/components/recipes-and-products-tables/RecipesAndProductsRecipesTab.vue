@@ -1,16 +1,17 @@
 <template>
-  <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center">
-    <el-card class="max-w-[600px] lg:max-w-[700px] xl:max-w-[900px] 2xl:max-w-full">
+  <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center mt-5">
+    <el-card class="w-full xl:max-w-[900px] 2xl:max-w-full">
       <div class="flex flex-col items-center justify-between">
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
           v-model:visible="isEditDialogVisible"
-          :title="'Edit recipe'"
+          :isCreating="isCreating"
+          :title="isCreating ? 'Add New Recipe' : 'Edit Recipe'"
           @close="isEditDialogVisible = false"
           @save="saveRecipe"
           @delete="deleteRecipe"
         />
-        <div class="flex items-center gap-5 w-full mb-10">
+        <div class="flex items-center justify-end gap-5 w-full mb-10">
           <el-input
             v-model="searchQuery"
             :prefix-icon="IconSearchFood"
@@ -24,6 +25,7 @@
           <el-select
             v-model="selectedType"
             clearable
+            :size="$elComponentSize.large"
             class="max-w-[200px]"
             placeholder="Select recipe type"
             @change="handleFilterChange"
@@ -32,22 +34,27 @@
               v-for="type in recipeTypes"
               :key="type"
               class="capitalize"
-              :label="type"
+              :label="normalizeStringLabel(type)"
               :value="type"
             />
           </el-select>
-          <el-button :type="$elComponentType.primary" @click="openCreateDialog">
+          <el-button
+            :type="$elComponentType.primary"
+            :size="$elComponentSize.large"
+            @click="openCreateDialog"
+          >
             Add New Recipe
           </el-button>
         </div>
 
         <div class="overflow-x-auto w-full">
-          <div class="min-w-[1200px]">
+          <div class="w-full">
             <AppTable
               v-loading="tableLoading"
+              :height="'550'"
               :headers="recipeHeaders"
+              :empty-title="'No recipes added'"
               :table-data="sortedRecipes"
-              @sort-change="handleSortChange"
             >
               <template #image="{ row }">
                 <div class="w-[100px] h-[100px] rounded-xl overflow-hidden">
@@ -60,9 +67,15 @@
               </template>
 
               <template #name="{ row }">
-                <span class="">
+                <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="row.name" :multiline="2">
                   <b>{{ row.name }}</b>
-                </span>
+                </TruncatedTooltip>
+              </template>
+
+              <template #description="{ row }">
+                <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="row.description" :multiline="4">
+                  {{ row.description }}
+                </TruncatedTooltip>
               </template>
 
               <template #nutrition="{ row }">
@@ -78,15 +91,12 @@
                 <el-popover
                   placement="top"
                   width="auto"
-                  trigger="click"
+                  trigger="hover"
                 >
                   <ul class="flex gap-5 w-auto">
                     <li v-for="(ingredient, index) in row.ingredients" :key="index">
                       <b>{{ ingredient.name }}</b>: <br>
-                      {{ ingredient.nutritionDetails.carbs }}g carbs, <br>
-                      {{ ingredient.nutritionDetails.proteins }}g proteins, <br>
-                      {{ ingredient.nutritionDetails.fats }}g fats, <br>
-                      {{ ingredient.nutritionDetails.calories }} kcal <br>
+                      {{ ingredient.grams }}g <br>
                     </li>
                   </ul>
                   <template #reference>
@@ -99,25 +109,25 @@
                 <span v-if="row.isVegan" class="fill-success">
                   <IconVegan class="w-[30px] h-[30px]" />
                 </span>
-                <span v-else />
+                <span v-else>No</span>
               </template>
 
-              <template #edit="{ row }">
-                <el-button
-                  :size="$elComponentSize.small"
-                  @click="openEditDialog(row)"
-                >
-                  Edit
-                </el-button>
-              </template>
-              <template #delete="{ row }">
-                <el-button
-                  :type="$elComponentType.danger"
-                  :size="$elComponentSize.small"
-                  @click="deleteRecipe(row.id)"
-                >
-                  Delete
-                </el-button>
+              <template #actions="{ row }">
+                <div class="flex">
+                  <el-button
+                    :size="$elComponentSize.small"
+                    @click="openEditDialog(row)"
+                  >
+                    Edit
+                  </el-button>
+                  <el-button
+                    :type="$elComponentType.danger"
+                    :size="$elComponentSize.small"
+                    @click="deleteRecipe(row.id)"
+                  >
+                    Delete
+                  </el-button>
+                </div>
               </template>
             </AppTable>
           </div>
@@ -136,11 +146,12 @@
 </template>
 
 <script lang="ts" setup>
+import orderBy from 'lodash/orderBy'
 import debounce from 'lodash/debounce'
 import cloneDeep from 'lodash/cloneDeep'
 
 import { ERecipeType } from '@/types/products-and-recipes.enums'
-import { normalizeStringLabel, showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
+import { normalizeStringLabel, showNotification } from '@/helpers'
 import IconSearchFood from '~icons/icon/search-food'
 import IconErrorRecipe from '~icons/icon/error-recipe'
 
@@ -164,7 +175,7 @@ const tableLoading = ref(false)
 
 const recipeHeaders: TTableHeadings<IRecipe> = [
   {
-    label: '',
+    label: 'Images',
     value: 'image',
     fixed: 'left'
   },
@@ -208,8 +219,8 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
     formatter: (row) => Math.round(nutritionService.calcTotalRecipeCalories(row))
   },
   {
-    label: '',
-    value: 'edit',
+    label: 'Actions',
+    value: 'actions',
     align: 'center'
   },
   {
@@ -220,19 +231,19 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
 
 ]
 
-const sortField = ref<string>(null)
 const sortOrder = ref<'asc' | 'desc'>(null)
 
-function handleSortChange () {
-  return sortArrayBySortFieldAndOrder(recipes.value, 'nutritionDetails.calories', sortOrder.value)
+function sortRecipesByCalories (recipes: IRecipe[], sortOrder: 'asc' | 'desc' = 'asc') {
+  const recipesWithCalories = recipes.map(recipe => ({
+    ...recipe,
+    totalCalories: calculateTotalCalories(recipe)
+  }))
+
+  return orderBy(recipesWithCalories, ['totalCalories'], [sortOrder])
 }
 
 const sortedRecipes = computed(() => {
-  if (!sortField.value || !sortOrder.value) {
-    return recipes.value
-  }
-
-  return handleSortChange()
+  return sortRecipesByCalories(recipes.value, sortOrder.value || 'asc')
 })
 
 function calculateTotalCarbs (recipe: IRecipe): number {
@@ -254,18 +265,17 @@ function calculateTotalCalories (recipe: IRecipe): number {
 async function getPaginatedRecipes (page?: number) {
   if (page && recipePagesCache.value[page]) {
     recipes.value = recipePagesCache.value[page]
-
     return
   }
 
   try {
     tableLoading.value = true
 
-    const { data, count } = await productsAndRecipesService.getPaginatedRecipes(
-      pageSize.value,
-      (currentPage.value - 1) * pageSize.value,
-      selectedType.value
-    )
+    const { data, count } = await productsAndRecipesService.getPaginatedRecipes({
+      limit: pageSize.value,
+      offset: (currentPage.value - 1) * pageSize.value,
+      typeFilter: selectedType.value
+    })
 
     recipes.value = data || []
     totalRecipes.value = count || 0
@@ -282,15 +292,16 @@ async function searchRecipes (page: number = 1) {
     tableLoading.value = true
 
     const offset = (page - 1) * pageSize.value
-    const { data, count } = await productsAndRecipesService.searchRecipes(
-      searchQuery.value,
-      selectedType.value,
-      pageSize.value, offset
-    )
+    const { data, count } = await productsAndRecipesService.searchRecipes({
+      searchQuery: searchQuery.value,
+      typeFilter: selectedType.value,
+      limit: pageSize.value,
+      offset
+    })
 
     recipes.value = data || []
     totalRecipes.value = count || 0
-    currentPage.value = 1
+    currentPage.value = page
 
     tableLoading.value = false
   } catch (error) {
