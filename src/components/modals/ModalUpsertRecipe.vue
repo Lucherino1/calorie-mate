@@ -269,9 +269,9 @@ const allProducts = ref<IProduct[]>([])
 const recipeTypes = ref<TRecipesType[]>(Object.values(ERecipeType))
 
 const fileList = ref<UploadUserFile[]>([])
-const uploadedImageUrl = ref<string>('/')
+const uploadedImageUrl = ref<string>(null)
 
-const searchQuery = ref<string>('')
+const searchQuery = ref<string>(null)
 const filteredProducts = ref<IProduct[]>([])
 
 const handleImageChange: UploadProps['onChange'] = (uploadFile) => {
@@ -329,7 +329,7 @@ async function handleSave () {
 
         emit('save', recipe.value)
 
-        uploadedImageUrl.value = ''
+        uploadedImageUrl.value = null
       } catch (error) {
         showNotification()
       }
