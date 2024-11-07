@@ -1,5 +1,5 @@
 =<template>
-  <el-table :data="tableData" class="w-full">
+  <el-table :height="height" :data="tableData" class="w-full">
     <el-table-column
       v-for="header of prop.headers"
       :key="header.value"
@@ -27,6 +27,11 @@
         </slot>
       </template>
     </el-table-column>
+    <template #empty>
+      <div class="min-h-[200px] flex justify-center items-center text-base">
+        {{ emptyTitle }}
+      </div>
+    </template>
   </el-table>
 </template>
 
@@ -34,5 +39,7 @@
 const prop = defineProps<{
   headers: TTableHeadings
   tableData: TIndexedObject[]
+  emptyTitle?: string
+  height?: string
 }>()
 </script>
