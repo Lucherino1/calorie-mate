@@ -230,17 +230,6 @@ class NutritionService {
   calcTotalRecipeCalories (recipe: IRecipe): number {
     return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.calories, 0)
   }
-
-  calcPortionsDivision (ingredients: IProduct[], portionCount: number) {
-    return ingredients.reduce((totals, ingredient) => {
-      const { calories, proteins, carbs, fats } = ingredient.nutritionDetails
-      totals.calories += Math.round((calories || 0) / portionCount)
-      totals.proteins += Math.round((proteins || 0) / portionCount)
-      totals.carbs += Math.round((carbs || 0) / portionCount)
-      totals.fats += Math.round((fats || 0) / portionCount)
-      return totals
-    }, { calories: 0, proteins: 0, carbs: 0, fats: 0 } as INutritionDetails)
-  }
 }
 
 export const nutritionService = new NutritionService()
