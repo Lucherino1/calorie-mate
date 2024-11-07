@@ -5,7 +5,7 @@
         <div class="flex items-center text-center justify-between">
           <div class="flex flex-col gap-5">
             <BackButton v-if="backButton" :button-text="'Back to dashboard'" :route-name="$routeNames.dashboard" />
-            <h1 class="font-bold text-primary-dark text-[34px] leading-10">
+            <h1 class="font-bold text-[34px] leading-10">
               {{ pageTitle }}
             </h1>
           </div>

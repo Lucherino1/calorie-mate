@@ -6,11 +6,11 @@
           <BackButton :button-text="'Back'" :route-name="$routeNames.aboutUs" />
 
           <div>
-            <h2 class="text-4xl leading-[56px] font-bold text-primary-dark">{{ titleText }}</h2>
+            <h2 class="text-4xl leading-[56px] font-bold">{{ titleText }}</h2>
             <slot />
             <div class="flex flex-col gap-3 mt-1">
               <div class="flex gap-1">
-                <p class="text-primary-dark">{{ authPromptText }}</p>
+                <p>{{ authPromptText }}</p>
                 <el-button link :type="$elComponentType.primary" @click="toggleAuthPage">
                   {{ toggleAuthPageBtnText }}
                 </el-button>

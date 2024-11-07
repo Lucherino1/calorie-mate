@@ -14,7 +14,7 @@
           <div class="flex justify-between items-start">
             <div>
               <div class="flex items-center">
-                <p class="text-2xl font-bold text-primary-dark">
+                <p class="text-2xl font-bold">
                   {{ recipe.name }}
                 </p>
                 <span v-if="recipe.isVegan" class="flex items-center fill-success w-[20px] h-[20px] ml-2">

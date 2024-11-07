@@ -6,7 +6,7 @@
           <div class="flex justify-center items-center">
             <div class="min-w-[110px] text-left flex flex-col items-start">
               <div class="flex justify-center items-center mr-2">
-                <span class="max-w-[80px] truncate font-bold text-[12px] text-primary-dark">
+                <span class="max-w-[80px] truncate font-bold text-[12px] ">
                   <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="product.name" :multiline="1">
                     {{ product.name }}
                   </TruncatedTooltip>

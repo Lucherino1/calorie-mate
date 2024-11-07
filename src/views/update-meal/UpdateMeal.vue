@@ -8,7 +8,7 @@
     <template #header>
       <el-card class="px-2">
         <div class="flex text-center items-center gap-5 ">
-          <p class="capitalize font-bold text-primary-dark">TOTAL:</p>
+          <p class="capitalize font-bold">TOTAL:</p>
           <ProgressCalories
             :type="'circle'"
             :percentage="totalCaloriesPercentage || 0"
@@ -16,7 +16,7 @@
           >
             <template #default>
               <div class="flex items-center justify-center text-center">
-                <span class="text-sm text-primary-dark">
+                <span class="text-sm">
                   <b>{{ totalNutrients.calories }}</b><br>
                   <p>kcal</p>
                 </span>

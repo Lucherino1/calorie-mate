@@ -1,7 +1,7 @@
 <template>
   <aside class="min-h-screen h-auto bg-white flex flex-col">
     <div class="fixed w-[310px] min-h-screen flex flex-col justify-between">
-      <div class="pt-14 pb-12 font-poppins text-[26px] text-primary-dark text-center border-b">
+      <div class="pt-14 pb-12 font-poppins text-[26px] text-center border-b">
         <h1><b>CALORIE</b> MATE</h1>
       </div>
       <div class="flex-1 pl-5 pt-10">
