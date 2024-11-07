@@ -113,7 +113,7 @@
               </template>
 
               <template #actions="{ row }">
-                <div class="flex">
+                <div class="flex min-w-[300px]">
                   <el-button
                     :size="$elComponentSize.small"
                     @click="openEditDialog(row)"
@@ -221,12 +221,8 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
   {
     label: 'Actions',
     value: 'actions',
-    align: 'center'
-  },
-  {
-    label: '',
-    value: 'delete',
-    align: 'center'
+    align: 'center',
+    width: 200
   }
 
 ]
