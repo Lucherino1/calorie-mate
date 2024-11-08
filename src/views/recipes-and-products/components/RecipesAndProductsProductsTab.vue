@@ -1,6 +1,6 @@
 <template>
-  <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center mt-5">
-    <el-card class="w-full lg:max-w-[800px] xl:max-w-full">
+  <div v-loading.fullscreen="pageLoading" class="flex w-full justify-center items-center mt-5">
+    <el-card class="w-full overflow-x-scroll items-center justify-between">
       <div class="flex flex-col items-center justify-between">
         <ModalUpsertProduct
           v-model:product="editableProduct"
@@ -91,6 +91,8 @@ import { EProductType } from '@/types/products-and-recipes.enums'
 import { normalizeStringLabel, showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
 import IconSearchFood from '~icons/icon/search-food'
 
+const authStore = useAuthStore()
+
 const currentPage = ref(1)
 const pageSize = ref(15)
 
@@ -132,10 +134,12 @@ async function getPaginatedProducts (page?: number) {
   try {
     tableLoading.value = true
 
-    const { data, count } = await productsAndRecipesService.getPaginatedProducts({
+    const { data, count } = await productsAndRecipesService.getProducts({
       limit: pageSize.value,
       offset: (currentPage.value - 1) * pageSize.value,
-      typeFilter: selectedType.value
+      typeFilter: selectedType.value,
+      userOnly: true,
+      isAdmin: authStore.isUserAdmin
     })
 
     products.value = data || []
@@ -153,11 +157,13 @@ async function searchProducts (page: number = 1) {
     tableLoading.value = true
 
     const offset = (page - 1) * pageSize.value
-    const { data, count } = await productsAndRecipesService.searchProducts({
+    const { data, count } = await productsAndRecipesService.getProducts({
       searchQuery: searchQuery.value,
       typeFilter: selectedType.value,
       limit: pageSize.value,
-      offset
+      offset,
+      userOnly: true,
+      isAdmin: authStore.isUserAdmin
     })
 
     products.value = data || []
@@ -207,12 +213,19 @@ async function saveProduct () {
   modalButtonLoading.value = true
   try {
     if (isCreating.value) {
-      const createdProduct = await productsAndRecipesService.createProduct(editableProduct.value)
+      const createdProduct = await productsAndRecipesService.createProduct({
+        product: editableProduct.value,
+        isAdmin: authStore.isUserAdmin
+      })
 
       products.value.push(createdProduct)
       showNotification('Product created successfully', 'Success', 'success')
     } else {
-      await productsAndRecipesService.updateProduct(editableProduct.value.id, editableProduct.value)
+      await productsAndRecipesService.updateProduct({
+        productId: editableProduct.value.id,
+        updatedProductData: editableProduct.value,
+        isAdmin: authStore.isUserAdmin
+      })
 
       const index = products.value.findIndex(product => product.id === editableProduct.value.id)
       if (index !== -1) {
@@ -226,6 +239,7 @@ async function saveProduct () {
     showNotification(error.message, 'error')
   } finally {
     isEditDialogVisible.value = false
+    modalButtonLoading.value = false
   }
 }
 
@@ -233,7 +247,7 @@ async function deleteProduct (productId: string) {
   try {
     tableLoading.value = true
 
-    await productsAndRecipesService.deleteProduct(productId)
+    await productsAndRecipesService.deleteProduct({ productId, isAdmin: authStore.isUserAdmin })
     products.value = products.value.filter(product => product.id !== productId)
     showNotification('Product deleted successfully', 'Success', 'success')
     isEditDialogVisible.value = false

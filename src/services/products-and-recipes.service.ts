@@ -1,26 +1,41 @@
 class ProductsAndRecipesService {
-  async getGlobalProducts () {
-    const { data, error } = await useSupabase.from('products').select('*')
-    if (error) throw new Error(error.message)
-    return data
-  }
+  async getProducts ({
+    searchQuery,
+    typeFilter,
+    limit,
+    offset,
+    isAdmin = false,
+    userOnly = false
+  }: {
+    searchQuery?: string
+    typeFilter?: string
+    limit?: number
+    offset?: number
+    isAdmin?: boolean
+    userOnly?: boolean
+  } = {}) {
+    const tableName = isAdmin || !userOnly ? 'products' : 'user-products'
 
-  async getGlobalRecipes () {
-    const { data, error } = await useSupabase.from('recipes').select('*')
-    if (error) throw new Error(error.message)
-    return data
-  }
+    let query = useSupabase
+      .from(tableName)
+      .select('*', { count: 'exact' })
 
-  async getUserProduct () {
-    const { data, error } = await useSupabase.from('user-products').select('*')
-    if (error) throw new Error(error.message)
-    return data
-  }
+    if (typeFilter) {
+      query = query.eq('type', typeFilter)
+    }
 
-  async getUserRecipes () {
-    const { data, error } = await useSupabase.from('user-recipes').select('*')
+    if (searchQuery) {
+      query = query.ilike('name', `%${searchQuery}%`)
+    }
+
+    if (limit !== undefined && offset !== undefined) {
+      query = query.range(offset, offset + limit - 1)
+    }
+
+    const { data, count, error } = await query
     if (error) throw new Error(error.message)
-    return data
+
+    return { data, count }
   }
 
   async getProductById (id: string) {
@@ -38,81 +53,33 @@ class ProductsAndRecipesService {
     }
   }
 
-  async getPaginatedProducts ({
-    limit,
-    offset,
-    typeFilter
-  }: {
-    limit: number
-    offset: number
-    typeFilter?: string
-  }) {
-    const authStore = useAuthStore()
-    const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
-
-    let query = useSupabase
-      .from(tableName)
-      .select('*', { count: 'exact' })
-      .range(offset, offset + limit - 1)
-
-    if (typeFilter) {
-      query = query.eq('type', typeFilter)
-    }
-
-    const { data, count, error } = await query
-    if (error) throw new Error(error.message)
-
-    return { data, count }
-  }
-
-  async getPaginatedRecipes ({
-    limit,
-    offset,
-    typeFilter
-  }: {
-    limit: number
-    offset: number
-    typeFilter?: string
-  }) {
-    const authStore = useAuthStore()
-    const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
-
-    let query = useSupabase
-      .from(tableName)
-      .select('*', { count: 'exact' })
-      .range(offset, offset + limit - 1)
-
-    if (typeFilter) {
-      query = query.eq('type', typeFilter)
-    }
-
-    const { data, count, error } = await query
-    if (error) throw new Error(error.message)
-
-    return { data, count }
-  }
-
-  async searchRecipes ({
+  async getRecipes ({
     searchQuery,
     typeFilter,
     limit,
-    offset
+    offset,
+    isAdmin = false,
+    userOnly = false
   }: {
-    searchQuery: string
+    searchQuery?: string
     typeFilter?: string
     limit?: number
     offset?: number
-  }) {
-    const authStore = useAuthStore()
-    const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
+    isAdmin?: boolean
+    userOnly?: boolean
+  } = {}) {
+    const tableName = isAdmin || !userOnly ? 'recipes' : 'user-recipes'
 
     let query = useSupabase
       .from(tableName)
       .select('*', { count: 'exact' })
-      .ilike('name', `%${searchQuery}%`)
 
     if (typeFilter) {
       query = query.eq('type', typeFilter)
+    }
+
+    if (searchQuery) {
+      query = query.ilike('name', `%${searchQuery}%`)
     }
 
     if (limit !== undefined && offset !== undefined) {
@@ -125,42 +92,16 @@ class ProductsAndRecipesService {
     return { data, count }
   }
 
-  async searchProducts ({
-    searchQuery,
-    typeFilter,
-    limit,
-    offset
+  async updateProduct ({
+    productId,
+    updatedProductData,
+    isAdmin = false
   }: {
-    searchQuery: string
-    typeFilter?: string
-    limit?: number
-    offset?: number
+    productId: string
+    updatedProductData: Partial<IProduct>
+    isAdmin?: boolean
   }) {
-    const authStore = useAuthStore()
-    const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
-
-    let query = useSupabase
-      .from(tableName)
-      .select('*', { count: 'exact' })
-      .ilike('name', `%${searchQuery}%`)
-
-    if (typeFilter) {
-      query = query.eq('type', typeFilter)
-    }
-
-    if (limit !== undefined && offset !== undefined) {
-      query = query.range(offset, offset + limit - 1)
-    }
-
-    const { data, count, error } = await query
-    if (error) throw new Error(error.message)
-
-    return { data, count }
-  }
-
-  async updateProduct (productId: string, updatedProductData: Partial<IProduct>) {
-    const authStore = useAuthStore()
-    const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
+    const tableName = isAdmin ? 'products' : 'user-products'
 
     const { data, error } = await useSupabase
       .from(tableName)
@@ -172,9 +113,16 @@ class ProductsAndRecipesService {
     return data
   }
 
-  async updateRecipe (recipeId: string, updatedRecipeData: Partial<IRecipe>) {
-    const authStore = useAuthStore()
-    const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
+  async updateRecipe ({
+    recipeId,
+    updatedRecipeData,
+    isAdmin = false
+  }: {
+    recipeId: string
+    updatedRecipeData: Partial<IRecipe>
+    isAdmin?: boolean
+  }) {
+    const tableName = isAdmin ? 'recipes' : 'user-recipes'
 
     const { data, error } = await useSupabase
       .from(tableName)
@@ -186,9 +134,14 @@ class ProductsAndRecipesService {
     return data
   }
 
-  async deleteProduct (productId: string) {
-    const authStore = useAuthStore()
-    const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
+  async deleteProduct ({
+    productId,
+    isAdmin = false
+  }: {
+    productId: string
+    isAdmin?: boolean
+  }) {
+    const tableName = isAdmin ? 'products' : 'user-products'
 
     const { data, error } = await useSupabase
       .from(tableName)
@@ -200,9 +153,14 @@ class ProductsAndRecipesService {
     return data
   }
 
-  async deleteRecipe (recipeId: string) {
-    const authStore = useAuthStore()
-    const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
+  async deleteRecipe ({
+    recipeId,
+    isAdmin = false
+  }: {
+    recipeId: string
+    isAdmin?: boolean
+  }) {
+    const tableName = isAdmin ? 'recipes' : 'user-recipes'
 
     const { data, error } = await useSupabase
       .from(tableName)
@@ -214,9 +172,14 @@ class ProductsAndRecipesService {
     return data
   }
 
-  async createProduct (product: Partial<IProduct>) {
-    const authStore = useAuthStore()
-    const tableName = authStore.isUserAdmin ? 'products' : 'user-products'
+  async createProduct ({
+    product,
+    isAdmin = false
+  }: {
+    product: Partial<IProduct>
+    isAdmin?: boolean
+  }) {
+    const tableName = isAdmin ? 'products' : 'user-products'
 
     const { data, error } = await useSupabase
       .from(tableName)
@@ -229,9 +192,14 @@ class ProductsAndRecipesService {
     return data
   }
 
-  async createRecipe (recipe: Partial<IRecipe>) {
-    const authStore = useAuthStore()
-    const tableName = authStore.isUserAdmin ? 'recipes' : 'user-recipes'
+  async createRecipe ({
+    recipe,
+    isAdmin = false
+  }: {
+    recipe: Partial<IRecipe>
+    isAdmin?: boolean
+  }) {
+    const tableName = isAdmin ? 'recipes' : 'user-recipes'
 
     const { data, error } = await useSupabase
       .from(tableName)

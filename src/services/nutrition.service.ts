@@ -64,6 +64,7 @@ class NutritionService {
   // Eaten calculations:
 
   calcNutritionPerGrams (nutritionDetails: INutritionDetails, grams: number) {
+    if (grams === undefined || grams === null) grams = 100
     const factor = grams / 100
     return Object.keys(nutritionDetails).reduce((acc, key) => {
       acc[key] = Math.round(nutritionDetails[key] * factor)
@@ -231,8 +232,14 @@ class NutritionService {
     return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.calories, 0)
   }
 
-  calculateTotalCalories (recipe: IRecipe): number {
-    return Math.round(recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.calories, 0))
+  calculateTotalRecipeCalories (recipe: IRecipe): number {
+    return Math.round(
+      recipe.ingredients.reduce((sum, ingredient) => {
+        const calsPerGrams =
+        nutritionService.calcNutritionPerGrams(ingredient.nutritionDetails, ingredient.grams || 100).calories
+        return sum + calsPerGrams
+      }, 0)
+    )
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center mt-5">
-    <el-card class="w-full lg:max-w-[800px] xl:max-w-full">
-      <div class="flex flex-col items-center justify-between">
+    <el-card class="w-full overflow-x-scroll items-center justify-between">
+      <div class="flex flex-col items-center justify-between w-full">
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
           v-model:visible="isEditDialogVisible"
@@ -48,28 +48,31 @@
           </el-button>
         </div>
 
-        <RecipesAndProductsRecipesTable
-          :table-data="sortedRecipes"
-          :table-loading="tableLoading"
-        >
-          <template #actions="{ row }">
-            <div class="flex min-w-[300px]">
-              <el-button
-                :size="$elComponentSize.small"
-                @click="openEditDialog(row)"
-              >
-                Edit
-              </el-button>
-              <el-button
-                :type="$elComponentType.danger"
-                :size="$elComponentSize.small"
-                @click="deleteRecipe(row.id)"
-              >
-                Delete
-              </el-button>
-            </div>
-          </template>
-        </RecipesAndProductsRecipesTable>
+        <div class="w-full overflow-x-scroll">
+          <RecipesAndProductsRecipesTable
+            :table-data="sortedRecipes"
+            :table-loading="tableLoading"
+          >
+            >
+            <template #actions="{ row }">
+              <div class="flex min-w-[300px]">
+                <el-button
+                  :size="$elComponentSize.small"
+                  @click="openEditDialog(row)"
+                >
+                  Edit
+                </el-button>
+                <el-button
+                  :type="$elComponentType.danger"
+                  :size="$elComponentSize.small"
+                  @click="deleteRecipe(row.id)"
+                >
+                  Delete
+                </el-button>
+              </div>
+            </template>
+          </RecipesAndProductsRecipesTable>
+        </div>
 
         <el-pagination
           v-model:current-page="currentPage"
@@ -91,6 +94,8 @@ import cloneDeep from 'lodash/cloneDeep'
 import { ERecipeType } from '@/types/products-and-recipes.enums'
 import { normalizeStringLabel, showNotification } from '@/helpers'
 import IconSearchFood from '~icons/icon/search-food'
+
+const authStore = useAuthStore()
 
 const activeTab = defineModel<string>('active-tab')
 
@@ -125,7 +130,7 @@ const sortedRecipes = computed(() => {
 })
 
 function calculateTotalCalories (recipe: IRecipe): number {
-  return nutritionService.calculateTotalCalories(recipe)
+  return nutritionService.calculateTotalRecipeCalories(recipe)
 }
 
 async function getPaginatedRecipes (page?: number) {
@@ -137,19 +142,21 @@ async function getPaginatedRecipes (page?: number) {
   try {
     tableLoading.value = true
 
-    const { data, count } = await productsAndRecipesService.getPaginatedRecipes({
+    const { data, count } = await productsAndRecipesService.getRecipes({
       limit: pageSize.value,
       offset: (currentPage.value - 1) * pageSize.value,
-      typeFilter: selectedType.value
+      typeFilter: selectedType.value,
+      userOnly: true,
+      isAdmin: authStore.isUserAdmin
     })
 
     recipes.value = data || []
     totalRecipes.value = count || 0
     recipePagesCache.value[page] = data
-
-    tableLoading.value = false
   } catch (error) {
     showNotification()
+  } finally {
+    tableLoading.value = false
   }
 }
 
@@ -158,20 +165,22 @@ async function searchRecipes (page: number = 1) {
     tableLoading.value = true
 
     const offset = (page - 1) * pageSize.value
-    const { data, count } = await productsAndRecipesService.searchRecipes({
+    const { data, count } = await productsAndRecipesService.getRecipes({
       searchQuery: searchQuery.value,
       typeFilter: selectedType.value,
       limit: pageSize.value,
-      offset
+      offset,
+      userOnly: true,
+      isAdmin: authStore.isUserAdmin
     })
 
     recipes.value = data || []
     totalRecipes.value = count || 0
     currentPage.value = page
-
-    tableLoading.value = false
   } catch (error) {
     showNotification()
+  } finally {
+    tableLoading.value = false
   }
 }
 
@@ -195,25 +204,31 @@ async function saveRecipe () {
 
   try {
     if (isCreating.value) {
-      const createdRecipe = await productsAndRecipesService.createRecipe(editableRecipe.value)
+      const createdRecipe = await productsAndRecipesService.createRecipe({
+        recipe: editableRecipe.value,
+        isAdmin: authStore.isUserAdmin
+      })
 
       recipes.value.push(createdRecipe)
       showNotification('Recipe created successfully', 'Success', 'success')
     } else {
-      await productsAndRecipesService.updateRecipe(editableRecipe.value.id, editableRecipe.value)
-      console.log(editableRecipe)
+      await productsAndRecipesService.updateRecipe({
+        recipeId: editableRecipe.value.id,
+        updatedRecipeData: editableRecipe.value,
+        isAdmin: authStore.isUserAdmin
+      })
+
       const index = recipes.value.findIndex(recipe => recipe.id === editableRecipe.value.id)
       if (index !== -1) {
         recipes.value[index] = { ...editableRecipe.value }
       }
       showNotification('Recipe updated successfully', 'Success', 'success')
     }
-
+  } catch (error) {
+    showNotification(error.message, 'Error', 'error')
+  } finally {
     isEditDialogVisible.value = false
     isCreating.value = false
-  } catch (error) {
-    throw new Error(error)
-  } finally {
     modalButtonLoading.value = false
   }
 }
@@ -242,7 +257,7 @@ async function deleteRecipe (recipeId: string) {
     recipePagesCache.value = {}
 
     tableLoading.value = true
-    await productsAndRecipesService.deleteRecipe(recipeId)
+    await productsAndRecipesService.deleteRecipe({ recipeId, isAdmin: authStore.isUserAdmin })
 
     getPaginatedRecipes()
     recipes.value = recipes.value.filter(recipe => recipe.id !== recipeId)

@@ -394,11 +394,11 @@ const portionWeight = computed(() => {
 const getAllProducts = async () => {
   try {
     const [userProducts, products] = await Promise.all([
-      productsAndRecipesService.getUserProduct(),
+      productsAndRecipesService.getProducts({ userOnly: true }),
       productsAndRecipesService.getProducts()
     ])
 
-    allProducts.value = [...userProducts, ...products]
+    allProducts.value = [...userProducts.data, ...products.data]
   } catch (error) {
     showNotification()
   }

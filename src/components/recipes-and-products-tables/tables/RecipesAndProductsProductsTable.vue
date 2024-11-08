@@ -1,31 +1,29 @@
 <template>
-  <div class="overflow-x-auto w-full">
-    <AppTable
-      v-loading="tableLoading"
-      :height="'550'"
-      empty-title="No products added"
-      :headers="productHeaders"
-      :table-data="tableData"
-      @sort-change="handleSortChange"
-    >
-      <template #name="{ row }">
-        <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="row.name" :multiline="2">
-          <b>{{ row.name }}</b>
-        </TruncatedTooltip>
-      </template>
+  <AppTable
+    v-loading="tableLoading"
+    height="550"
+    empty-title="No products added"
+    :headers="productHeaders"
+    :table-data="tableData"
+    @sort-change="handleSortChange"
+  >
+    <template #name="{ row }">
+      <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="row.name" :multiline="2">
+        <b>{{ row.name }}</b>
+      </TruncatedTooltip>
+    </template>
 
-      <template #isVegan="{ row }">
-        <span v-if="row.isVegan" class="fill-success">
-          <IconVegan />
-        </span>
-        <span v-else>No</span>
-      </template>=
+    <template #isVegan="{ row }">
+      <span v-if="row.isVegan" class="fill-success">
+        <IconVegan />
+      </span>
+      <span v-else>No</span>
+    </template>=
 
-      <template #actions="{ row }">
-        <slot name="actions" :row="row" />
-      </template>
-    </AppTable>
-  </div>
+    <template #actions="{ row }">
+      <slot name="actions" :row="row" />
+    </template>
+  </AppTable>
 </template>
 
 <script lang="ts" setup>
@@ -85,7 +83,7 @@ const productHeaders: TTableHeadings<IProduct> = [
     label: 'Actions',
     value: 'actions',
     align: 'center',
-    width: 150
+    minWidth: 150
   }
 ]
 </script>
