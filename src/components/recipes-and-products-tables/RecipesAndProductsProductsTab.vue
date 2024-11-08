@@ -51,7 +51,7 @@
           <AppTable
             v-loading="tableLoading"
             :height="'550'"
-            :empty-title="'No products added'"
+            empty-title="No products added"
             :headers="productHeaders"
             :table-data="sortedProducts"
             @sort-change="handleSortChange"

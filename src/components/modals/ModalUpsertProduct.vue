@@ -62,7 +62,7 @@
           <el-form-item>
             <div class="flex min-w-[230px] justify-between">
               <p class="font-semibold">Carbs:</p>
-              <el-input-number v-model="product.nutritionDetails.carbs" type="number" :min="1">
+              <el-input-number v-model="product.nutritionDetails.carbs" type="number" :min="0">
                 <template #suffix>g</template>
               </el-input-number>
             </div>
@@ -71,7 +71,7 @@
           <el-form-item>
             <div class="flex min-w-[230px] justify-between">
               <p class="font-semibold">Proteins:</p>
-              <el-input-number v-model="product.nutritionDetails.proteins" type="number" :min="1">
+              <el-input-number v-model="product.nutritionDetails.proteins" type="number" :min="0">
                 <template #suffix>g</template>
               </el-input-number>
             </div>
@@ -80,7 +80,7 @@
           <el-form-item>
             <div class="flex min-w-[230px] justify-between">
               <p class="font-semibold">Fats:</p>
-              <el-input-number v-model="product.nutritionDetails.fats" type="number" :min="1">
+              <el-input-number v-model="product.nutritionDetails.fats" type="number" :min="0">
                 <template #suffix>g</template>
               </el-input-number>
             </div>
