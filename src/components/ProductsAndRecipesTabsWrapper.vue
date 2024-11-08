@@ -14,12 +14,12 @@
         </div>
 
         <div class="mx-0">
-          <el-tabs v-model="modelValue" stretch class="min-h-[500px] flex">
+          <el-tabs v-model="modelValue" stretch class="min-h-[500px] flex w-full">
             <el-tab-pane label="Products" name="products" class="w-full overflow-y-scroll">
               <slot name="products" />
             </el-tab-pane>
 
-            <el-tab-pane class="overflow-y-scroll" label="Recipes" name="recipes">
+            <el-tab-pane class="w-full overflow-y-scroll" label="Recipes" name="recipes">
               <slot name="recipes" />
             </el-tab-pane>
           </el-tabs>
