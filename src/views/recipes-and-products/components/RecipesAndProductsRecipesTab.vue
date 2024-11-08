@@ -1,10 +1,11 @@
 <template>
   <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center mt-5">
-    <el-card class="w-full xl:max-w-[900px] 2xl:max-w-full">
+    <el-card class="w-full lg:max-w-[800px] xl:max-w-full">
       <div class="flex flex-col items-center justify-between">
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
           v-model:visible="isEditDialogVisible"
+          :modal-button-loading="modalButtonLoading"
           :isCreating="isCreating"
           :title="isCreating ? 'Add New Recipe' : 'Edit Recipe'"
           @close="isEditDialogVisible = false"
@@ -113,11 +114,10 @@ const sortOrder = ref<'asc' | 'desc'>(null)
 
 function sortRecipesByCalories (recipes: IRecipe[], sortOrder: 'asc' | 'desc' = 'asc') {
   const recipesWithCalories = recipes.map(recipe => ({
-    ...recipe,
-    totalCalories: calculateTotalCalories(recipe)
+    ...recipe
   }))
 
-  return orderBy(recipesWithCalories, ['totalCalories'], [sortOrder])
+  return orderBy(recipesWithCalories, recipe => calculateTotalCalories(recipe), [sortOrder])
 }
 
 const sortedRecipes = computed(() => {
@@ -182,12 +182,16 @@ const editableRecipe = ref<IRecipe>(null)
 
 function openEditDialog (row: IRecipe) {
   editableRecipe.value = cloneDeep(row)
+  isCreating.value = false
 
   isEditDialogVisible.value = true
 }
 
+const modalButtonLoading = ref(false)
+
 async function saveRecipe () {
   if (!editableRecipe.value) return
+  modalButtonLoading.value = true
 
   try {
     if (isCreating.value) {
@@ -197,7 +201,7 @@ async function saveRecipe () {
       showNotification('Recipe created successfully', 'Success', 'success')
     } else {
       await productsAndRecipesService.updateRecipe(editableRecipe.value.id, editableRecipe.value)
-
+      console.log(editableRecipe)
       const index = recipes.value.findIndex(recipe => recipe.id === editableRecipe.value.id)
       if (index !== -1) {
         recipes.value[index] = { ...editableRecipe.value }
@@ -208,7 +212,9 @@ async function saveRecipe () {
     isEditDialogVisible.value = false
     isCreating.value = false
   } catch (error) {
-    showNotification(error.message, 'error')
+    throw new Error(error)
+  } finally {
+    modalButtonLoading.value = false
   }
 }
 
@@ -233,14 +239,20 @@ function openCreateDialog () {
 
 async function deleteRecipe (recipeId: string) {
   try {
+    recipePagesCache.value = {}
+
+    tableLoading.value = true
     await productsAndRecipesService.deleteRecipe(recipeId)
 
+    getPaginatedRecipes()
     recipes.value = recipes.value.filter(recipe => recipe.id !== recipeId)
 
     showNotification('Have a nice day', 'Recipe deleted successfully', 'success')
     isEditDialogVisible.value = false
   } catch (error) {
     showNotification(`Error deleting recipe: ${error.message}`, 'error')
+  } finally {
+    tableLoading.value = false
   }
 }
 

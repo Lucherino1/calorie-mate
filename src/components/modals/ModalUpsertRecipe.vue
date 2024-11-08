@@ -36,10 +36,10 @@
                   :on-change="handleImageChange"
                 >
                   <template #default>
-                    <div v-if="uploadedImageUrl" class="w-[150px] h-[150px]">
+                    <div v-if="uploadedImageUrl || recipe.image" class="w-[150px] h-[150px]">
                       <img
                         class="object-cover w-full h-full"
-                        :src="uploadedImageUrl"
+                        :src="recipe.image || uploadedImageUrl"
                       >
                     </div>
                     <div
@@ -210,7 +210,7 @@
                   <el-button @click="handleCancel">Cancel</el-button>
                   <div>
                     <el-button
-                      :loading="buttonLoading"
+                      :loading="modalButtonLoading"
                       :type="$elComponentType.primary"
                       native-type="submit"
                     >
@@ -239,6 +239,7 @@ import { ERecipeType } from '@/types/products-and-recipes.enums'
 const props = defineProps<{
   title: string
   isCreating: boolean
+  modalButtonLoading: boolean
 }>()
 
 const emit = defineEmits<{
@@ -261,8 +262,6 @@ const submitForReview = ref(false)
 
 const recipe = defineModel<IRecipe>('recipe')
 const isModalVisible = defineModel<boolean>('visible')
-
-const buttonLoading = ref(false)
 
 const allProducts = ref<IProduct[]>([])
 
@@ -297,7 +296,7 @@ const uploadImage = async () => {
       }
     }
   } catch (error) {
-    showNotification()
+    showNotification('Please try again later', 'Failed to upload an image')
   }
 }
 
@@ -315,8 +314,6 @@ async function handleSave () {
   formRef.value?.validate(async (isValid) => {
     if (isValid) {
       try {
-        buttonLoading.value = true
-
         if (fileList.value.length > 0 && uploadedImageUrl.value) {
           await uploadImage()
           recipe.value.image = uploadedImageUrl.value
@@ -330,13 +327,11 @@ async function handleSave () {
 
         emit('save', recipe.value)
         fileList.value = []
-        buttonLoading.value = false
+
         uploadedImageUrl.value = null
       } catch (error) {
         showNotification()
       }
-    } else {
-      showNotification('Please fill in all required fields.', 'warning')
     }
   })
 }
@@ -398,15 +393,12 @@ const portionWeight = computed(() => {
 
 const getAllProducts = async () => {
   try {
-    buttonLoading.value = true
-
     const [userProducts, products] = await Promise.all([
       productsAndRecipesService.getUserProduct(),
-      productsAndRecipesService.getGlobalProducts()
+      productsAndRecipesService.getProducts()
     ])
 
     allProducts.value = [...userProducts, ...products]
-    buttonLoading.value = false
   } catch (error) {
     showNotification()
   }

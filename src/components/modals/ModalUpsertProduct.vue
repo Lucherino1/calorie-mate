@@ -1,6 +1,7 @@
 <template>
   <el-dialog
     v-model="isModalVisible"
+    :validate-on-rule-change="false"
     :modal="true"
     :close-icon="IconClose"
     plain
@@ -9,7 +10,7 @@
     :lock-scroll="true"
     close-on-press-escape
     :title="props.title"
-    width="700px"
+    width="650px"
     class="rounded-xl pb-0"
   >
     <p class="text-center mx-0 text-sm mb-2">
@@ -22,12 +23,12 @@
       :rules="formRules"
       @submit.prevent="handleSave"
     >
-      <div class="flex gap-28 justify-center items-start py-10">
+      <div class="flex gap-20 justify-center items-start py-10">
         <div class="flex flex-col gap-4 max-w-[300px]">
           <el-form-item class="flex fex-col" prop="name">
             <div class="flex gap-2">
               <p class="font-semibold">Name:</p>
-              <el-input v-model="product.name" />
+              <el-input v-model="product.name" placeholder="Your product name is..." />
             </div>
             <template #error>
               <p class="block absolute top-9 text-sm left-14 text-red-600">*This field is required</p>
@@ -47,6 +48,18 @@
               </el-select>
             </div>
           </el-form-item>
+
+          <el-form-item>
+            <div class="flex">
+              <el-switch
+                v-model="product.isVegan"
+                size="large"
+                active-text="Vegan"
+                inactive-text="Not vegan"
+              />
+            </div>
+          </el-form-item>
+
           <el-checkbox
             v-if="isCreating"
             v-model="submitForReview"

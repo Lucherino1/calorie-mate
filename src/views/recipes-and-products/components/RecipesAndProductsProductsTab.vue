@@ -1,6 +1,6 @@
 <template>
   <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center mt-5">
-    <el-card class="w-full xl:max-w-[800px] 2xl:max-w-full">
+    <el-card class="w-full lg:max-w-[800px] xl:max-w-full">
       <div class="flex flex-col items-center justify-between">
         <ModalUpsertProduct
           v-model:product="editableProduct"
@@ -53,19 +53,21 @@
           :handle-sort-change="handleSortChange"
         >
           <template #actions="{ row }">
-            <el-button
-              :size="$elComponentSize.small"
-              @click="openEditDialog(row)"
-            >
-              Edit
-            </el-button>
-            <el-button
-              :type="$elComponentType.danger"
-              :size="$elComponentSize.small"
-              @click="deleteProduct(row.id)"
-            >
-              Delete
-            </el-button>
+            <div class="flex">
+              <el-button
+                :size="$elComponentSize.small"
+                @click="openEditDialog(row)"
+              >
+                Edit
+              </el-button>
+              <el-button
+                :type="$elComponentType.danger"
+                :size="$elComponentSize.small"
+                @click="deleteProduct(row.id)"
+              >
+                Delete
+              </el-button>
+            </div>
           </template>
         </RecipesAndProductsProductsTable>
 
@@ -139,10 +141,10 @@ async function getPaginatedProducts (page?: number) {
     products.value = data || []
     totalProducts.value = count || 0
     productPagesCache.value[page] = data
-
-    tableLoading.value = false
   } catch (error) {
     showNotification()
+  } finally {
+    tableLoading.value = false
   }
 }
 
@@ -161,10 +163,10 @@ async function searchProducts (page: number = 1) {
     products.value = data || []
     totalProducts.value = count || 0
     currentPage.value = 1
-
-    tableLoading.value = false
   } catch (error) {
     showNotification()
+  } finally {
+    tableLoading.value = false
   }
 }
 
@@ -219,21 +221,26 @@ async function saveProduct () {
       showNotification('Product updated successfully', 'Success', 'success')
     }
 
-    modalButtonLoading.value = false
     isEditDialogVisible.value = false
   } catch (error) {
     showNotification(error.message, 'error')
+  } finally {
+    isEditDialogVisible.value = false
   }
 }
 
 async function deleteProduct (productId: string) {
   try {
+    tableLoading.value = true
+
     await productsAndRecipesService.deleteProduct(productId)
     products.value = products.value.filter(product => product.id !== productId)
     showNotification('Product deleted successfully', 'Success', 'success')
     isEditDialogVisible.value = false
   } catch (error) {
     showNotification(error.message, 'error')
+  } finally {
+    tableLoading.value = false
   }
 }
 

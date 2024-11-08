@@ -84,7 +84,8 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
   {
     label: 'Images',
     value: 'image',
-    fixed: 'left'
+    // fixed: 'left',
+    width: 130
   },
   {
     label: 'Recipe Name',
@@ -93,7 +94,7 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
   {
     label: 'Description',
     value: 'description',
-    width: 150
+    width: 100
   },
   {
     label: 'Nutrition',
@@ -105,7 +106,7 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
     value: 'portionWeight',
     sort: true,
     align: 'center',
-    width: 130
+    width: 100
   },
   {
     label: 'Type',
@@ -117,7 +118,8 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
     label: 'Vegan',
     value: 'isVegan',
     sort: true,
-    align: 'center'
+    align: 'center',
+    width: 70
   },
   {
     label: 'Ingredients',
@@ -129,7 +131,7 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
     label: 'Actions',
     value: 'actions',
     align: 'center',
-    width: 200
+    width: 150
   }
 ]
 

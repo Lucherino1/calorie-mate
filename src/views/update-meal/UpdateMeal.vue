@@ -132,10 +132,10 @@ const getAllProducts = async () => {
 
     const [userProducts, products] = await Promise.all([
       productsAndRecipesService.getUserProduct(),
-      productsAndRecipesService.getGlobalProducts()
+      productsAndRecipesService.getProducts()
     ])
 
-    allProducts.value = [...userProducts, ...products]
+    allProducts.value = [...userProducts, ...products.data]
     pageLoading.value = false
   } catch (error) {
     showNotification()

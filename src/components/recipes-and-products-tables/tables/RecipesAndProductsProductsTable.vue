@@ -84,7 +84,8 @@ const productHeaders: TTableHeadings<IProduct> = [
   {
     label: 'Actions',
     value: 'actions',
-    align: 'center'
+    align: 'center',
+    width: 150
   }
 ]
 </script>
