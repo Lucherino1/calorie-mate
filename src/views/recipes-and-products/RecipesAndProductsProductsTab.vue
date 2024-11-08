@@ -47,45 +47,27 @@
           </el-button>
         </div>
 
-        <div class="overflow-x-auto w-full">
-          <AppTable
-            v-loading="tableLoading"
-            :height="'550'"
-            empty-title="No products added"
-            :headers="productHeaders"
-            :table-data="sortedProducts"
-            @sort-change="handleSortChange"
-          >
-            <template #name="{ row }">
-              <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="row.name" :multiline="2">
-                <b>{{ row.name }}</b>
-              </TruncatedTooltip>
-            </template>
-
-            <template #isVegan="{ row }">
-              <span v-if="row.isVegan" class="fill-success">
-                <IconVegan />
-              </span>
-              <span v-else>No</span>
-            </template>=
-
-            <template #actions="{ row }">
-              <el-button
-                :size="$elComponentSize.small"
-                @click="openEditDialog(row)"
-              >
-                Edit
-              </el-button>
-              <el-button
-                :type="$elComponentType.danger"
-                :size="$elComponentSize.small"
-                @click="deleteProduct(row.id)"
-              >
-                Delete
-              </el-button>
-            </template>
-          </AppTable>
-        </div>
+        <RecipesAndProductsProductsTable
+          :table-data="sortedProducts"
+          :table-loading="tableLoading"
+          :handle-sort-change="handleSortChange"
+        >
+          <template #actions="{ row }">
+            <el-button
+              :size="$elComponentSize.small"
+              @click="openEditDialog(row)"
+            >
+              Edit
+            </el-button>
+            <el-button
+              :type="$elComponentType.danger"
+              :size="$elComponentSize.small"
+              @click="deleteProduct(row.id)"
+            >
+              Delete
+            </el-button>
+          </template>
+        </RecipesAndProductsProductsTable>
 
         <el-pagination
           v-model:current-page="currentPage"
@@ -105,7 +87,6 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import { EProductType } from '@/types/products-and-recipes.enums'
 import { normalizeStringLabel, showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
-import IconVegan from '~icons/icon/vegan'
 import IconSearchFood from '~icons/icon/search-food'
 
 const currentPage = ref(1)
@@ -124,57 +105,6 @@ const productPagesCache = ref<{ [key: number]: IProduct[] }>({})
 const pageLoading = ref(false)
 const tableLoading = ref(false)
 const modalButtonLoading = ref(false)
-
-const productHeaders: TTableHeadings<IProduct> = [
-  {
-    label: 'Product Name',
-    value: 'name'
-  },
-  {
-    label: 'Calories (kcal)',
-    value: 'nutritionDetails.calories',
-    sort: true,
-    align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.calories)
-  },
-  {
-    label: 'Carbs (g)',
-    value: 'nutritionDetails.carbs',
-    sort: true,
-    align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.carbs)
-  },
-  {
-    label: 'Proteins (g)',
-    value: 'nutritionDetails.proteins',
-    sort: true,
-    align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.proteins)
-  },
-  {
-    label: 'Fats (g)',
-    value: 'nutritionDetails.fats',
-    sort: true,
-    align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.fats)
-  },
-  {
-    label: 'Type',
-    value: 'type',
-    formatter: (row) => normalizeStringLabel(row.type)
-  },
-  {
-    label: 'Vegan',
-    value: 'isVegan',
-    sort: true,
-    align: 'center'
-  },
-  {
-    label: 'Actions',
-    value: 'actions',
-    align: 'center'
-  }
-]
 
 const sortField = ref<string>(null)
 const sortOrder = ref<'asc' | 'desc'>(null)

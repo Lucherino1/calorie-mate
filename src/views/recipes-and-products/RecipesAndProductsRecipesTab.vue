@@ -47,91 +47,28 @@
           </el-button>
         </div>
 
-        <div class="overflow-x-auto w-full">
-          <div class="w-full">
-            <AppTable
-              v-loading="tableLoading"
-              :height="'550'"
-              :headers="recipeHeaders"
-              :empty-title="'No recipes added'"
-              :table-data="sortedRecipes"
-            >
-              <template #image="{ row }">
-                <div class="w-[100px] h-[100px] rounded-xl overflow-hidden">
-                  <SkeletonImage :img-src="row.image">
-                    <template #placeholder>
-                      <IconErrorRecipe class="fill-gray-dark" />
-                    </template>
-                  </SkeletonImage>
-                </div>
-              </template>
-
-              <template #name="{ row }">
-                <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="row.name" :multiline="2">
-                  <b>{{ row.name }}</b>
-                </TruncatedTooltip>
-              </template>
-
-              <template #description="{ row }">
-                <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="row.description" :multiline="4">
-                  {{ row.description }}
-                </TruncatedTooltip>
-              </template>
-
-              <template #nutrition="{ row }">
-                <div>
-                  <p><b>Calories:</b> {{ calculateTotalCalories(row) }} kcal</p>
-                  <p><b>Carbs:</b> {{ calculateTotalCarbs(row) }}g</p>
-                  <p><b>Proteins:</b> {{ calculateTotalProteins(row) }}g</p>
-                  <p><b>Fats:</b> {{ calculateTotalFats(row) }}g</p>
-                </div>
-              </template>
-
-              <template #ingredients="{ row }">
-                <el-popover
-                  placement="top"
-                  width="auto"
-                  trigger="hover"
-                >
-                  <ul class="flex gap-5 w-auto">
-                    <li v-for="(ingredient, index) in row.ingredients" :key="index">
-                      <b>{{ ingredient.name }}</b>: <br>
-                      {{ ingredient.grams }}g <br>
-                    </li>
-                  </ul>
-                  <template #reference>
-                    <el-button link :size="$elComponentSize.small">show</el-button>
-                  </template>
-                </el-popover>
-              </template>
-
-              <template #isVegan="{ row }">
-                <span v-if="row.isVegan" class="fill-success">
-                  <IconVegan class="w-[30px] h-[30px]" />
-                </span>
-                <span v-else>No</span>
-              </template>
-
-              <template #actions="{ row }">
-                <div class="flex min-w-[300px]">
-                  <el-button
-                    :size="$elComponentSize.small"
-                    @click="openEditDialog(row)"
-                  >
-                    Edit
-                  </el-button>
-                  <el-button
-                    :type="$elComponentType.danger"
-                    :size="$elComponentSize.small"
-                    @click="deleteRecipe(row.id)"
-                  >
-                    Delete
-                  </el-button>
-                </div>
-              </template>
-            </AppTable>
-          </div>
-        </div>
+        <RecipesAndProductsRecipesTable
+          :table-data="sortedRecipes"
+          :table-loading="tableLoading"
+        >
+          <template #actions="{ row }">
+            <div class="flex min-w-[300px]">
+              <el-button
+                :size="$elComponentSize.small"
+                @click="openEditDialog(row)"
+              >
+                Edit
+              </el-button>
+              <el-button
+                :type="$elComponentType.danger"
+                :size="$elComponentSize.small"
+                @click="deleteRecipe(row.id)"
+              >
+                Delete
+              </el-button>
+            </div>
+          </template>
+        </RecipesAndProductsRecipesTable>
 
         <el-pagination
           v-model:current-page="currentPage"
@@ -153,7 +90,6 @@ import cloneDeep from 'lodash/cloneDeep'
 import { ERecipeType } from '@/types/products-and-recipes.enums'
 import { normalizeStringLabel, showNotification } from '@/helpers'
 import IconSearchFood from '~icons/icon/search-food'
-import IconErrorRecipe from '~icons/icon/error-recipe'
 
 const activeTab = defineModel<string>('active-tab')
 
@@ -173,60 +109,6 @@ const recipePagesCache = ref<{ [key: number]: IRecipe[] }>({})
 const pageLoading = ref(false)
 const tableLoading = ref(false)
 
-const recipeHeaders: TTableHeadings<IRecipe> = [
-  {
-    label: 'Images',
-    value: 'image',
-    fixed: 'left'
-  },
-  {
-    label: 'Recipe Name',
-    value: 'name'
-  },
-  {
-    label: 'Description',
-    value: 'description',
-    width: 150
-  },
-  {
-    label: 'Nutrition',
-    value: 'nutrition',
-    sort: true
-  },
-  {
-    label: 'Weight (g)',
-    value: 'portionWeight',
-    sort: true,
-    align: 'center',
-    width: 130
-  },
-  {
-    label: 'Type',
-    value: 'type',
-    align: 'center',
-    formatter: (row) => normalizeStringLabel(row.type)
-  },
-  {
-    label: 'Vegan',
-    value: 'isVegan',
-    sort: true,
-    align: 'center'
-  },
-  {
-    label: 'Ingredients',
-    value: 'ingredients',
-    align: 'center',
-    formatter: (row) => Math.round(nutritionService.calcTotalRecipeCalories(row))
-  },
-  {
-    label: 'Actions',
-    value: 'actions',
-    align: 'center',
-    width: 200
-  }
-
-]
-
 const sortOrder = ref<'asc' | 'desc'>(null)
 
 function sortRecipesByCalories (recipes: IRecipe[], sortOrder: 'asc' | 'desc' = 'asc') {
@@ -242,20 +124,8 @@ const sortedRecipes = computed(() => {
   return sortRecipesByCalories(recipes.value, sortOrder.value || 'asc')
 })
 
-function calculateTotalCarbs (recipe: IRecipe): number {
-  return Math.round(recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.carbs, 0))
-}
-
-function calculateTotalProteins (recipe: IRecipe): number {
-  return Math.round(recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.proteins, 0))
-}
-
-function calculateTotalFats (recipe: IRecipe): number {
-  return Math.round(recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.fats, 0))
-}
-
 function calculateTotalCalories (recipe: IRecipe): number {
-  return Math.round(recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.calories, 0))
+  return nutritionService.calculateTotalCalories(recipe)
 }
 
 async function getPaginatedRecipes (page?: number) {

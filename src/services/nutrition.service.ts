@@ -230,6 +230,10 @@ class NutritionService {
   calcTotalRecipeCalories (recipe: IRecipe): number {
     return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.calories, 0)
   }
+
+  calculateTotalCalories (recipe: IRecipe): number {
+    return Math.round(recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.calories, 0))
+  }
 }
 
 export const nutritionService = new NutritionService()
