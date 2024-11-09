@@ -12,6 +12,9 @@
     width="1200px"
     class="rounded-xl pb-0"
   >
+    <p class="text-center mx-0 text-sm mb-2">
+      * All products should be added per one portion of the recipe.
+    </p>
     <el-form
       ref="formRef"
       :model="recipe"
@@ -64,11 +67,18 @@
               </div>
 
               <div class="flex flex-col justify-start">
-                <el-form-item required :show-message="false" prop="name">
+                <el-form-item required prop="name">
                   <div class="flex gap-2 min-w-[300px]">
                     <p class="font-semibold">Name:</p>
                     <el-input v-model="recipe.name" class="w-full" />
                   </div>
+                  <template #error>
+                    <p
+                      class="block absolute top-10 text-[12px] leading-3 left-14 text-red-600"
+                    >
+                      *This field is required
+                    </p>
+                  </template>
                 </el-form-item>
 
                 <el-form-item>
@@ -99,7 +109,7 @@
             </div>
 
             <div class="flex">
-              <el-form-item :show-message="false" prop="description">
+              <el-form-item prop="description">
                 <div class="flex flex-col mx-0 justify-center gap-2">
                   <p class="font-semibold">Description:</p>
                   <el-input
@@ -289,7 +299,7 @@ const uploadImage = async () => {
       const file = fileList.value[0] as UploadFile
 
       const data = await filesService.uploadRecipeImage(file)
-      console.log(data.productUrl)
+
       if (data) {
         console.log(data)
         uploadedImageUrl.value = data.productUrl
@@ -311,6 +321,10 @@ function filterProducts (searchQuery: string) {
 }
 
 async function handleSave () {
+  if (recipe.value.ingredients.length === 0) {
+    showNotification('Please add at least one ingredient to save the recipe.', 'Missing ingredients', 'warning')
+    return
+  }
   formRef.value?.validate(async (isValid) => {
     if (isValid) {
       try {
