@@ -6,7 +6,7 @@
           <div class="flex justify-center items-center">
             <div>
               <div class="flex justify-center items-center">
-                <p class="text-wrap truncate font-bold text-base text-primary-dark">{{ product.name }}</p>
+                <p class="text-wrap max-w-[170px] truncate font-bold text-base text-primary-dark">{{ product.name }}</p>
                 <span v-if="product.isVegan" class="flex items-center fill-success w-[20px] h-[20px] ml-2">
                   <IconVegan class="w-full h-full" />
                 </span>
