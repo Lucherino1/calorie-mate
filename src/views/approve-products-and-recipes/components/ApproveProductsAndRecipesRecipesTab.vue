@@ -37,6 +37,8 @@ import { showNotification } from '@/helpers'
 const recipes = ref<IRecipe[]>([])
 const tableLoading = ref(false)
 
+const activeTab = defineModel<string>('active-tab')
+
 async function getRecipes () {
   tableLoading.value = false
 
@@ -81,7 +83,9 @@ async function rejectProduct (productId: string) {
   }
 }
 
-onMounted(() => {
-  getRecipes()
+watch(activeTab, (newTab) => {
+  if (newTab === 'recipes' && !recipes.value.length) {
+    getRecipes()
+  }
 })
 </script>
