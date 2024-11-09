@@ -8,7 +8,7 @@ class ProductsAndRecipesService {
     userOnly = false
   }: {
     searchQuery?: string
-    typeFilter?: string
+    typeFilter?: string[]
     limit?: number
     offset?: number
     isAdmin?: boolean
@@ -20,8 +20,8 @@ class ProductsAndRecipesService {
       .from(tableName)
       .select('*', { count: 'exact' })
 
-    if (typeFilter) {
-      query = query.eq('type', typeFilter)
+    if (typeFilter && typeFilter.length > 0) {
+      query = query.in('type', typeFilter)
     }
 
     if (searchQuery) {
@@ -62,7 +62,7 @@ class ProductsAndRecipesService {
     userOnly = false
   }: {
     searchQuery?: string
-    typeFilter?: string
+    typeFilter?: string[]
     limit?: number
     offset?: number
     isAdmin?: boolean
@@ -74,8 +74,8 @@ class ProductsAndRecipesService {
       .from(tableName)
       .select('*', { count: 'exact' })
 
-    if (typeFilter) {
-      query = query.eq('type', typeFilter)
+    if (typeFilter && typeFilter.length > 0) {
+      query = query.in('type', typeFilter)
     }
 
     if (searchQuery) {
