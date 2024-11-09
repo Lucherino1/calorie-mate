@@ -5,7 +5,7 @@
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
           v-model:visible="isEditDialogVisible"
-          :modal-button-loading="modalButtonLoading"
+          v-model:modal-button-loading="modalButtonLoading"
           :isCreating="isCreating"
           :title="isCreating ? 'Add New Recipe' : 'Edit Recipe'"
           @close="isEditDialogVisible = false"

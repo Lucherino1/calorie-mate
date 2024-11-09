@@ -249,13 +249,14 @@ import { ERecipeType } from '@/types/products-and-recipes.enums'
 const props = defineProps<{
   title: string
   isCreating: boolean
-  modalButtonLoading: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'save', recipe: IRecipe): void
 }>()
+
+const modalButtonLoading = defineModel<boolean>('modal-button-loading')
 
 const authStore = useAuthStore()
 
@@ -325,6 +326,7 @@ async function handleSave () {
     showNotification('Please add at least one ingredient to save the recipe.', 'Missing ingredients', 'warning')
     return
   }
+  modalButtonLoading.value = true
   formRef.value?.validate(async (isValid) => {
     if (isValid) {
       try {
@@ -345,6 +347,8 @@ async function handleSave () {
         uploadedImageUrl.value = null
       } catch (error) {
         showNotification()
+      } finally {
+        modalButtonLoading.value = false
       }
     }
   })
