@@ -1,7 +1,7 @@
 <template>
   <div v-loading.fullscreen="pageLoading" class="flex w-full justify-center items-center mt-5">
     <el-card class="w-full overflow-x-scroll items-center justify-between">
-      <div class="flex flex-col items-center justify-between">
+      <div class="flex flex-col items-center justify-between min-w-[1230px]">
         <ModalUpsertProduct
           v-model:product="editableProduct"
           v-model:visible="isEditDialogVisible"
@@ -17,6 +17,7 @@
             v-model="searchQuery"
             :prefix-icon="IconSearchFood"
             :size="$elComponentSize.large"
+            :disabled="isSearchAndInputDisabled"
             class="w-full"
             placeholder="Search products..."
             clearable
@@ -24,6 +25,10 @@
           />
           <el-select
             v-model="selectedType"
+            multiple
+            :disabled="isSearchAndInputDisabled"
+            collapse-tags
+            :max-collapse-tags="1"
             :size="$elComponentSize.large"
             clearable
             class="max-w-[200px]"
@@ -100,7 +105,7 @@ const totalProducts = ref(0)
 const products = ref<IProduct[]>([])
 
 const productTypes = ref<TProductType[]>(Object.values(EProductType))
-const selectedType = ref<string>(null)
+const selectedType = ref<string[]>(null)
 
 const searchQuery = ref('')
 
@@ -112,6 +117,8 @@ const modalButtonLoading = ref(false)
 
 const sortField = ref<string>(null)
 const sortOrder = ref<'asc' | 'desc'>(null)
+
+const isSearchAndInputDisabled = ref(false)
 
 function handleSortChange () {
   return sortArrayBySortFieldAndOrder(products.value, sortField.value, sortOrder.value)
@@ -148,6 +155,7 @@ async function getPaginatedProducts (page?: number) {
   } catch (error) {
     showNotification()
   } finally {
+    isSearchAndInputDisabled.value = products.value.length === 0
     tableLoading.value = false
   }
 }
@@ -236,8 +244,10 @@ async function saveProduct () {
 
     isEditDialogVisible.value = false
   } catch (error) {
-    showNotification(error.message, 'error')
+    showNotification()
   } finally {
+    getPaginatedProducts()
+    isSearchAndInputDisabled.value = products.value.length === 0
     isEditDialogVisible.value = false
     modalButtonLoading.value = false
   }
@@ -245,15 +255,20 @@ async function saveProduct () {
 
 async function deleteProduct (productId: string) {
   try {
+    productPagesCache.value = {}
     tableLoading.value = true
 
     await productsAndRecipesService.deleteProduct({ productId, isAdmin: authStore.isUserAdmin })
+
+    getPaginatedProducts()
     products.value = products.value.filter(product => product.id !== productId)
+
     showNotification('Product deleted successfully', 'Success', 'success')
-    isEditDialogVisible.value = false
   } catch (error) {
-    showNotification(error.message, 'error')
+    showNotification()
   } finally {
+    isSearchAndInputDisabled.value = products.value.length === 0
+    isEditDialogVisible.value = false
     tableLoading.value = false
   }
 }
