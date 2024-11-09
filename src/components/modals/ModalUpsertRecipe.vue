@@ -12,6 +12,9 @@
     width="1200px"
     class="rounded-xl pb-0"
   >
+    <p class="text-center mx-0 text-sm mb-2">
+      * All products should be added per one portion of the recipe.
+    </p>
     <el-form
       ref="formRef"
       :model="recipe"
@@ -36,10 +39,10 @@
                   :on-change="handleImageChange"
                 >
                   <template #default>
-                    <div v-if="uploadedImageUrl" class="w-[150px] h-[150px]">
+                    <div v-if="uploadedImageUrl || recipe.image" class="w-[150px] h-[150px]">
                       <img
                         class="object-cover w-full h-full"
-                        :src="uploadedImageUrl"
+                        :src="recipe.image || uploadedImageUrl"
                       >
                     </div>
                     <div
@@ -64,11 +67,18 @@
               </div>
 
               <div class="flex flex-col justify-start">
-                <el-form-item required :show-message="false" prop="name">
+                <el-form-item required prop="name">
                   <div class="flex gap-2 min-w-[300px]">
                     <p class="font-semibold">Name:</p>
                     <el-input v-model="recipe.name" class="w-full" />
                   </div>
+                  <template #error>
+                    <p
+                      class="block absolute top-10 text-[12px] leading-3 left-14 text-red-600"
+                    >
+                      *This field is required
+                    </p>
+                  </template>
                 </el-form-item>
 
                 <el-form-item>
@@ -99,7 +109,7 @@
             </div>
 
             <div class="flex">
-              <el-form-item :show-message="false" prop="description">
+              <el-form-item prop="description">
                 <div class="flex flex-col mx-0 justify-center gap-2">
                   <p class="font-semibold">Description:</p>
                   <el-input
@@ -210,7 +220,7 @@
                   <el-button @click="handleCancel">Cancel</el-button>
                   <div>
                     <el-button
-                      :loading="buttonLoading"
+                      :loading="modalButtonLoading"
                       :type="$elComponentType.primary"
                       native-type="submit"
                     >
@@ -246,6 +256,8 @@ const emit = defineEmits<{
   (e: 'save', recipe: IRecipe): void
 }>()
 
+const modalButtonLoading = defineModel<boolean>('modal-button-loading')
+
 const authStore = useAuthStore()
 
 const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
@@ -261,8 +273,6 @@ const submitForReview = ref(false)
 
 const recipe = defineModel<IRecipe>('recipe')
 const isModalVisible = defineModel<boolean>('visible')
-
-const buttonLoading = ref(false)
 
 const allProducts = ref<IProduct[]>([])
 
@@ -290,14 +300,14 @@ const uploadImage = async () => {
       const file = fileList.value[0] as UploadFile
 
       const data = await filesService.uploadRecipeImage(file)
-      console.log(data.productUrl)
+
       if (data) {
         console.log(data)
         uploadedImageUrl.value = data.productUrl
       }
     }
   } catch (error) {
-    showNotification()
+    showNotification('Please try again later', 'Failed to upload an image')
   }
 }
 
@@ -312,11 +322,14 @@ function filterProducts (searchQuery: string) {
 }
 
 async function handleSave () {
+  if (recipe.value.ingredients.length === 0) {
+    showNotification('Please add at least one ingredient to save the recipe.', 'Missing ingredients', 'warning')
+    return
+  }
+  modalButtonLoading.value = true
   formRef.value?.validate(async (isValid) => {
     if (isValid) {
       try {
-        buttonLoading.value = true
-
         if (fileList.value.length > 0 && uploadedImageUrl.value) {
           await uploadImage()
           recipe.value.image = uploadedImageUrl.value
@@ -330,13 +343,13 @@ async function handleSave () {
 
         emit('save', recipe.value)
         fileList.value = []
-        buttonLoading.value = false
+
         uploadedImageUrl.value = null
       } catch (error) {
         showNotification()
+      } finally {
+        modalButtonLoading.value = false
       }
-    } else {
-      showNotification('Please fill in all required fields.', 'warning')
     }
   })
 }
@@ -398,15 +411,12 @@ const portionWeight = computed(() => {
 
 const getAllProducts = async () => {
   try {
-    buttonLoading.value = true
-
     const [userProducts, products] = await Promise.all([
-      productsAndRecipesService.getUserProduct(),
-      productsAndRecipesService.getGlobalProducts()
+      productsAndRecipesService.getProducts({ userOnly: true }),
+      productsAndRecipesService.getProducts()
     ])
 
-    allProducts.value = [...userProducts, ...products]
-    buttonLoading.value = false
+    allProducts.value = [...userProducts.data, ...products.data]
   } catch (error) {
     showNotification()
   }

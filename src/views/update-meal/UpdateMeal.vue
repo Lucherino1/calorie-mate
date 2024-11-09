@@ -131,14 +131,15 @@ const getAllProducts = async () => {
     }
 
     const [userProducts, products] = await Promise.all([
-      productsAndRecipesService.getUserProduct(),
-      productsAndRecipesService.getGlobalProducts()
+      productsAndRecipesService.getProducts({ userOnly: true }),
+      productsAndRecipesService.getProducts()
     ])
 
-    allProducts.value = [...userProducts, ...products]
-    pageLoading.value = false
+    allProducts.value = [...userProducts.data, ...products.data]
   } catch (error) {
     showNotification()
+  } finally {
+    pageLoading.value = false
   }
 }
 
@@ -151,14 +152,15 @@ const getAllRecipes = async () => {
     }
 
     const [userRecipes, recipes] = await Promise.all([
-      productsAndRecipesService.getUserRecipes(),
-      productsAndRecipesService.getGlobalRecipes()
+      productsAndRecipesService.getRecipes({ userOnly: true }),
+      productsAndRecipesService.getRecipes()
     ])
 
-    allRecipes.value = [...userRecipes, ...recipes]
-    pageLoading.value = false
+    allRecipes.value = [...userRecipes.data, ...recipes.data]
   } catch (error) {
     showNotification()
+  } finally {
+    pageLoading.value = false
   }
 }
 

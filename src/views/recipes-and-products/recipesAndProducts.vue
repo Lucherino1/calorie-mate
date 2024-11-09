@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts" setup>
+
 const pageLoading = ref(false)
 const activeTab = ref('products')
 

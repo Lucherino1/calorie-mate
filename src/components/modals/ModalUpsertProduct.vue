@@ -1,6 +1,7 @@
 <template>
   <el-dialog
     v-model="isModalVisible"
+    :validate-on-rule-change="false"
     :modal="true"
     :close-icon="IconClose"
     plain
@@ -9,7 +10,7 @@
     :lock-scroll="true"
     close-on-press-escape
     :title="props.title"
-    width="700px"
+    width="650px"
     class="rounded-xl pb-0"
   >
     <p class="text-center mx-0 text-sm mb-2">
@@ -18,18 +19,20 @@
 
     <el-form
       ref="formRef"
-      :show-message="false"
       :model="product"
       :rules="formRules"
       @submit.prevent="handleSave"
     >
-      <div class="flex gap-28 justify-center items-start py-10">
+      <div class="flex gap-20 justify-center items-start py-10">
         <div class="flex flex-col gap-4 max-w-[300px]">
-          <el-form-item prop="name">
+          <el-form-item class="flex fex-col" prop="name">
             <div class="flex gap-2">
               <p class="font-semibold">Name:</p>
-              <el-input v-model="product.name" />
+              <el-input v-model="product.name" placeholder="Your product name is..." />
             </div>
+            <template #error>
+              <p class="block absolute top-9 text-sm left-14 text-red-600">*This field is required</p>
+            </template>
           </el-form-item>
 
           <el-form-item>
@@ -47,7 +50,7 @@
           </el-form-item>
 
           <el-form-item>
-            <div class="flex justify-center items-center">
+            <div class="flex">
               <el-switch
                 v-model="product.isVegan"
                 size="large"
@@ -56,13 +59,33 @@
               />
             </div>
           </el-form-item>
+
+          <el-checkbox
+            v-if="isCreating"
+            v-model="submitForReview"
+            class="self-start"
+            :size="$elComponentSize.large"
+          >
+            <template #default>
+              <div class="flex justify-center gap-1 items-center text-center">
+                <p>Submit for review</p>
+
+                <el-tooltip
+                  content="Submit for admin review to add this product to the public database."
+                  placement="top"
+                >
+                  <IconInfo class="w-[18px] h-[18px] my-0 fill-primary" />
+                </el-tooltip>
+              </div>
+            </template>
+          </el-checkbox>
         </div>
 
         <div class="flex flex-col justify-end items-end gap-4">
           <el-form-item>
             <div class="flex min-w-[230px] justify-between">
               <p class="font-semibold">Carbs:</p>
-              <el-input-number v-model="product.nutritionDetails.carbs" type="number" :min="1">
+              <el-input-number v-model="product.nutritionDetails.carbs" type="number" :min="0">
                 <template #suffix>g</template>
               </el-input-number>
             </div>
@@ -71,7 +94,7 @@
           <el-form-item>
             <div class="flex min-w-[230px] justify-between">
               <p class="font-semibold">Proteins:</p>
-              <el-input-number v-model="product.nutritionDetails.proteins" type="number" :min="1">
+              <el-input-number v-model="product.nutritionDetails.proteins" type="number" :min="0">
                 <template #suffix>g</template>
               </el-input-number>
             </div>
@@ -80,7 +103,7 @@
           <el-form-item>
             <div class="flex min-w-[230px] justify-between">
               <p class="font-semibold">Fats:</p>
-              <el-input-number v-model="product.nutritionDetails.fats" type="number" :min="1">
+              <el-input-number v-model="product.nutritionDetails.fats" type="number" :min="0">
                 <template #suffix>g</template>
               </el-input-number>
             </div>
@@ -90,24 +113,6 @@
             Total Calories: {{ totalCalories }} kcal
           </p>
           <div class="flex justify-end items-center gap-4 mt-5">
-            <el-checkbox
-              v-if="isCreating"
-              v-model="submitForReview"
-              :size="$elComponentSize.large"
-            >
-              <template #default>
-                <div class="flex justify-center gap-1 items-center text-center">
-                  <p>Submit for review</p>
-
-                  <el-tooltip
-                    content="Submit for admin review to add this product to the public database."
-                    placement="top"
-                  >
-                    <IconInfo class="w-[18px] h-[18px] my-0 fill-primary" />
-                  </el-tooltip>
-                </div>
-              </template>
-            </el-checkbox>
             <el-button @click="$emit('close')">Cancel</el-button>
             <div>
               <el-button

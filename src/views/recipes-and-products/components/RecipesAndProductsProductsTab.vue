@@ -1,7 +1,7 @@
 <template>
-  <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center mt-5">
-    <el-card class="w-full xl:max-w-[800px] 2xl:max-w-full">
-      <div class="flex flex-col items-center justify-between">
+  <div v-loading.fullscreen="pageLoading" class="flex w-full justify-center items-center mt-5">
+    <el-card class="w-full overflow-x-scroll items-center justify-between">
+      <div class="flex flex-col items-center justify-between min-w-[1230px]">
         <ModalUpsertProduct
           v-model:product="editableProduct"
           v-model:visible="isEditDialogVisible"
@@ -17,6 +17,7 @@
             v-model="searchQuery"
             :prefix-icon="IconSearchFood"
             :size="$elComponentSize.large"
+            :disabled="isSearchAndInputDisabled"
             class="w-full"
             placeholder="Search products..."
             clearable
@@ -24,6 +25,10 @@
           />
           <el-select
             v-model="selectedType"
+            multiple
+            :disabled="isSearchAndInputDisabled"
+            collapse-tags
+            :max-collapse-tags="1"
             :size="$elComponentSize.large"
             clearable
             class="max-w-[200px]"
@@ -47,29 +52,13 @@
           </el-button>
         </div>
 
-        <div class="overflow-x-auto w-full">
-          <AppTable
-            v-loading="tableLoading"
-            :height="'550'"
-            :empty-title="'No products added'"
-            :headers="productHeaders"
-            :table-data="sortedProducts"
-            @sort-change="handleSortChange"
-          >
-            <template #name="{ row }">
-              <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="row.name" :multiline="2">
-                <b>{{ row.name }}</b>
-              </TruncatedTooltip>
-            </template>
-
-            <template #isVegan="{ row }">
-              <span v-if="row.isVegan" class="fill-success">
-                <IconVegan />
-              </span>
-              <span v-else>No</span>
-            </template>=
-
-            <template #actions="{ row }">
+        <RecipesAndProductsProductsTable
+          :table-data="sortedProducts"
+          :table-loading="tableLoading"
+          :handle-sort-change="handleSortChange"
+        >
+          <template #actions="{ row }">
+            <div class="flex">
               <el-button
                 :size="$elComponentSize.small"
                 @click="openEditDialog(row)"
@@ -83,9 +72,9 @@
               >
                 Delete
               </el-button>
-            </template>
-          </AppTable>
-        </div>
+            </div>
+          </template>
+        </RecipesAndProductsProductsTable>
 
         <el-pagination
           v-model:current-page="currentPage"
@@ -105,8 +94,9 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import { EProductType } from '@/types/products-and-recipes.enums'
 import { normalizeStringLabel, showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
-import IconVegan from '~icons/icon/vegan'
 import IconSearchFood from '~icons/icon/search-food'
+
+const authStore = useAuthStore()
 
 const currentPage = ref(1)
 const pageSize = ref(15)
@@ -115,7 +105,7 @@ const totalProducts = ref(0)
 const products = ref<IProduct[]>([])
 
 const productTypes = ref<TProductType[]>(Object.values(EProductType))
-const selectedType = ref<string>(null)
+const selectedType = ref<string[]>(null)
 
 const searchQuery = ref('')
 
@@ -125,59 +115,10 @@ const pageLoading = ref(false)
 const tableLoading = ref(false)
 const modalButtonLoading = ref(false)
 
-const productHeaders: TTableHeadings<IProduct> = [
-  {
-    label: 'Product Name',
-    value: 'name'
-  },
-  {
-    label: 'Calories (kcal)',
-    value: 'nutritionDetails.calories',
-    sort: true,
-    align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.calories)
-  },
-  {
-    label: 'Carbs (g)',
-    value: 'nutritionDetails.carbs',
-    sort: true,
-    align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.carbs)
-  },
-  {
-    label: 'Proteins (g)',
-    value: 'nutritionDetails.proteins',
-    sort: true,
-    align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.proteins)
-  },
-  {
-    label: 'Fats (g)',
-    value: 'nutritionDetails.fats',
-    sort: true,
-    align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.fats)
-  },
-  {
-    label: 'Type',
-    value: 'type',
-    formatter: (row) => normalizeStringLabel(row.type)
-  },
-  {
-    label: 'Vegan',
-    value: 'isVegan',
-    sort: true,
-    align: 'center'
-  },
-  {
-    label: 'Actions',
-    value: 'actions',
-    align: 'center'
-  }
-]
-
 const sortField = ref<string>(null)
 const sortOrder = ref<'asc' | 'desc'>(null)
+
+const isSearchAndInputDisabled = ref(false)
 
 function handleSortChange () {
   return sortArrayBySortFieldAndOrder(products.value, sortField.value, sortOrder.value)
@@ -200,19 +141,22 @@ async function getPaginatedProducts (page?: number) {
   try {
     tableLoading.value = true
 
-    const { data, count } = await productsAndRecipesService.getPaginatedProducts({
+    const { data, count } = await productsAndRecipesService.getProducts({
       limit: pageSize.value,
       offset: (currentPage.value - 1) * pageSize.value,
-      typeFilter: selectedType.value
+      typeFilter: selectedType.value,
+      userOnly: true,
+      isAdmin: authStore.isUserAdmin
     })
 
     products.value = data || []
     totalProducts.value = count || 0
     productPagesCache.value[page] = data
-
-    tableLoading.value = false
   } catch (error) {
     showNotification()
+  } finally {
+    isSearchAndInputDisabled.value = products.value.length === 0
+    tableLoading.value = false
   }
 }
 
@@ -221,20 +165,22 @@ async function searchProducts (page: number = 1) {
     tableLoading.value = true
 
     const offset = (page - 1) * pageSize.value
-    const { data, count } = await productsAndRecipesService.searchProducts({
+    const { data, count } = await productsAndRecipesService.getProducts({
       searchQuery: searchQuery.value,
       typeFilter: selectedType.value,
       limit: pageSize.value,
-      offset
+      offset,
+      userOnly: true,
+      isAdmin: authStore.isUserAdmin
     })
 
     products.value = data || []
     totalProducts.value = count || 0
     currentPage.value = 1
-
-    tableLoading.value = false
   } catch (error) {
     showNotification()
+  } finally {
+    tableLoading.value = false
   }
 }
 
@@ -275,12 +221,19 @@ async function saveProduct () {
   modalButtonLoading.value = true
   try {
     if (isCreating.value) {
-      const createdProduct = await productsAndRecipesService.createProduct(editableProduct.value)
+      const createdProduct = await productsAndRecipesService.createProduct({
+        product: editableProduct.value,
+        isAdmin: authStore.isUserAdmin
+      })
 
       products.value.push(createdProduct)
       showNotification('Product created successfully', 'Success', 'success')
     } else {
-      await productsAndRecipesService.updateProduct(editableProduct.value.id, editableProduct.value)
+      await productsAndRecipesService.updateProduct({
+        productId: editableProduct.value.id,
+        updatedProductData: editableProduct.value,
+        isAdmin: authStore.isUserAdmin
+      })
 
       const index = products.value.findIndex(product => product.id === editableProduct.value.id)
       if (index !== -1) {
@@ -289,21 +242,34 @@ async function saveProduct () {
       showNotification('Product updated successfully', 'Success', 'success')
     }
 
-    modalButtonLoading.value = false
     isEditDialogVisible.value = false
   } catch (error) {
-    showNotification(error.message, 'error')
+    showNotification()
+  } finally {
+    getPaginatedProducts()
+    isSearchAndInputDisabled.value = products.value.length === 0
+    isEditDialogVisible.value = false
+    modalButtonLoading.value = false
   }
 }
 
 async function deleteProduct (productId: string) {
   try {
-    await productsAndRecipesService.deleteProduct(productId)
+    productPagesCache.value = {}
+    tableLoading.value = true
+
+    await productsAndRecipesService.deleteProduct({ productId, isAdmin: authStore.isUserAdmin })
+
+    getPaginatedProducts()
     products.value = products.value.filter(product => product.id !== productId)
+
     showNotification('Product deleted successfully', 'Success', 'success')
-    isEditDialogVisible.value = false
   } catch (error) {
-    showNotification(error.message, 'error')
+    showNotification()
+  } finally {
+    isSearchAndInputDisabled.value = products.value.length === 0
+    isEditDialogVisible.value = false
+    tableLoading.value = false
   }
 }
 
