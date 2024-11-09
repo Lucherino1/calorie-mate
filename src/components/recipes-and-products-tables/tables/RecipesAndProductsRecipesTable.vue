@@ -1,7 +1,7 @@
 <template>
   <AppTable
     v-loading="tableLoading"
-    height="550"
+    :height="tableHeight"
     :headers="recipeHeaders"
     :empty-title="'No recipes added'"
     :table-data="tableData"
@@ -74,6 +74,7 @@ import { normalizeStringLabel } from '@/helpers'
 defineProps<{
   tableData: IRecipe[]
   tableLoading: boolean
+  tableHeight: string
 }>()
 
 const recipeHeaders: TTableHeadings<IRecipe> = [
@@ -125,7 +126,7 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
     label: 'Actions',
     value: 'actions',
     align: 'center',
-    minWidth: 200
+    width: 200
 
   }
 ]

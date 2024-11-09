@@ -11,13 +11,13 @@
       <slot name="header" />
     </div>
 
-    <div class="mx-0">
-      <el-tabs v-model="modelValue" stretch class="min-h-[500px] flex w-full">
-        <el-tab-pane label="Products" name="products" class="w-full overflow-y-scroll">
+    <div class="mx-0 h-full overflow-hidden">
+      <el-tabs v-model="modelValue" stretch class="min-h-[500px] flex w-full h-full">
+        <el-tab-pane label="Products" name="products" class="w-full overflow-y-scroll h-full pt-5">
           <slot name="products" />
         </el-tab-pane>
 
-        <el-tab-pane class="w-full overflow-y-scroll" label="Recipes" name="recipes">
+        <el-tab-pane class="w-full h-full overflow-y-scroll pt-5" label="Recipes" name="recipes">
           <slot name="recipes" />
         </el-tab-pane>
       </el-tabs>

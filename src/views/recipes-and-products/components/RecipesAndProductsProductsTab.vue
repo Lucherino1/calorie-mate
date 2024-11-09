@@ -1,7 +1,7 @@
 <template>
-  <div v-loading.fullscreen="pageLoading" class="flex w-full justify-center items-center mt-5">
-    <el-card class="w-full overflow-x-scroll items-center justify-between">
-      <div class="flex flex-col items-center justify-between min-w-[1230px]">
+  <div v-loading.fullscreen="pageLoading" class="flex w-full justify-center items-center">
+    <el-card class="card--no-shadow w-full overflow-x-scroll h-full">
+      <div class="flex flex-col items-center min-w-[1230px]">
         <ModalUpsertProduct
           v-model:product="editableProduct"
           v-model:visible="isEditDialogVisible"
@@ -12,7 +12,7 @@
           @save="saveProduct"
           @delete="deleteProduct"
         />
-        <div class="flex items-center justify-end gap-5 w-full mb-10">
+        <div class="flex items-center justify-end gap-5 w-full mb-5">
           <el-input
             v-model="searchQuery"
             :prefix-icon="IconSearchFood"
@@ -53,12 +53,13 @@
         </div>
 
         <RecipesAndProductsProductsTable
+          table-height="550"
           :table-data="sortedProducts"
           :table-loading="tableLoading"
           :handle-sort-change="handleSortChange"
         >
           <template #actions="{ row }">
-            <div class="flex">
+            <div class="flex items-center justify-center">
               <el-button
                 :size="$elComponentSize.small"
                 @click="openEditDialog(row)"
@@ -76,13 +77,15 @@
           </template>
         </RecipesAndProductsProductsTable>
 
-        <el-pagination
-          v-model:current-page="currentPage"
-          :page-size="pageSize"
-          :total="totalProducts"
-          layout="prev, pager, next"
-          @current-change="handlePageChange"
-        />
+        <div class="flex justify-center items-center mt-5 w-full">
+          <el-pagination
+            v-model:current-page="currentPage"
+            :page-size="pageSize"
+            :total="totalProducts"
+            layout="prev, pager, next"
+            @current-change="handlePageChange"
+          />
+        </div>
       </div>
     </el-card>
   </div>
