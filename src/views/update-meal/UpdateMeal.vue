@@ -136,9 +136,10 @@ const getAllProducts = async () => {
     ])
 
     allProducts.value = [...userProducts.data, ...products.data]
-    pageLoading.value = false
   } catch (error) {
     showNotification()
+  } finally {
+    pageLoading.value = false
   }
 }
 
@@ -156,9 +157,10 @@ const getAllRecipes = async () => {
     ])
 
     allRecipes.value = [...userRecipes.data, ...recipes.data]
-    pageLoading.value = false
   } catch (error) {
     showNotification()
+  } finally {
+    pageLoading.value = false
   }
 }
 

@@ -79,51 +79,53 @@ defineProps<{
 const recipeHeaders: TTableHeadings<IRecipe> = [
   {
     label: 'Images',
-    value: 'image',
-    // fixed: 'left',
+    value: 'image'
   },
   {
     label: 'Recipe Name',
-    value: 'name',
+    value: 'name'
   },
   {
     label: 'Description',
     value: 'description',
+    minWidth: 170
   },
   {
     label: 'Nutrition',
     value: 'nutrition',
     sort: true,
+    minWidth: 170
   },
   {
     label: 'Weight (g)',
     value: 'portionWeight',
     sort: true,
-    align: 'center',
+    align: 'center'
   },
   {
     label: 'Type',
     value: 'type',
     align: 'center',
-    formatter: (row) => normalizeStringLabel(row.type),
+    formatter: (row) => normalizeStringLabel(row.type)
   },
   {
     label: 'Vegan',
     value: 'isVegan',
     sort: true,
-    align: 'center',
+    align: 'center'
 
   },
   {
     label: 'Ingredients',
     value: 'ingredients',
-    align: 'center',
+    align: 'center'
 
   },
   {
     label: 'Actions',
     value: 'actions',
     align: 'center',
+    minWidth: 200
 
   }
 ]

@@ -1,7 +1,7 @@
 <template>
   <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center mt-5">
     <el-card class="w-full overflow-x-scroll items-center justify-between">
-      <div class="flex flex-col items-center justify-between w-full">
+      <div class="flex flex-col items-center justify-between w-full min-w-[1250px]">
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
           v-model:visible="isEditDialogVisible"
@@ -15,6 +15,7 @@
         <div class="flex items-center justify-end gap-5 w-full mb-10">
           <el-input
             v-model="searchQuery"
+            :disabled="isSearchAndInputDisabled"
             :prefix-icon="IconSearchFood"
             :size="$elComponentSize.large"
             class="w-full"
@@ -25,6 +26,10 @@
 
           <el-select
             v-model="selectedType"
+            multiple
+            :disabled="isSearchAndInputDisabled"
+            collapse-tags
+            :max-collapse-tags="1"
             clearable
             :size="$elComponentSize.large"
             class="max-w-[200px]"
@@ -50,12 +55,13 @@
 
         <div class="w-full overflow-x-scroll">
           <RecipesAndProductsRecipesTable
+            class=""
             :table-data="sortedRecipes"
             :table-loading="tableLoading"
           >
             >
             <template #actions="{ row }">
-              <div class="flex min-w-[300px]">
+              <div class="flex">
                 <el-button
                   :size="$elComponentSize.small"
                   @click="openEditDialog(row)"
@@ -106,7 +112,7 @@ const totalRecipes = ref(0)
 const recipes = ref<IRecipe[]>([])
 
 const recipeTypes = ref<TRecipesType[]>(Object.values(ERecipeType))
-const selectedType = ref<string>(null)
+const selectedType = ref<string[]>(null)
 
 const searchQuery = ref('')
 
@@ -116,6 +122,8 @@ const pageLoading = ref(false)
 const tableLoading = ref(false)
 
 const sortOrder = ref<'asc' | 'desc'>(null)
+
+const isSearchAndInputDisabled = ref(false)
 
 function sortRecipesByCalories (recipes: IRecipe[], sortOrder: 'asc' | 'desc' = 'asc') {
   const recipesWithCalories = recipes.map(recipe => ({
@@ -153,6 +161,8 @@ async function getPaginatedRecipes (page?: number) {
     recipes.value = data || []
     totalRecipes.value = count || 0
     recipePagesCache.value[page] = data
+
+    isSearchAndInputDisabled.value = recipes.value.length === 0
   } catch (error) {
     showNotification()
   } finally {
@@ -199,8 +209,9 @@ function openEditDialog (row: IRecipe) {
 const modalButtonLoading = ref(false)
 
 async function saveRecipe () {
-  if (!editableRecipe.value) return
   modalButtonLoading.value = true
+
+  if (!editableRecipe.value) return
 
   try {
     if (isCreating.value) {
@@ -225,8 +236,10 @@ async function saveRecipe () {
       showNotification('Recipe updated successfully', 'Success', 'success')
     }
   } catch (error) {
-    showNotification(error.message, 'Error', 'error')
+    showNotification()
   } finally {
+    getPaginatedRecipes()
+    isSearchAndInputDisabled.value = recipes.value.length === 0
     isEditDialogVisible.value = false
     isCreating.value = false
     modalButtonLoading.value = false
@@ -262,11 +275,13 @@ async function deleteRecipe (recipeId: string) {
     getPaginatedRecipes()
     recipes.value = recipes.value.filter(recipe => recipe.id !== recipeId)
 
-    showNotification('Have a nice day', 'Recipe deleted successfully', 'success')
+    showNotification('Recipe deleted successfully', 'Success', 'success')
+
     isEditDialogVisible.value = false
   } catch (error) {
-    showNotification(`Error deleting recipe: ${error.message}`, 'error')
+    showNotification()
   } finally {
+    isSearchAndInputDisabled.value = recipes.value.length === 0
     tableLoading.value = false
   }
 }
