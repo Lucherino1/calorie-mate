@@ -1,7 +1,7 @@
 <template>
   <div v-loading.fullscreen="loading" class="w-full flex bg-gray-ultra-light">
     <Sidebar />
-    <main class="w-full">
+    <main class="w-full overflow-hidden">
       <slot />
     </main>
   </div>
