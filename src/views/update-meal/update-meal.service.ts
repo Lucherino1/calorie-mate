@@ -113,7 +113,7 @@ class UpdateMealService {
     }
   }
 
-  calculateTotalNutrients (products: IProduct[], recipes: IRecipe[]) {
+  calculateTotalNutrients (products, recipes) {
     const totalNutrients = {
       calories: 0,
       proteins: 0,
@@ -123,26 +123,35 @@ class UpdateMealService {
 
     products.forEach(product => {
       const grams = product.grams || 100
-      const scale = grams / 100
+      const productNutrition = nutritionService.calcNutritionPerGrams(
+        product.nutritionDetails,
+        grams
+      )
 
       Object.keys(totalNutrients).forEach(key => {
-        totalNutrients[key] += Math.round((product.nutritionDetails[key] || 0) * scale)
+        totalNutrients[key] += productNutrition[key] || 0
       })
     })
 
     recipes.forEach(recipe => {
       const portionCount = recipe.portions || 1
+
       recipe.ingredients.forEach(ingredient => {
         const grams = ingredient.grams || 100
-        const scale = grams / 100
+        const ingredientNutrition = nutritionService.calcNutritionPerGrams(
+          ingredient.nutritionDetails,
+          grams
+        )
 
         Object.keys(totalNutrients).forEach(key => {
-          totalNutrients[key] += Math.round(((ingredient.nutritionDetails[key] || 0) * scale) * portionCount)
+          totalNutrients[key] += (ingredientNutrition[key] || 0) * portionCount
         })
       })
     })
 
-    return totalNutrients
+    return Object.fromEntries(
+      Object.entries(totalNutrients).map(([key, value]) => [key, Math.round(value)])
+    )
   }
 
   calculateCaloriesPercentage (targetCalories: number, totalCalories: number) {
