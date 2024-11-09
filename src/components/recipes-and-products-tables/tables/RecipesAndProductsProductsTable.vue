@@ -32,7 +32,7 @@ import { normalizeStringLabel } from '@/helpers'
 defineProps<{
   tableData: IProduct[]
   tableLoading: boolean
-  handleSortChange: () => IProduct[]
+  handleSortChange?: () => IProduct[]
 }>()
 
 const productHeaders: TTableHeadings<IProduct> = [
