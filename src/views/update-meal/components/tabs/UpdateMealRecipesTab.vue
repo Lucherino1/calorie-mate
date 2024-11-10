@@ -46,10 +46,10 @@ import { showNotification } from '@/helpers'
 const props = defineProps<{
   mealType: TMealType
   allRecipes: IRecipe[]
-  userMeals?: IMeals
 }>()
 
 const recipesInMeal = defineModel<IRecipe[]>('recipesInMeal')
+const userMeals = defineModel<IMeals>('user-meals')
 
 const dashboardStore = useDashboardStore()
 
@@ -73,7 +73,8 @@ async function addRecipeToMeal (recipe: IRecipe) {
   }
 
   const newRecipe: IRecipe = { ...recipe, portions: 1 }
-  recipesInMeal.value.unshift(newRecipe)
+  recipesInMeal.value.push(newRecipe)
+  userMeals.value.recipes.push(newRecipe)
 
   try {
     await updateMealService.updateMeal({
@@ -91,6 +92,7 @@ async function handleRecipeUpdate (updatedRecipe: IRecipe) {
   const index = recipesInMeal.value.findIndex(recipe => recipe.id === updatedRecipe.id)
   if (index !== -1) {
     recipesInMeal.value[index] = updatedRecipe
+    userMeals.value.recipes = recipesInMeal.value
   }
 
   try {
@@ -99,7 +101,7 @@ async function handleRecipeUpdate (updatedRecipe: IRecipe) {
       mealType: props.mealType,
       newItem: updatedRecipe,
       mealComponent: 'recipes',
-      currentMealData: props.userMeals
+      currentMealData: userMeals.value
     })
   } catch (error) {
     showNotification('Failed to update the recipe in the meal.', 'error')
