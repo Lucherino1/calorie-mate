@@ -28,8 +28,8 @@
               <div class="relative w-[150px] h-[150px] hover:opacity-60">
                 <el-upload
                   v-model:file-list="fileList"
-                  drag
                   action="#"
+                  drag
                   :show-file-list="false"
                   list-type="picture"
                   class="w-[150px] h-[150px]"
@@ -56,7 +56,7 @@
                   </template>
                 </el-upload>
                 <div
-                  v-if="uploadedImageUrl"
+                  v-if="uploadedImageUrl || recipe.image"
                   class="absolute inset-0 bg-black bg-opacity-50 flex items-center
                   justify-center opacity-0 hover:opacity-100 transition-opacity"
                 >
@@ -302,7 +302,6 @@ const uploadImage = async () => {
       const data = await filesService.uploadRecipeImage(file)
 
       if (data) {
-        console.log(data)
         uploadedImageUrl.value = data.productUrl
       }
     }
@@ -334,7 +333,7 @@ async function handleSave () {
           await uploadImage()
           recipe.value.image = uploadedImageUrl.value
         }
-
+        console.log(uploadedImageUrl.value)
         if (!authStore.isUserAdmin) {
           recipe.value.isUnderReview = submitForReview.value
         }

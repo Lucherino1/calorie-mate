@@ -3,7 +3,6 @@
     v-model:active-tab="activeTab"
     page-title="Admin Panel"
     :loading="pageLoading"
-    class=""
   >
     <template #products>
       <ApproveProductsAndRecipesProductsTab />

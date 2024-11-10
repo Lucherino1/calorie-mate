@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full">
     <el-card class="px-2 lg:px-0 card--no-shadow">
-      <div class="flex items-center justify-between min-h-[80px]">
+      <div class="flex items-center justify-between min-h-[70px]">
         <div class="flex min-w-[320px] items-center justify-between">
           <div class="flex justify-center items-center">
             <div>

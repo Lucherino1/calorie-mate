@@ -3,7 +3,7 @@
     <el-card class="p-5 rounded-3x card--no-shadow">
       <div class="flex gap-10 min-h-[200px]">
         <div class="w-[200px] h-[200px] bg-gray-200 rounded-3xl overflow-hidden">
-          <SkeletonImage :img-src="recipe.image">
+          <SkeletonImage v-model:src="localRecipe.image">
             <template #placeholder>
               <IconErrorRecipe class="fill-gray-dark" />
             </template>

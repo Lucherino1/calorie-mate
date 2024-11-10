@@ -223,6 +223,8 @@ async function saveRecipe () {
       })
 
       recipes.value.push(createdRecipe)
+      getPaginatedRecipes()
+
       showNotification('Recipe created successfully', 'Success', 'success')
     } else {
       await productsAndRecipesService.updateRecipe({
@@ -233,14 +235,13 @@ async function saveRecipe () {
 
       const index = recipes.value.findIndex(recipe => recipe.id === editableRecipe.value.id)
       if (index !== -1) {
-        recipes.value[index] = { ...editableRecipe.value }
+        recipes.value.splice(index, 1, { ...editableRecipe.value })
       }
       showNotification('Recipe updated successfully', 'Success', 'success')
     }
   } catch (error) {
     showNotification()
   } finally {
-    getPaginatedRecipes()
     isSearchAndInputDisabled.value = recipes.value.length === 0
     isEditDialogVisible.value = false
     isCreating.value = false

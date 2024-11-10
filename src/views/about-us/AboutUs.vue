@@ -1,3 +1,3 @@
 <template>
-  <div>About Us</div>
+  <div class="h-full">About Us</div>
 </template>
