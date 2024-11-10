@@ -1,6 +1,6 @@
 <template>
   <div class="w-full max-h-[100px]">
-    <el-card class="h-full">
+    <el-card class="h-full card--no-shadow">
       <div class="flex items-center justify-between">
         <div class="flex min-w-[200px] items-center justify-between">
           <div class="flex justify-center items-center">

@@ -1,14 +1,15 @@
 <template>
   <AppTable
     v-loading="tableLoading"
-    height="550"
+    :height="tableHeight"
     :headers="recipeHeaders"
     :empty-title="'No recipes added'"
     :table-data="tableData"
   >
     <template #image="{ row }">
       <div class="w-[100px] h-[100px] rounded-xl overflow-hidden">
-        <SkeletonImage :img-src="row.image">
+        <!-- <img :src="row.image"> -->
+        <SkeletonImage :key="row.image" v-model:src="row.image">
           <template #placeholder>
             <IconErrorRecipe class="fill-gray-dark" />
           </template>
@@ -74,6 +75,7 @@ import { normalizeStringLabel } from '@/helpers'
 defineProps<{
   tableData: IRecipe[]
   tableLoading: boolean
+  tableHeight: string
 }>()
 
 const recipeHeaders: TTableHeadings<IRecipe> = [
@@ -88,13 +90,13 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
   {
     label: 'Description',
     value: 'description',
-    minWidth: 170
+    width: 170
   },
   {
     label: 'Nutrition',
     value: 'nutrition',
     sort: true,
-    minWidth: 170
+    width: 150
   },
   {
     label: 'Weight (g)',
@@ -125,7 +127,7 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
     label: 'Actions',
     value: 'actions',
     align: 'center',
-    minWidth: 200
+    width: 200
 
   }
 ]

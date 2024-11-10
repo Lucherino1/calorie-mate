@@ -302,7 +302,6 @@ const uploadImage = async () => {
       const data = await filesService.uploadRecipeImage(file)
 
       if (data) {
-        console.log(data)
         uploadedImageUrl.value = data.productUrl
       }
     }

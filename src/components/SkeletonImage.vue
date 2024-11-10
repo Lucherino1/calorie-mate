@@ -2,7 +2,7 @@
   <div
     ref="intersectionTargetRef"
     class="w-full h-full bg-gray-ultra-light relative"
-    :class="{ 'flex items-center justify-center': imageHasError }"
+    :class="{'flex items-center justify-center': imageHasError}"
   >
     <el-skeleton v-if="isSkeletonLoading" class="w-full h-full absolute" animated>
       <template #template>
@@ -27,9 +27,7 @@
 <script lang="ts" setup>
 import IconErrorRecipe from '~icons/icon/error-recipe'
 
-const props = defineProps<{
-  imgSrc: string | undefined
-}>()
+const imgSrc = defineModel<string>('src')
 
 const intersectionTargetRef = ref<HTMLElement | null>(null)
 const observedImgSrc = ref<string | null>(null)
@@ -37,33 +35,41 @@ const observedImgSrc = ref<string | null>(null)
 const imageHasError = ref(false)
 const isSkeletonLoading = ref(true)
 const imageLoadingStarted = ref(false)
+const isLoaded = ref(false)
 
 const onLoad = () => {
+  if (imgSrc.value === '') {
+    imageHasError.value = true
+    isLoaded.value = true
+    isSkeletonLoading.value = false
+    return
+  }
+  isLoaded.value = true
   imageHasError.value = false
   isSkeletonLoading.value = false
+  imageLoadingStarted.value = true
 }
 
 const onError = () => {
   imageHasError.value = true
   isSkeletonLoading.value = false
-  observedImgSrc.value = null
+  imageLoadingStarted.value = false
 }
 
 let observer: IntersectionObserver | null = null
 
 const observeImage = () => {
-  if (!props.imgSrc) {
+  if (!imgSrc.value || imgSrc.value === null) {
     imageHasError.value = true
     isSkeletonLoading.value = false
     return
   }
-
   observer = new IntersectionObserver(
     ([entry]) => {
       if (entry.isIntersecting) {
         imageLoadingStarted.value = true
-        observedImgSrc.value = props.imgSrc
-        observer.disconnect()
+        observedImgSrc.value = imgSrc.value
+        observer?.disconnect()
       }
     },
     {

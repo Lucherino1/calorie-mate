@@ -1,7 +1,7 @@
 <template>
-  <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center mt-5">
-    <el-card class="w-full overflow-x-scroll items-center justify-between">
-      <div class="flex flex-col items-center justify-between w-full min-w-[1250px]">
+  <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center">
+    <el-card class="card--no-shadow w-full overflow-x-scroll">
+      <div class="flex flex-col items-center w-full min-w-[1250px]">
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
           v-model:visible="isEditDialogVisible"
@@ -12,7 +12,7 @@
           @save="saveRecipe"
           @delete="deleteRecipe"
         />
-        <div class="flex items-center justify-end gap-5 w-full mb-10">
+        <div class="flex items-center gap-5 w-full mb-5">
           <el-input
             v-model="searchQuery"
             :disabled="isSearchAndInputDisabled"
@@ -45,6 +45,7 @@
             />
           </el-select>
           <el-button
+            class="mr-2"
             :type="$elComponentType.primary"
             :size="$elComponentSize.large"
             @click="openCreateDialog"
@@ -55,13 +56,13 @@
 
         <div class="w-full overflow-x-scroll">
           <RecipesAndProductsRecipesTable
-            class=""
+            table-height="550"
             :table-data="sortedRecipes"
             :table-loading="tableLoading"
           >
             >
             <template #actions="{ row }">
-              <div class="flex">
+              <div class="flex items-center justify-center">
                 <el-button
                   :size="$elComponentSize.small"
                   @click="openEditDialog(row)"
@@ -80,13 +81,15 @@
           </RecipesAndProductsRecipesTable>
         </div>
 
-        <el-pagination
-          v-model:current-page="currentPage"
-          :page-size="pageSize"
-          :total="totalRecipes"
-          layout="prev, pager, next"
-          @current-change="handlePageChange"
-        />
+        <div class="flex justify-center items-center mt-2 w-full">
+          <el-pagination
+            v-model:current-page="currentPage"
+            :page-size="pageSize"
+            :total="totalRecipes"
+            layout="prev, pager, next"
+            @current-change="handlePageChange"
+          />
+        </div>
       </div>
     </el-card>
   </div>
@@ -221,6 +224,8 @@ async function saveRecipe () {
       })
 
       recipes.value.push(createdRecipe)
+      getPaginatedRecipes()
+
       showNotification('Recipe created successfully', 'Success', 'success')
     } else {
       await productsAndRecipesService.updateRecipe({
@@ -231,14 +236,13 @@ async function saveRecipe () {
 
       const index = recipes.value.findIndex(recipe => recipe.id === editableRecipe.value.id)
       if (index !== -1) {
-        recipes.value[index] = { ...editableRecipe.value }
+        recipes.value.splice(index, 1, { ...editableRecipe.value })
       }
       showNotification('Recipe updated successfully', 'Success', 'success')
     }
   } catch (error) {
     showNotification()
   } finally {
-    getPaginatedRecipes()
     isSearchAndInputDisabled.value = recipes.value.length === 0
     isEditDialogVisible.value = false
     isCreating.value = false
