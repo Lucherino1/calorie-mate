@@ -8,7 +8,6 @@
   >
     <template #image="{ row }">
       <div class="w-[100px] h-[100px] rounded-xl overflow-hidden">
-        <!-- <img :src="row.image"> -->
         <SkeletonImage :key="row.image" v-model:src="row.image">
           <template #placeholder>
             <IconErrorRecipe class="fill-gray-dark" />
