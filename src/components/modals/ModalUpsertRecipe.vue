@@ -333,7 +333,7 @@ async function handleSave () {
           await uploadImage()
           recipe.value.image = uploadedImageUrl.value
         }
-        console.log(uploadedImageUrl.value)
+
         if (!authStore.isUserAdmin) {
           recipe.value.isUnderReview = submitForReview.value
         }
