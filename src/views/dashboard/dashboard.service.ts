@@ -35,6 +35,20 @@ class DashboardService {
 
     return data
   }
+
+  async updateWaterAmount (date: string, waterAmount: number): Promise<void> {
+    const authStore = useAuthStore()
+
+    const { error } = await useSupabase
+      .from('dashboard')
+      .update({ waterAmount })
+      .eq('date', date)
+      .eq('userId', authStore.user.id)
+
+    if (error) {
+      throw new Error(error.message)
+    }
+  }
 }
 
 export const dashboardService = new DashboardService()

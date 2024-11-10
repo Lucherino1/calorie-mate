@@ -39,6 +39,7 @@
           </ProgressCalories>
         </div>
       </el-card>
+
       <div class="flex flex-1 flex-col w-full justify-between">
         <DashboardNutrientCard
           v-for="nutrient in nutrientData"
@@ -51,8 +52,8 @@
         />
       </div>
 
-      <div class="flex-1 gap-5 flex flex-col">
-        <el-card class="flex justify-center text-center items-center min-h-[155px] weight-form-wrapper">
+      <div class="flex-1 gap-5 flex flex-col max-w-[400px]">
+        <el-card class="flex justify-center text-center relative items-center min-h-[135px] weight-form-wrapper">
           <el-form
             ref="formRef"
             :model="bodyDetailsFormModel"
@@ -75,12 +76,22 @@
             </el-form-item>
 
             <transition name="fade">
-              <div v-show="isEditWeightMode" class="flex items-center justify-center">
+              <div v-show="isEditWeightMode" class="absolute left-1/2 transform -translate-x-1/2">
                 <el-form-item class="flex items-center justify-end">
-                  <el-button :type="$elComponentType.danger" link @click="cancelEditMode()">
+                  <el-button
+                    :size="$elComponentSize.small"
+                    :type="$elComponentType.danger"
+                    link
+                    @click="cancelEditMode()"
+                  >
                     Cancel
                   </el-button>
-                  <el-button native-type="submit" :type="$elComponentType.info" link>
+                  <el-button
+                    :size="$elComponentSize.small"
+                    native-type="submit"
+                    :type="$elComponentType.info"
+                    link
+                  >
                     Save
                   </el-button>
                 </el-form-item>
@@ -89,9 +100,24 @@
           </el-form>
         </el-card>
 
-        <el-card class="w-full h-auto flex-1">
-          <div class="text-[34px] leading-10">
-            <p class="section-header">Hydration:</p>
+        <el-card class="flex-1 flex flex-col text-start bg-white">
+          <p class="section-header">
+            Hydration:
+            <span
+              class="text- font-normal text-base text-gray-light"
+            >
+              {{ waterAmount }}/{{ targetWaterAmount }} ml
+            </span>
+          </p>
+          <div class="flex items-center gap-10 justify-center w-full">
+            <div class="grid grid-cols-4 gap-x-6 gap-y-2 pt-4">
+              <DashboardWaterGlass
+                v-for="index in totalGlasses"
+                :key="index"
+                v-model:isFilled="filledStates[index - 1]"
+                @click="updateWaterAmount(index)"
+              />
+            </div>
           </div>
         </el-card>
       </div>
@@ -129,10 +155,43 @@ const dashboardPageLoading = ref(false)
 
 const authStore = useAuthStore()
 
+const totalGlasses = 8
+const targetWaterAmount = 2000
+const glassVolume = 250
+const waterAmount = ref(0)
+
+const filledStates = computed(() => {
+  const filledCount = Math.floor(waterAmount.value / glassVolume)
+  return Array.from({ length: totalGlasses }, (_, i) => i < filledCount)
+})
+
 const getUserDashboard = async (selectedDate: string) => {
-  dashboardPageLoading.value = true
-  userDashboard.value = await dashboardService.getUserDashboard(selectedDate)
-  dashboardPageLoading.value = false
+  try {
+    dashboardPageLoading.value = true
+    userDashboard.value = await dashboardService.getUserDashboard(selectedDate)
+
+    waterAmount.value = userDashboard.value.waterAmount
+
+    dashboardPageLoading.value = false
+  } catch (error) {
+    showNotification()
+  }
+}
+
+const updateWaterAmount = async (index) => {
+  const clickedGlassAmount = (index) * glassVolume
+
+  if (waterAmount.value >= clickedGlassAmount) {
+    waterAmount.value = index * (glassVolume) - glassVolume
+  } else {
+    waterAmount.value = clickedGlassAmount
+  }
+
+  try {
+    await dashboardService.updateWaterAmount(SelectedDate.value, waterAmount.value)
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 const handleDateChange = (newDate: string) => {
