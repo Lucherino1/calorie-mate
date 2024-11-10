@@ -8,7 +8,6 @@
   >
     <template #image="{ row }">
       <div class="w-[100px] h-[100px] rounded-xl overflow-hidden">
-        <!-- <img :src="row.image"> -->
         <SkeletonImage :key="row.image" v-model:src="row.image">
           <template #placeholder>
             <IconErrorRecipe class="fill-gray-dark" />
@@ -90,13 +89,13 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
   {
     label: 'Description',
     value: 'description',
-    minWidth: 170
+    width: 170
   },
   {
     label: 'Nutrition',
     value: 'nutrition',
     sort: true,
-    minWidth: 170
+    width: 150
   },
   {
     label: 'Weight (g)',
