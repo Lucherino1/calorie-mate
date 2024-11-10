@@ -8,7 +8,7 @@ class ProductsAndRecipesService {
     userOnly = false
   }: {
     searchQuery?: string
-    typeFilter?: string[]
+    typeFilter?: TProductType[]
     limit?: number
     offset?: number
     isAdmin?: boolean
