@@ -12,45 +12,19 @@
           @save="saveProduct"
           @delete="deleteProduct"
         />
-        <div class="flex items-center justify-end gap-5 w-full mb-5">
-          <el-input
-            v-model="searchQuery"
-            :prefix-icon="IconSearchFood"
-            :size="$elComponentSize.large"
-            :disabled="isSearchAndInputDisabled"
-            class="w-full"
-            placeholder="Search products..."
-            clearable
-            @input="handleSearchInput"
-          />
-          <el-select
-            v-model="selectedType"
-            multiple
-            :disabled="isSearchAndInputDisabled"
-            collapse-tags
-            :max-collapse-tags="1"
-            :size="$elComponentSize.large"
-            clearable
-            class="max-w-[200px]"
-            placeholder="Select product type"
-            @change="handleFilterChange"
-          >
-            <el-option
-              v-for="type in productTypes"
-              :key="type"
-              class="capitalize"
-              :label="normalizeStringLabel(type)"
-              :value="type"
-            />
-          </el-select>
-          <el-button
-            :type="$elComponentType.primary"
-            :size="$elComponentSize.large"
-            @click="openCreateDialog"
-          >
-            Add New Product
-          </el-button>
-        </div>
+
+        <RecipesAndProductsManageBar
+          v-model:search-query="searchQuery"
+          v-model:selected-type="selectedType"
+          :option-types="productTypes"
+          :is-search-and-input-disabled="isSearchAndInputDisabled"
+          button-text="Add New Product"
+          search-placeholder="Search products..."
+          select-placeholder="Select product type"
+          @add-new-product="openCreateDialog"
+          @filter-change="handleFilterChange"
+          @search-input="handleSearchInput"
+        />
 
         <RecipesAndProductsProductsTable
           table-height="550"
@@ -96,8 +70,7 @@ import debounce from 'lodash/debounce'
 import cloneDeep from 'lodash/cloneDeep'
 
 import { EProductType } from '@/types/products-and-recipes.enums'
-import { normalizeStringLabel, showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
-import IconSearchFood from '~icons/icon/search-food'
+import { showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
 
 const authStore = useAuthStore()
 
@@ -108,7 +81,7 @@ const totalProducts = ref(0)
 const products = ref<IProduct[]>([])
 
 const productTypes = ref<TProductType[]>(Object.values(EProductType))
-const selectedType = ref<string[]>(null)
+const selectedType = ref<TProductType[]>(null)
 
 const searchQuery = ref('')
 
