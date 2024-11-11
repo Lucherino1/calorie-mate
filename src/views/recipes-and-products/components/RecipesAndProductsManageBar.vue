@@ -13,6 +13,8 @@
     <el-select
       v-model="selectedType"
       multiple
+      collapse-tags-tooltip
+      :tag-type="$elComponentType.primary"
       :disabled="isSearchAndInputDisabled"
       collapse-tags
       :max-collapse-tags="1"
@@ -31,7 +33,6 @@
       />
     </el-select>
     <el-button
-      class="mr-2"
       :type="$elComponentType.primary"
       :size="$elComponentSize.large"
       @click="onAddNewProduct"

@@ -10,8 +10,8 @@
     :lock-scroll="true"
     close-on-press-escape
     :title="props.title"
-    width="650px"
-    class="rounded-xl pb-0"
+    width="470px"
+    class="rounded-xl"
   >
     <p class="text-center mx-0 text-sm mb-2">
       * All nutritional values should be based on 100 g of the product.
@@ -23,30 +23,21 @@
       :rules="formRules"
       @submit.prevent="handleSave"
     >
-      <div class="flex gap-20 justify-center items-start py-10">
-        <div class="flex flex-col gap-4 max-w-[300px]">
-          <el-form-item class="flex fex-col" prop="name">
-            <div class="flex gap-2">
-              <p class="font-semibold">Name:</p>
-              <el-input v-model="product.name" placeholder="Your product name is..." />
-            </div>
-            <template #error>
-              <p class="block absolute top-9 text-sm left-14 text-red-600">*This field is required</p>
-            </template>
+      <div class="flex gap-20 justify-center pt-3">
+        <div class="flex flex-col gap-3 max-w-[300px]">
+          <el-form-item label="Name" label-position="top" prop="name">
+            <el-input v-model="product.name" placeholder="Your product name is..." />
           </el-form-item>
 
-          <el-form-item>
-            <div class="flex w-full gap-2">
-              <p class="font-semibold">Type:</p>
-              <el-select v-model="product.type" class="min-w-[100px]">
-                <el-option
-                  v-for="type in productTypes"
-                  :key="type"
-                  :label="normalizeStringLabel(type)"
-                  :value="type"
-                />
-              </el-select>
-            </div>
+          <el-form-item label="Type" label-position="top" required>
+            <el-select v-model="product.type" class="min-w-[100px]">
+              <el-option
+                v-for="type in productTypes"
+                :key="type"
+                :label="normalizeStringLabel(type)"
+                :value="type"
+              />
+            </el-select>
           </el-form-item>
 
           <el-form-item>
@@ -80,32 +71,23 @@
           </el-checkbox>
         </div>
 
-        <div class="flex flex-col justify-end items-end gap-4">
-          <el-form-item>
-            <div class="flex min-w-[230px] justify-between">
-              <p class="font-semibold">Carbs:</p>
-              <el-input-number v-model="product.nutritionDetails.carbs" type="number" :min="0">
-                <template #suffix>g</template>
-              </el-input-number>
-            </div>
+        <div class="flex flex-col justify-end items-end gap-2">
+          <el-form-item label="Carbs:" label-position="top">
+            <el-input-number v-model="product.nutritionDetails.carbs" type="number" :min="0">
+              <template #suffix>g</template>
+            </el-input-number>
           </el-form-item>
 
-          <el-form-item>
-            <div class="flex min-w-[230px] justify-between">
-              <p class="font-semibold">Proteins:</p>
-              <el-input-number v-model="product.nutritionDetails.proteins" type="number" :min="0">
-                <template #suffix>g</template>
-              </el-input-number>
-            </div>
+          <el-form-item label="Proteins:" label-position="top">
+            <el-input-number v-model="product.nutritionDetails.proteins" type="number" :min="0">
+              <template #suffix>g</template>
+            </el-input-number>
           </el-form-item>
 
-          <el-form-item>
-            <div class="flex min-w-[230px] justify-between">
-              <p class="font-semibold">Fats:</p>
-              <el-input-number v-model="product.nutritionDetails.fats" type="number" :min="0">
-                <template #suffix>g</template>
-              </el-input-number>
-            </div>
+          <el-form-item label="Fats:" label-position="top">
+            <el-input-number v-model="product.nutritionDetails.fats" type="number" :min="0">
+              <template #suffix>g</template>
+            </el-input-number>
           </el-form-item>
 
           <p class="text-right text- font-semibold">

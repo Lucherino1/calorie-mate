@@ -39,52 +39,59 @@ defineProps<{
 const productHeaders: TTableHeadings<IProduct> = [
   {
     label: 'Product Name',
-    value: 'name'
+    value: 'name',
+    minWidth: 200
   },
   {
     label: 'Calories (kcal)',
     value: 'nutritionDetails.calories',
     sort: true,
     align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.calories)
+    formatter: (row) => Math.round(row.nutritionDetails.calories),
+    minWidth: 200
   },
   {
     label: 'Carbs (g)',
     value: 'nutritionDetails.carbs',
     sort: true,
     align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.carbs)
+    formatter: (row) => Math.round(row.nutritionDetails.carbs),
+    minWidth: 120
   },
   {
     label: 'Proteins (g)',
     value: 'nutritionDetails.proteins',
     sort: true,
     align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.proteins)
+    formatter: (row) => Math.round(row.nutritionDetails.proteins),
+    minWidth: 180
   },
   {
     label: 'Fats (g)',
     value: 'nutritionDetails.fats',
     sort: true,
     align: 'center',
-    formatter: (row) => Math.round(row.nutritionDetails.fats)
+    formatter: (row) => Math.round(row.nutritionDetails.fats),
+    minWidth: 120
   },
   {
     label: 'Type',
     value: 'type',
-    formatter: (row) => normalizeStringLabel(row.type)
+    formatter: (row) => normalizeStringLabel(row.type),
+    minWidth: 120
   },
   {
     label: 'Vegan',
     value: 'isVegan',
     sort: true,
-    align: 'center'
+    align: 'center',
+    minWidth: 120
   },
   {
     label: 'Actions',
     value: 'actions',
     align: 'center',
-    width: 180
+    minWidth: 200
   }
 ]
 </script>

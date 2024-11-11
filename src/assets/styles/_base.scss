@@ -47,10 +47,10 @@ label {
 }
 
 .app-container {
-  @apply mx-auto w-full;
+  @apply mx-auto w-full max-w-[1728px];
 
   &--main {
-    @apply p-5 md:p-5 xl:p-5 2xl:p-[50px] flex-1;
+    @apply p-5 md:p-7 xl:p-10 2xl:p-[50px] max-w-[1418px] flex-1 mx-auto;
   }
 }
 

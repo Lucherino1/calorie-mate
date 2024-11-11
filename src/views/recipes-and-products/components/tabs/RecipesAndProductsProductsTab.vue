@@ -1,7 +1,7 @@
 <template>
   <div v-loading.fullscreen="pageLoading" class="flex w-full justify-center items-center">
     <el-card class="card--no-shadow w-full overflow-x-scroll h-full">
-      <div class="flex flex-col items-center min-w-[1230px]">
+      <div class="flex flex-col items-center">
         <ModalUpsertProduct
           v-model:product="editableProduct"
           v-model:visible="isEditDialogVisible"
@@ -108,7 +108,7 @@ const sortedProducts = computed(() => {
   return handleSortChange()
 })
 
-async function getPaginatedProducts (page?: number) {
+async function getPaginatedProducts (page?: number, initialLoad = false) {
   if (page && productPagesCache.value[page]) {
     products.value = productPagesCache.value[page]
     return
@@ -128,10 +128,13 @@ async function getPaginatedProducts (page?: number) {
     products.value = data || []
     totalProducts.value = count || 0
     productPagesCache.value[page] = data
+
+    if (initialLoad) {
+      isSearchAndInputDisabled.value = totalProducts.value === 0
+    }
   } catch (error) {
     showNotification()
   } finally {
-    isSearchAndInputDisabled.value = products.value.length === 0
     tableLoading.value = false
   }
 }
@@ -263,9 +266,9 @@ function handlePageChange (page: number) {
   getPaginatedProducts(currentPage.value)
 }
 
-onMounted(() => {
+onMounted(async () => {
   pageLoading.value = true
-  getPaginatedProducts(currentPage.value)
+  await getPaginatedProducts(currentPage.value, true)
   pageLoading.value = false
 })
 </script>

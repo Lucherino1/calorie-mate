@@ -40,13 +40,14 @@
     <template #ingredients="{ row }">
       <el-popover
         placement="top"
-        width="auto"
+        width="200px"
         trigger="hover"
+        popper-class="custom-popover"
       >
-        <ul class="flex gap-5 w-auto">
-          <li v-for="(ingredient, index) in row.ingredients" :key="index">
-            <b>{{ ingredient.name }}</b>: <br>
-            {{ ingredient.grams }}g <br>
+        <ul class="flex flex-col gap-2 overflow-y-auto h-[160px]">
+          <li v-for="(ingredient, index) in row.ingredients" :key="index" class="text-sm">
+            <b>{{ ingredient.name }}</b>:<br>
+            {{ ingredient.grams }}g
           </li>
         </ul>
         <template #reference>
@@ -80,53 +81,59 @@ defineProps<{
 const recipeHeaders: TTableHeadings<IRecipe> = [
   {
     label: 'Images',
-    value: 'image'
+    value: 'image',
+    minWidth: 115
   },
   {
     label: 'Recipe Name',
-    value: 'name'
+    value: 'name',
+    minWidth: 150
   },
   {
     label: 'Description',
     value: 'description',
-    width: 170
+    minWidth: 195
   },
   {
     label: 'Nutrition',
     value: 'nutrition',
     sort: true,
-    width: 150
+    minWidth: 190
   },
   {
     label: 'Weight (g)',
     value: 'portionWeight',
     sort: true,
-    align: 'center'
+    align: 'center',
+    minWidth: 120
   },
   {
     label: 'Type',
     value: 'type',
     align: 'center',
-    formatter: (row) => normalizeStringLabel(row.type)
+    formatter: (row) => normalizeStringLabel(row.type),
+    minWidth: 100
   },
   {
     label: 'Vegan',
     value: 'isVegan',
     sort: true,
-    align: 'center'
+    align: 'center',
+    minWidth: 95
 
   },
   {
     label: 'Ingredients',
     value: 'ingredients',
-    align: 'center'
+    align: 'center',
+    minWidth: 120
 
   },
   {
     label: 'Actions',
     value: 'actions',
     align: 'center',
-    width: 200
+    minWidth: 170
 
   }
 ]
