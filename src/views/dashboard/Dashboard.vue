@@ -108,6 +108,13 @@
             >
               {{ waterAmount }}/{{ targetWaterAmount }} ml
             </span>
+            <InfoTooltip
+              content="Using this menu you may control your hydration. 2 liters per day is the basic recommended water
+              intake for an average adult. Feel free to drink more if desired!
+               Each glass in the menu represents 250 ml."
+              fill-class="fill-info"
+              :icon="IconTooltipInfo"
+            />
           </p>
           <div class="flex items-center gap-10 justify-center w-full">
             <div class="grid grid-cols-4 gap-x-6 gap-y-2 pt-4">
@@ -143,6 +150,8 @@
 <script lang="ts" setup>
 import { showNotification } from '@/helpers'
 import { EProgressColorStatus } from '@/views/dashboard/dashboard.enums'
+
+import IconTooltipInfo from '~icons/icon/info-tooltip'
 
 const route = useRoute()
 
