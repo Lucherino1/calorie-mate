@@ -1,7 +1,7 @@
 <template>
   <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center">
     <el-card class="card--no-shadow w-full overflow-x-scroll">
-      <div class="flex flex-col items-center w-full min-w-[1250px]">
+      <div class="flex flex-col items-center w-full">
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
           v-model:visible="isEditDialogVisible"
@@ -77,8 +77,6 @@ import { showNotification } from '@/helpers'
 
 const authStore = useAuthStore()
 
-const activeTab = defineModel<string>('active-tab')
-
 const currentPage = ref(1)
 const pageSize = ref(10)
 
@@ -115,7 +113,7 @@ function calculateTotalCalories (recipe: IRecipe): number {
   return nutritionService.calculateTotalRecipeCalories(recipe)
 }
 
-async function getPaginatedRecipes (page?: number) {
+async function getPaginatedRecipes (page?: number, initialLoad = false) {
   if (page && recipePagesCache.value[page]) {
     recipes.value = recipePagesCache.value[page]
     return
@@ -136,7 +134,9 @@ async function getPaginatedRecipes (page?: number) {
     totalRecipes.value = count || 0
     recipePagesCache.value[page] = data
 
-    isSearchAndInputDisabled.value = totalRecipes.value === 0 && searchQuery.value !== ''
+    if (initialLoad) {
+      isSearchAndInputDisabled.value = totalRecipes.value === 0
+    }
   } catch (error) {
     showNotification()
   } finally {
@@ -275,9 +275,9 @@ function handlePageChange (page: number) {
   getPaginatedRecipes(currentPage.value)
 }
 
-watch(activeTab, (newTab) => {
-  if (newTab === 'recipes' && !recipes.value.length) {
-    getPaginatedRecipes()
-  }
+onMounted(async () => {
+  pageLoading.value = true
+  await getPaginatedRecipes(currentPage.value, true)
+  pageLoading.value = false
 })
 </script>
