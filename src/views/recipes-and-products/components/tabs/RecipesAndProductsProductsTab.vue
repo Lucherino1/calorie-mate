@@ -131,7 +131,7 @@ async function getPaginatedProducts (page?: number) {
   } catch (error) {
     showNotification()
   } finally {
-    isSearchAndInputDisabled.value = products.value.length === 0
+    isSearchAndInputDisabled.value = products.value.length === 0 && searchQuery.value !== ''
     tableLoading.value = false
   }
 }

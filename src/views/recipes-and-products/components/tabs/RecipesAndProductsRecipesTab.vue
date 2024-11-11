@@ -136,7 +136,7 @@ async function getPaginatedRecipes (page?: number) {
     totalRecipes.value = count || 0
     recipePagesCache.value[page] = data
 
-    isSearchAndInputDisabled.value = recipes.value.length === 0
+    isSearchAndInputDisabled.value = totalRecipes.value === 0 && searchQuery.value !== ''
   } catch (error) {
     showNotification()
   } finally {
