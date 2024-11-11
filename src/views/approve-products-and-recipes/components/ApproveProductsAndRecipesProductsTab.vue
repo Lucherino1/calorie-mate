@@ -1,8 +1,9 @@
 <template>
   <el-card
+    v-loading.fullscreen="pageLoading"
     class="pt-5 h-full w-full card--no-shadow overflow-x-scroll"
   >
-    <div class="flex flex-col items-center min-w-[1230px]">
+    <div class="flex flex-col items-center">
       <RecipesAndProductsProductsTable
         table-height="650"
         :table-data="products"
@@ -36,6 +37,7 @@ import { showNotification } from '@/helpers'
 
 const products = ref<IProduct[]>([])
 const tableLoading = ref(false)
+const pageLoading = ref(false)
 
 async function getProducts () {
   tableLoading.value = false
@@ -82,6 +84,8 @@ async function rejectProduct (productId: string) {
 }
 
 onMounted(() => {
+  pageLoading.value = true
   getProducts()
+  pageLoading.value = false
 })
 </script>

@@ -1,8 +1,9 @@
 <template>
   <el-card
+    v-loading.fullscreen="pageLoading"
     class="pt-5 h-full w-full card--no-shadow overflow-x-scroll"
   >
-    <div class="flex flex-col items-center min-w-[1230px]">
+    <div class="flex flex-col items-center">
       <RecipesAndProductsRecipesTable
         table-height="650"
         :table-data="recipes"
@@ -34,10 +35,10 @@
 <script lang="ts" setup>
 import { showNotification } from '@/helpers'
 
+const pageLoading = ref(false)
+
 const recipes = ref<IRecipe[]>([])
 const tableLoading = ref(false)
-
-const activeTab = defineModel<string>('active-tab')
 
 async function getRecipes () {
   tableLoading.value = false
@@ -83,9 +84,9 @@ async function rejectProduct (productId: string) {
   }
 }
 
-watch(activeTab, (newTab) => {
-  if (newTab === 'recipes' && !recipes.value.length) {
-    getRecipes()
-  }
+onMounted(async () => {
+  tableLoading.value = true
+  getRecipes()
+  tableLoading.value = false
 })
 </script>
