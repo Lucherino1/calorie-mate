@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.fullscreen="loading" class="app-container--main flex-col flex h-full">
+  <div v-loading.fullscreen="loading" class="app-container--main flex-col gap-3 flex h-full">
     <div class="flex items-center text-center justify-between">
       <div class="flex flex-col gap-5">
         <BackButton v-if="backButton" :button-text="'Back to dashboard'" :route-name="$routeNames.dashboard" />
@@ -12,12 +12,12 @@
     </div>
 
     <div class="mx-0">
-      <el-tabs v-model="modelValue" stretch class="min-h-[500px] flex w-full">
-        <el-tab-pane label="Products" name="products" class="w-full overflow-y-scroll">
+      <el-tabs v-model="modelValue" stretch class="min-h-[500px] gap-3 flex w-full">
+        <el-tab-pane lazy label="Products" name="products" class="w-full">
           <slot name="products" />
         </el-tab-pane>
 
-        <el-tab-pane class="w-full overflow-y-scroll" label="Recipes" name="recipes">
+        <el-tab-pane lazy class="w-full" label="Recipes" name="recipes">
           <slot name="recipes" />
         </el-tab-pane>
       </el-tabs>
