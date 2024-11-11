@@ -40,7 +40,7 @@ const productHeaders: TTableHeadings<IProduct> = [
   {
     label: 'Product Name',
     value: 'name',
-    width: 200
+    minWidth: 200
   },
   {
     label: 'Calories (kcal)',
@@ -48,7 +48,7 @@ const productHeaders: TTableHeadings<IProduct> = [
     sort: true,
     align: 'center',
     formatter: (row) => Math.round(row.nutritionDetails.calories),
-    width: 200
+    minWidth: 200
   },
   {
     label: 'Carbs (g)',
@@ -56,7 +56,7 @@ const productHeaders: TTableHeadings<IProduct> = [
     sort: true,
     align: 'center',
     formatter: (row) => Math.round(row.nutritionDetails.carbs),
-    width: 120
+    minWidth: 120
   },
   {
     label: 'Proteins (g)',
@@ -64,7 +64,7 @@ const productHeaders: TTableHeadings<IProduct> = [
     sort: true,
     align: 'center',
     formatter: (row) => Math.round(row.nutritionDetails.proteins),
-    width: 180
+    minWidth: 180
   },
   {
     label: 'Fats (g)',
@@ -72,26 +72,26 @@ const productHeaders: TTableHeadings<IProduct> = [
     sort: true,
     align: 'center',
     formatter: (row) => Math.round(row.nutritionDetails.fats),
-    width: 120
+    minWidth: 120
   },
   {
     label: 'Type',
     value: 'type',
     formatter: (row) => normalizeStringLabel(row.type),
-    width: 120
+    minWidth: 120
   },
   {
     label: 'Vegan',
     value: 'isVegan',
     sort: true,
     align: 'center',
-    width: 120
+    minWidth: 120
   },
   {
     label: 'Actions',
     value: 'actions',
     align: 'center',
-    width: 200
+    minWidth: 200
   }
 ]
 </script>

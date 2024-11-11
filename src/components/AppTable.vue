@@ -1,5 +1,5 @@
 =<template>
-  <el-table :height="height" :data="tableData" class="w-full">
+  <el-table flexible :height="height" class="min-w-full" :data="tableData">
     <el-table-column
       v-for="header of prop.headers"
       :key="header.value"
@@ -8,6 +8,7 @@
       :label="header.label"
       :fixed="header.fixed"
       :width="header.width"
+      :min-width="header.minWidth"
       :align="header.align"
     >
       <template #header>

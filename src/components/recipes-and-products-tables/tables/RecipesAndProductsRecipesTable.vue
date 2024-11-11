@@ -82,58 +82,58 @@ const recipeHeaders: TTableHeadings<IRecipe> = [
   {
     label: 'Images',
     value: 'image',
-    width: 115
+    minWidth: 115
   },
   {
     label: 'Recipe Name',
     value: 'name',
-    width: 150
+    minWidth: 150
   },
   {
     label: 'Description',
     value: 'description',
-    width: 195
+    minWidth: 195
   },
   {
     label: 'Nutrition',
     value: 'nutrition',
     sort: true,
-    width: 190
+    minWidth: 190
   },
   {
     label: 'Weight (g)',
     value: 'portionWeight',
     sort: true,
     align: 'center',
-    width: 120
+    minWidth: 120
   },
   {
     label: 'Type',
     value: 'type',
     align: 'center',
     formatter: (row) => normalizeStringLabel(row.type),
-    width: 100
+    minWidth: 100
   },
   {
     label: 'Vegan',
     value: 'isVegan',
     sort: true,
     align: 'center',
-    width: 95
+    minWidth: 95
 
   },
   {
     label: 'Ingredients',
     value: 'ingredients',
     align: 'center',
-    width: 120
+    minWidth: 120
 
   },
   {
     label: 'Actions',
     value: 'actions',
     align: 'center',
-    width: 170
+    minWidth: 170
 
   }
 ]
