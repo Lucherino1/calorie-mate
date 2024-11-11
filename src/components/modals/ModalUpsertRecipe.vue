@@ -22,7 +22,7 @@
       @submit.prevent="handleSave"
     >
       <div class="flex justify-between items-start pt-5">
-        <div class="flex flex-col gap-4 flex-1 px-2">
+        <div class="flex flex-col gap-10 flex-1 px-2">
           <div class="flex flex-col justify-center">
             <div class="flex gap-10 justify-start">
               <div class="relative w-[150px] h-[150px] hover:opacity-60">
@@ -60,39 +60,30 @@
                   class="absolute inset-0 bg-black bg-opacity-50 flex items-center
                   justify-center opacity-0 hover:opacity-100 transition-opacity"
                 >
-                  <el-icon class="text-white cursor-pointer opacity-100" @click.stop="handleImageRemove">
+                  <el-icon
+                    :size="$elComponentSize.large"
+                    class="text-red- cursor-pointer opacity-100"
+                    @click.stop="handleImageRemove"
+                  >
                     <Delete />
                   </el-icon>
                 </div>
               </div>
 
               <div class="flex flex-col justify-start">
-                <el-form-item required prop="name">
-                  <div class="flex gap-2 min-w-[300px]">
-                    <p class="font-semibold">Name:</p>
-                    <el-input v-model="recipe.name" class="w-full" />
-                  </div>
-                  <template #error>
-                    <p
-                      class="block absolute top-10 text-[12px] leading-3 left-14 text-red-600"
-                    >
-                      *This field is required
-                    </p>
-                  </template>
+                <el-form-item label="Name" label-position="top" required prop="name">
+                  <el-input v-model="recipe.name" class="w-full min-w-[300px]" />
                 </el-form-item>
 
-                <el-form-item>
-                  <div class="flex gap-2 items-center w-full">
-                    <p class="font-semibold">Type:</p>
-                    <el-select v-model="recipe.type" class="w-full">
-                      <el-option
-                        v-for="type in recipeTypes"
-                        :key="type"
-                        :label="normalizeStringLabel(type)"
-                        :value="type"
-                      />
-                    </el-select>
-                  </div>
+                <el-form-item required label="Type" label-position="top">
+                  <el-select v-model="recipe.type" class="w-full">
+                    <el-option
+                      v-for="type in recipeTypes"
+                      :key="type"
+                      :label="normalizeStringLabel(type)"
+                      :value="type"
+                    />
+                  </el-select>
                 </el-form-item>
 
                 <el-form-item>
@@ -109,19 +100,16 @@
             </div>
 
             <div class="flex">
-              <el-form-item prop="description">
-                <div class="flex flex-col mx-0 justify-center gap-2">
-                  <p class="font-semibold">Description:</p>
-                  <el-input
-                    v-model="recipe.description"
-                    required
-                    class="min-w-[500px] rounded-3xl"
-                    type="textarea"
-                    :resize="'none'"
-                    :rows="4"
-                    :maxlength="500"
-                  />
-                </div>
+              <el-form-item label="Description" required label-position="top" prop="description">
+                <el-input
+                  v-model="recipe.description"
+                  required
+                  class="min-w-[500px] rounded-3xl"
+                  type="textarea"
+                  :resize="'none'"
+                  :rows="4"
+                  :maxlength="500"
+                />
               </el-form-item>
             </div>
           </div>
@@ -153,31 +141,32 @@
 
         <div class="flex flex-col justify-center items-center gap-4 flex-1">
           <div class="min-w-[600px]">
-            <h3 class="font-semibold mb-1">Ingredients:</h3>
-            <el-select
-              v-model="searchQuery"
-              class=" mb-6 max-w-[600px]"
-              filterable
-              :filter-method="filterProducts"
-              :size="$elComponentSize.large"
-              placeholder="Enter a product name, e.g. 'bread', 'avocado', 'yogurt'"
-              clearable
-            >
-              <el-option
-                v-for="product in filteredProducts"
-                :key="product.id"
-                class="max-w-[600px]"
-                :label="product.name"
-                :value="product.name"
-                @click="addProductToIngredients(product)"
+            <el-form-item label="Ingredients:" label-position="top" required>
+              <el-select
+                v-model="searchQuery"
+                class=" mb-6 max-w-[600px]"
+                filterable
+                :filter-method="filterProducts"
+                :size="$elComponentSize.large"
+                placeholder="Enter a product name, e.g. 'bread', 'avocado', 'yogurt'"
+                clearable
               >
-                <div class="flex justify-between">
-                  <span class="font-semibold">{{ product.name }}</span>
-                  <p><b>{{ product.nutritionDetails.calories }}</b> kcal</p>
-                </div>
-              </el-option>
-              <template #empty>No products match</template>
-            </el-select>
+                <el-option
+                  v-for="product in filteredProducts"
+                  :key="product.id"
+                  class="max-w-[600px]"
+                  :label="product.name"
+                  :value="product.name"
+                  @click="addProductToIngredients(product)"
+                >
+                  <div class="flex justify-between">
+                    <span class="font-semibold">{{ product.name }}</span>
+                    <p><b>{{ product.nutritionDetails.calories }}</b> kcal</p>
+                  </div>
+                </el-option>
+                <template #empty>No products match</template>
+              </el-select>
+            </el-form-item>
 
             <div class="h-[300px] p-2 overflow-y-auto border-dashed border">
               <div v-for="(ingredient, index) in recipe.ingredients" :key="index" class="flex gap-4 mb-2">
@@ -195,7 +184,7 @@
                 description="No products added at the moment."
               />
             </div>
-            <p class="font-semibold mt-4">Portion Weight:  {{ portionWeight }}</p>
+            <p class="font-semibold mt-4 text-primary-dark">Portion Weight:  {{ portionWeight }} g</p>
             <div class="flex justify-end items-center my-5 w-full">
               <el-form-item>
                 <div class="flex justify-end items-center gap-4 mt-5">
