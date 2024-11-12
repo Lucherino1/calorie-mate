@@ -10,7 +10,7 @@
     :lock-scroll="true"
     close-on-press-escape
     :title="props.title"
-    width="470px"
+    width="480px"
     class="rounded-xl"
   >
     <p class="text-center mx-0 text-sm mb-2">
@@ -72,7 +72,7 @@
           </el-checkbox>
         </div>
 
-        <div class="flex flex-col justify-end items-end gap-2">
+        <div class="flex flex-col justify-end items-end gap-2 min-w-[180px]">
           <el-form-item label="Carbs:" label-position="top">
             <el-input-number v-model="product.nutritionDetails.carbs" type="number" :min="0">
               <template #suffix>g</template>
