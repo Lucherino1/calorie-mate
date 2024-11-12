@@ -62,7 +62,7 @@
                 >
                   <el-icon
                     :size="$elComponentSize.large"
-                    class="text-red- cursor-pointer opacity-100"
+                    class="fill-red-600 text-red-600 cursor-pointer opacity-100"
                     @click.stop="handleImageRemove"
                   >
                     <Delete />
@@ -254,6 +254,7 @@ const formRules = useElFormRules(
   {
     name: [useRequiredRule()],
     type: [useRequiredRule()],
+    description: [useRequiredRule()],
     ingredients: [useRequiredRule()]
   }
 )
@@ -314,6 +315,7 @@ async function handleSave () {
     showNotification('Please add at least one ingredient to save the recipe.', 'Missing ingredients', 'warning')
     return
   }
+
   modalButtonLoading.value = true
   formRef.value?.validate(async (isValid) => {
     if (isValid) {
