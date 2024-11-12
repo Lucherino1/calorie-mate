@@ -1,8 +1,8 @@
 type TProductType = keyof typeof import('@/types/products-and-recipes.enums').EProductType
-type TProductType = keyof typeof import('@/types/products-and-recipes.enums').ERecipeType
+type TRecipesType = keyof typeof import('@/types/products-and-recipes.enums').ERecipeType
 
 interface IProduct {
-  id: string
+  id?: string
   name: string
   nutritionDetails: {
     calories: number
@@ -13,19 +13,21 @@ interface IProduct {
   grams?: number
   type: TProductType
   isVegan: boolean
+  isUnderReview?: boolean
 }
 
 interface IRecipe {
-  id: string
+  id?: string
   name: string
-  userId: string
+  userId?: string
   description: string
   image: string
   portionWeight: number
   portions?: number
-  type: TProductType
+  type: TRecipesType
   isVegan: boolean
   ingredients: IProduct[]
+  isUnderReview?: boolean
 }
 
 type TMealType = 'breakfast' | 'lunch' | 'dinner' | 'snacks'

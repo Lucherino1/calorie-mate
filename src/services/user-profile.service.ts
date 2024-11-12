@@ -1,9 +1,10 @@
 class ProfileService {
-  updateUserBodyDetails = async (userId: string, bodyDetails: Partial<IBodyDetails>) => {
-    return useSupabase.from('profiles').update({ bodyDetails }).eq('id', userId)
+  async updateUserBodyDetails (bodyDetails: Partial<IBodyDetails>) {
+    const authStore = useAuthStore()
+    return useSupabase.from('profiles').update({ bodyDetails }).eq('id', authStore.user.id)
   }
 
-  recalculateTargetNutrition = (userProfile: IUser) => {
+  recalculateTargetNutrition (userProfile: IUser) {
     const userBody = userProfile.bodyDetails
 
     const bmr = nutritionService.calcBMR(userBody.currentWeight, userBody.height, userBody.age, userBody.sex)
@@ -19,15 +20,15 @@ class ProfileService {
     return userProfile
   }
 
-  updateUserTargetNutrition = async (userId: string, targetNutritionDetails: INutritionDetails) => {
-    return useSupabase.from('profiles').update({ targetNutritionDetails }).eq('id', userId)
+  async updateUserTargetNutrition (targetNutritionDetails: INutritionDetails) {
+    const authStore = useAuthStore()
+    return useSupabase.from('profiles').update({ targetNutritionDetails }).eq('id', authStore.user.id)
   }
 
-  updateUserTargetNutritionByMeal = async (
-    userId: string,
-    targetNutritionDetailsByMeal: ITargetNutritionDetailsByMeal
-  ) => {
-    return useSupabase.from('profiles').update({ targetNutritionDetailsByMeal }).eq('id', userId)
+  async updateUserTargetNutritionByMeal (targetNutritionDetailsByMeal: ITargetNutritionDetailsByMeal) {
+    const authStore = useAuthStore()
+
+    return useSupabase.from('profiles').update({ targetNutritionDetailsByMeal }).eq('id', authStore.user.id)
   }
 }
 

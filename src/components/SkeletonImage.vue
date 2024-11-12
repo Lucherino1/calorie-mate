@@ -19,17 +19,15 @@
     >
 
     <slot v-if="imageHasError" name="placeholder">
-      <p>Error image</p>
+      <IconErrorRecipe class="fill-gray-dark" />
     </slot>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import IconErrorRecipe from '~icons/icon/error-recipe'
 
-const props = defineProps<{
-  imgSrc: string
-}>()
+const imgSrc = defineModel<string>('src')
 
 const intersectionTargetRef = ref<HTMLElement | null>(null)
 const observedImgSrc = ref<string | null>(null)
@@ -40,6 +38,12 @@ const imageLoadingStarted = ref(false)
 const isLoaded = ref(false)
 
 const onLoad = () => {
+  if (imgSrc.value === '') {
+    imageHasError.value = true
+    isLoaded.value = true
+    isSkeletonLoading.value = false
+    return
+  }
   isLoaded.value = true
   imageHasError.value = false
   isSkeletonLoading.value = false
@@ -55,12 +59,17 @@ const onError = () => {
 let observer: IntersectionObserver | null = null
 
 const observeImage = () => {
+  if (!imgSrc.value || imgSrc.value === null) {
+    imageHasError.value = true
+    isSkeletonLoading.value = false
+    return
+  }
   observer = new IntersectionObserver(
     ([entry]) => {
       if (entry.isIntersecting) {
         imageLoadingStarted.value = true
-        observedImgSrc.value = props.imgSrc
-        observer.disconnect()
+        observedImgSrc.value = imgSrc.value
+        observer?.disconnect()
       }
     },
     {

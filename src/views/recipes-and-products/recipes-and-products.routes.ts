@@ -8,7 +8,7 @@ export const recipesAndProductsRoutes: RouteRecordRaw[] = [
   {
     path: '/recipes-and-products',
     name: recipesAndProductsRouteNames.recipesAndProducts,
-    component: () => import('@/views/recipes-and-products/recipesAndProducts.vue'),
+    component: () => import('@/views/recipes-and-products/RecipesAndProducts.vue'),
     meta: {
       requireAuth: true
     }

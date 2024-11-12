@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.fullscreen="dashboardPageLoading" class="app-container--dashboard">
+  <div v-loading.fullscreen="dashboardPageLoading" class="app-container--main">
     <div class="flex flex-col gap-5">
       <p class="font-bold text-gray-light text-[34px] leading-10">
         Hello, <span class="text-primary-dark">{{ authStore.user.firstName }}!</span>
@@ -18,7 +18,7 @@
 
     <div class="flex gap-5 mt-10 flex-wrap">
       <el-card class="w-full h-auto flex-1 min-w-[310px]">
-        <p class="card-header">Total Calories:</p>
+        <p class="section-header">Total Calories:</p>
         <div class="flex justify-center items-center">
           <ProgressCalories
             class="py-8"
@@ -91,7 +91,7 @@
 
         <el-card class="w-full h-auto flex-1">
           <div class="text-[34px] leading-10">
-            <p class="card-header">Hydration:</p>
+            <p class="section-header">Hydration:</p>
           </div>
         </el-card>
       </div>
@@ -131,7 +131,7 @@ const authStore = useAuthStore()
 
 const getUserDashboard = async (selectedDate: string) => {
   dashboardPageLoading.value = true
-  userDashboard.value = await dashboardService.getUserDashboard(selectedDate, authStore.user.id)
+  userDashboard.value = await dashboardService.getUserDashboard(selectedDate)
   dashboardPageLoading.value = false
 }
 
@@ -167,7 +167,7 @@ async function submitBodyDetails () {
 
     cancelEditMode()
     try {
-      await profileService.updateUserBodyDetails(authStore.user.id, { ...bodyDetailsFormModel })
+      await profileService.updateUserBodyDetails({ ...bodyDetailsFormModel })
 
       authStore.user.bodyDetails = bodyDetailsFormModel
       const {
@@ -176,8 +176,8 @@ async function submitBodyDetails () {
       } = profileService.recalculateTargetNutrition(authStore.user)
 
       await Promise.all([
-        profileService.updateUserTargetNutrition(authStore.user.id, { ...targetNutritionDetails }),
-        profileService.updateUserTargetNutritionByMeal(authStore.user.id, { ...targetNutritionDetailsByMeal })
+        profileService.updateUserTargetNutrition({ ...targetNutritionDetails }),
+        profileService.updateUserTargetNutritionByMeal({ ...targetNutritionDetailsByMeal })
       ])
 
       showNotification('Calories have been recalculated successfully', 'Recalculation Complete', 'success')

@@ -1,18 +1,18 @@
 import { roundToNearestTen } from '@/helpers'
 
 class NutritionService {
-  calcBMR = (weight: number, height: number, age: number, sex: TSex): number => {
+  calcBMR (weight: number, height: number, age: number, sex: TSex): number {
     const bmr = sex === 'male'
       ? 88.362 + 13.397 * weight + 4.799 * height - 5.677 * age
       : 447.593 + 9.247 * weight + 3.098 * height - 4.330 * age
     return roundToNearestTen(bmr)
   }
 
-  calcTDEE = (bmr: number, activityLevel: number): number => {
+  calcTDEE (bmr: number, activityLevel: number): number {
     return roundToNearestTen(bmr * activityLevel)
   }
 
-  calcGoalCalories = (currentWeight: number, goalWeight: number, tdee: number): number => {
+  calcGoalCalories (currentWeight: number, goalWeight: number, tdee: number): number {
     const weightDifference = currentWeight - goalWeight
 
     let goalCalories
@@ -29,7 +29,7 @@ class NutritionService {
     return roundToNearestTen(goalCalories)
   }
 
-  calcTargetNutritionDetails = (calories: number) => {
+  calcTargetNutritionDetails (calories: number) {
     return {
       calories: roundToNearestTen(calories),
       fats: roundToNearestTen(calories * 0.25 / 9),
@@ -38,7 +38,7 @@ class NutritionService {
     }
   }
 
-  calcTargetNutritionDetailsByMeal = (targetNutritionDetails: INutritionDetails) => {
+  calcTargetNutritionDetailsByMeal (targetNutritionDetails: INutritionDetails) {
     const mealDistribution: Record<TMealType, number> = {
       breakfast: 0.3,
       lunch: 0.35,
@@ -63,7 +63,8 @@ class NutritionService {
 
   // Eaten calculations:
 
-  calcNutritionPerGrams = (nutritionDetails: INutritionDetails, grams: number) => {
+  calcNutritionPerGrams (nutritionDetails: INutritionDetails, grams: number) {
+    if (grams === undefined || grams === null) grams = 100
     const factor = grams / 100
     return Object.keys(nutritionDetails).reduce((acc, key) => {
       acc[key] = Math.round(nutritionDetails[key] * factor)
@@ -71,7 +72,7 @@ class NutritionService {
     }, {} as INutritionDetails)
   }
 
-  calcIngredientsNutrition = (ingredients: IProduct[], portionCount: number) => {
+  calcIngredientsNutrition (ingredients: IProduct[], portionCount: number) {
     return ingredients.reduce((totals, ingredient) => {
       const { calories, proteins, carbs, fats } = ingredient.nutritionDetails
       totals.calories += Math.round((calories || 0) * portionCount)
@@ -82,7 +83,7 @@ class NutritionService {
     }, { calories: 0, proteins: 0, carbs: 0, fats: 0 } as INutritionDetails)
   }
 
-  calcIngredientNutrition = (ingredient: IProduct, portionCount: number) => {
+  calcIngredientNutrition (ingredient: IProduct, portionCount: number) {
     return {
       ...ingredient,
       nutritionDetails: {
@@ -94,7 +95,7 @@ class NutritionService {
     }
   }
 
-  calcTotalNutritious = (dashboard: IDashboard) => {
+  calcTotalNutritious (dashboard: IDashboard) {
     const totals = { calories: 0, proteins: 0, carbs: 0, fats: 0 }
     if (!dashboard) return totals
 
@@ -134,7 +135,7 @@ class NutritionService {
     }
   }
 
-  calcNutritiousByMeals = (dashboard: IDashboard) => {
+  calcNutritiousByMeals (dashboard: IDashboard) {
     const totalMealsData = {
       breakfast: { calories: 0, itemsCount: 0 },
       lunch: { calories: 0, itemsCount: 0 },
@@ -173,7 +174,7 @@ class NutritionService {
     return totalMealsData
   }
 
-  calcRemainingCalories = (dashboard: IDashboard, targetCalories: number) => {
+  calcRemainingCalories (dashboard: IDashboard, targetCalories: number) {
     const totalNutrition = this.calcTotalNutritious(dashboard)
     return targetCalories - totalNutrition.calories
   }
@@ -181,33 +182,65 @@ class NutritionService {
   calcNutrientPercentage = (dashboard: IDashboard, targetNutrition: INutritionDetails) => {
     const totalNutrition = this.calcTotalNutritious(dashboard)
 
-    return {
-      calories: roundToNearestTen((totalNutrition.calories / targetNutrition.calories) * 100),
-      fats: roundToNearestTen((totalNutrition.fats / targetNutrition.fats) * 100),
-      carbs: roundToNearestTen((totalNutrition.carbs / targetNutrition.carbs) * 100),
-      proteins: roundToNearestTen((totalNutrition.proteins / targetNutrition.proteins) * 100)
-    }
+    return ['calories', 'fats', 'carbs', 'proteins'].reduce((result, nutrient) => {
+      const percentage = (totalNutrition[nutrient] / targetNutrition[nutrient]) * 100
+      result[nutrient] = roundToNearestTen(Math.min(percentage, 100))
+      return result
+    }, {} as Record<keyof INutritionDetails, number>)
   }
 
-  calcMealCaloriesPercentage =
-    (dashboard: IDashboard, targetNutritionByMeal: ITargetNutritionDetailsByMeal) => {
-      const nutritionByMeal = this.calcNutritiousByMeals(dashboard)
-      const percentages: Record<keyof ITargetNutritionDetailsByMeal, number> =
+  calcMealCaloriesPercentage (dashboard: IDashboard, targetNutritionByMeal: ITargetNutritionDetailsByMeal) {
+    const nutritionByMeal = this.calcNutritiousByMeals(dashboard)
+    const percentages: Record<keyof ITargetNutritionDetailsByMeal, number> =
       { breakfast: 0, lunch: 0, dinner: 0, snacks: 0 }
 
-      for (const meal in targetNutritionByMeal) {
-        const target = targetNutritionByMeal[meal as keyof ITargetNutritionDetailsByMeal]
-        if (target) {
-          const targetCalories = target.calories
+    for (const meal in targetNutritionByMeal) {
+      const target = targetNutritionByMeal[meal as keyof ITargetNutritionDetailsByMeal]
+      if (target) {
+        const targetCalories = target.calories
 
-          const consumedCalories = nutritionByMeal[meal as keyof typeof nutritionByMeal]
+        const consumedCalories = nutritionByMeal[meal as keyof typeof nutritionByMeal]
 
-          percentages[meal] = Math.min(roundToNearestTen((consumedCalories.calories / targetCalories) * 100), 100)
-        }
+        percentages[meal] = Math.min(roundToNearestTen((consumedCalories.calories / targetCalories) * 100), 100)
       }
-
-      return percentages
     }
+
+    return percentages
+  }
+
+  calcCaloriesByCPF (product: IProduct) {
+    const { proteins, fats, carbs } = product.nutritionDetails
+    const calories = (proteins * 4) + (fats * 9) + (carbs * 4)
+    return Math.round(calories)
+  }
+
+  // calculate nutritious from recipes
+
+  calcTotalRecipeCarbs (recipe: IRecipe): number {
+    return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.carbs, 0)
+  }
+
+  calcTotalRecipeProteins (recipe: IRecipe): number {
+    return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.proteins, 0)
+  }
+
+  calcTotalRecipeFats (recipe: IRecipe): number {
+    return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.fats, 0)
+  }
+
+  calcTotalRecipeCalories (recipe: IRecipe): number {
+    return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.calories, 0)
+  }
+
+  calculateTotalRecipeCalories (recipe: IRecipe): number {
+    return Math.round(
+      recipe.ingredients.reduce((sum, ingredient) => {
+        const calsPerGrams =
+        nutritionService.calcNutritionPerGrams(ingredient.nutritionDetails, ingredient.grams || 100).calories
+        return sum + calsPerGrams
+      }, 0)
+    )
+  }
 }
 
 export const nutritionService = new NutritionService()

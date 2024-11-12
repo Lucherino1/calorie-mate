@@ -1,9 +1,9 @@
 <template>
   <div class="w-full h-full">
-    <el-card class="p-5 rounded-3x">
+    <el-card class="p-5 rounded-3x card--no-shadow">
       <div class="flex gap-10 min-h-[200px]">
         <div class="w-[200px] h-[200px] bg-gray-200 rounded-3xl overflow-hidden">
-          <SkeletonImage :img-src="recipe.image">
+          <SkeletonImage v-model:src="localRecipe.image">
             <template #placeholder>
               <IconErrorRecipe class="fill-gray-dark" />
             </template>
@@ -14,7 +14,7 @@
           <div class="flex justify-between items-start">
             <div>
               <div class="flex items-center">
-                <p class="text-2xl font-bold text-primary-dark">
+                <p class="text-2xl font-bold truncate max-w-[500px]">
                   {{ recipe.name }}
                 </p>
                 <span v-if="recipe.isVegan" class="flex items-center fill-success w-[20px] h-[20px] ml-2">

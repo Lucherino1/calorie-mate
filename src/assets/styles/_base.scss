@@ -7,7 +7,7 @@
 html,
 body,
 #app {
-  @apply h-full;
+  @apply h-full box-border;
 }
 
 html {
@@ -47,13 +47,23 @@ label {
 }
 
 .app-container {
-  @apply mx-auto w-full;
+  @apply mx-auto w-full max-w-[1728px];
 
-  &--dashboard {
-    @apply p-5 md:p-10 xl:px-5 2xl:p-[50px];
+  &--main {
+    @apply p-5 md:p-7 xl:p-10 2xl:p-[50px] max-w-[1418px] flex-1 mx-auto;
   }
 }
 
-.card-header {
-  @apply font-bold text-lg mb-2 text-primary-dark
+.section-header {
+  @apply font-bold text-lg mb-2 text-primary-dark;
+}
+
+
+.multi-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: var(--mt-lines, 3);
+  -webkit-box-orient: vertical;
+  white-space: initial;
+  overflow: hidden;
+  word-break: break-word;
 }

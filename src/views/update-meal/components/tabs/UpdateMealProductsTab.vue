@@ -25,7 +25,7 @@
       </el-select>
     </div>
 
-    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-scroll-auto">
+    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-auto">
       <UpdateMealProductCard
         v-for="product in productsInMeal"
         :key="product.id"
@@ -39,17 +39,6 @@
         :image-size="200"
         description="No products added at the moment."
       />
-    </div>
-
-    <div v-if="productsInMeal.length > productsPerPage" class="mt-5 w-full flex items-center justify-center">
-      <el-button
-        class="min-w-[600px]"
-        type="primary"
-        :size="$elComponentSize.large"
-        @click="loadMoreProducts"
-      >
-        See more
-      </el-button>
     </div>
   </div>
 </template>
@@ -66,14 +55,6 @@ const props = defineProps<{
 const productsInMeal = defineModel<IProduct[]>('productsInMeal')
 
 const dashboardStore = useDashboardStore()
-
-const authStore = useAuthStore()
-
-const productsPerPage = ref(10)
-
-function loadMoreProducts () {
-  productsPerPage.value += 10
-}
 
 const searchQuery = ref('')
 const filteredProducts = ref<IProduct[]>([])
@@ -99,7 +80,12 @@ async function addProductToMeal (product: IProduct) {
 
     productsInMeal.value.unshift(newProduct)
     try {
-      await updateMealService.updateMeal(authStore.user.id, dashboardStore.date, props.mealType, { ...newProduct }, 'products')
+      await updateMealService.updateMeal({
+        date: dashboardStore.date,
+        mealType: props.mealType,
+        newItem: newProduct,
+        mealComponent: 'products'
+      })
     } catch (error) {
       showNotification()
     }
@@ -107,39 +93,45 @@ async function addProductToMeal (product: IProduct) {
 }
 
 async function handleProductUpdate (updatedProduct: IProduct) {
-  const index = productsInMeal.value.findIndex(product => product.id === updatedProduct.id)
-  if (index !== -1) productsInMeal.value[index] = updatedProduct
+  const updatedProductsInMeal = [...productsInMeal.value]
+  const index = updatedProductsInMeal.findIndex(product => product.id === updatedProduct.id)
 
-  try {
-    await updateMealService.updateMeal(
-      authStore.user.id,
-      dashboardStore.date,
-      props.mealType,
-      updatedProduct,
-      'products',
-      props.userMeals
-    )
-  } catch (error) {
-    showNotification()
+  if (index !== -1) {
+    updatedProductsInMeal[index] = { ...updatedProduct }
+    productsInMeal.value = updatedProductsInMeal
+    try {
+      await updateMealService.updateMeal({
+        date: dashboardStore.date,
+        mealType: props.mealType,
+        newItem: updatedProduct,
+        mealComponent: 'products',
+        currentMealData: props.userMeals
+      })
+    } catch (error) {
+      showNotification()
+    }
+  } else {
+    showNotification('Product not found in meal', 'Error', 'error')
   }
 }
 
 async function handleProductRemove (productId: string) {
   const index = productsInMeal.value.findIndex(product => product.id === productId)
+
   if (index !== -1) {
     productsInMeal.value.splice(index, 1)
 
     try {
-      await updateMealService.removeProduct(
-        authStore.user.id,
-        dashboardStore.date,
-        props.mealType,
+      await updateMealService.removeProduct({
+        date: dashboardStore.date,
+        mealType: props.mealType,
         productId,
-        'products'
-      )
+        mealComponent: 'products'
+      })
     } catch (error) {
       showNotification()
     }
   }
 }
+
 </script>

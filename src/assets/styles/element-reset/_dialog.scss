@@ -1,0 +1,10 @@
+@import "element-plus/theme-chalk/src/dialog";
+
+.el-dialog {
+  &__header, &__title, &__headerbtn, &__close {
+    @apply text-primary-dark fill-primary-dark !important;
+  }
+  &__headerbtn, &__close {
+    @apply hover:fill-primary transition-colors duration-300 !important;
+  }
+}
