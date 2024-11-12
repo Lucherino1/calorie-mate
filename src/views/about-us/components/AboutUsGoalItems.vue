@@ -5,7 +5,7 @@
       :key="index"
       class="flex items-center text-[20px] space-x-2"
     >
-      <IconCheck class="w-[30px] h-[30px] fill-primary-dark" />
+      <IconCheck class="w-[30px] h-[30px]" />
       <span class="font-semibold">{{ goal }}</span>
     </div>
   </div>

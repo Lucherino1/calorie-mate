@@ -26,7 +26,7 @@
     <main class="flex flex-col justify-center items-center mt-[100px]">
       <p class="page-header w-full text-center mb-10">Discover Calorie Mate</p>
 
-      <div class="flex flex-wrap gap-10 px-[20px] 2xl:px-[80px]">
+      <section class="flex flex-wrap gap-10 px-[20px] 2xl:px-[80px]">
         <AboutUsDiscoverCard
           v-for="(item, index) in discoverCardsData"
           :key="index"
@@ -34,8 +34,8 @@
           :paragraph="item.paragraph"
           :title="item.title"
         />
-      </div>
-      <div class="text-center w-full mt-[150px]">
+      </section>
+      <section class="text-center w-full mt-[150px]">
         <p class="page-header w-full mb-10">Our mission</p>
 
         <div class="text-white bg-primary-dark py-8 w-full text-xl">
@@ -50,7 +50,20 @@
         </div>
 
         <p class="page-header w-full mb-10 mt-[150px]">Success Stories</p>
-      </div>
+        <div class="flex justify-center gap-10">
+          <AboutUsSuccessCard
+            v-for="(person, index) in peopleData"
+            :key="index"
+            :name="person.name"
+            :age="person.age"
+            :image-before="person.imageBefore"
+            :image-after="person.imageAfter"
+            :weight-before="person.weightBefore"
+            :weight-after="person.weightAfter"
+            :quote="person.quote"
+          />
+        </div>
+      </section>
     </main>
   </div>
 </template>
@@ -80,4 +93,34 @@ const discoverCardsData = ref([
     paragraph: 'Define your personal health goals — whether it’s weight loss, muscle gain, or maintenance — and let us guide you every step.'
   }
 ])
+
+const peopleData = [
+  {
+    name: 'Anna',
+    age: '24',
+    imageBefore: '/src/assets/images/about-us/main/success-stories/anna-before.jpeg',
+    imageAfter: '/src/assets/images/about-us/main/success-stories/anna-after.jpg',
+    weightBefore: '65 kg',
+    weightAfter: '53 kg',
+    quote: 'If you want to accomplish something, then you will accomplish it, regardless of how bumpy the road is. I always told myself: I can\'t go back and start from the beginning, but I can start today and follow a new path!'
+  },
+  {
+    name: 'James',
+    age: '37',
+    imageBefore: '/src/assets/images/about-us/main/success-stories/james-before.jpeg',
+    imageAfter: '/src/assets/images/about-us/main/success-stories/james-after.jpeg',
+    weightBefore: '85 kg',
+    weightAfter: '75 kg',
+    quote: 'Calorie Mate helped me stay consistent. I’ve learned that real change comes from small, steady improvements. With each step, I got closer to my goal.'
+  },
+  {
+    name: 'Zac',
+    age: '30',
+    imageBefore: '/src/assets/images/about-us/main/success-stories/zac-before.jpg',
+    imageAfter: '/src/assets/images/about-us/main/success-stories/zac-after.jpg',
+    weightBefore: '60 kg',
+    weightAfter: '81 kg',
+    quote: 'I was often bullied, but now I’m strong enough to stand up for myself. Calorie Mate gave me the motivation to change and build confidence.'
+  }
+]
 </script>
