@@ -1,7 +1,7 @@
 <template>
-  <div :loading="tableLoading" class="flex justify-center items-center">
-    <el-card class="card--no-shadow w-full overflow-x-scroll">
-      <div class="flex flex-col items-center w-full">
+  <div :loading="tableLoading" class="flex h-full w-full justify-center items-center">
+    <el-card class="card--no-shadow w-full h-full">
+      <div class="flex flex-col items-center w-full h-full">
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
           v-model:visible="isEditDialogVisible"
@@ -26,34 +26,31 @@
           @search-input="handleSearchInput"
         />
 
-        <div class="w-full overflow-x-scroll">
-          <RecipesAndProductsRecipesTable
-            table-height="550"
-            :table-data="sortedRecipes"
-            :table-loading="tableLoading"
+        <RecipesAndProductsRecipesTable
+          :table-data="sortedRecipes"
+          :table-loading="tableLoading"
+        >
           >
-            >
-            <template #actions="{ row }">
-              <div class="flex items-center justify-center">
-                <el-button
-                  :size="$elComponentSize.small"
-                  @click="openEditDialog(row)"
-                >
-                  Edit
-                </el-button>
-                <el-button
-                  :type="$elComponentType.danger"
-                  :size="$elComponentSize.small"
-                  @click="deleteRecipe(row.id)"
-                >
-                  Delete
-                </el-button>
-              </div>
-            </template>
-          </RecipesAndProductsRecipesTable>
-        </div>
+          <template #actions="{ row }">
+            <div class="flex items-center justify-center">
+              <el-button
+                :size="$elComponentSize.small"
+                @click="openEditDialog(row)"
+              >
+                Edit
+              </el-button>
+              <el-button
+                :type="$elComponentType.danger"
+                :size="$elComponentSize.small"
+                @click="deleteRecipe(row.id)"
+              >
+                Delete
+              </el-button>
+            </div>
+          </template>
+        </RecipesAndProductsRecipesTable>
 
-        <div class="flex justify-center items-center mt-2 w-full">
+        <div class="flex flex-1 justify-center items-end mt-2 w-full">
           <el-pagination
             v-model:current-page="currentPage"
             :page-size="pageSize"
