@@ -315,10 +315,9 @@ async function handleSave () {
     showNotification('Please add at least one ingredient to save the recipe.', 'Missing ingredients', 'warning')
     return
   }
-
-  modalButtonLoading.value = true
   formRef.value?.validate(async (isValid) => {
     if (isValid) {
+      modalButtonLoading.value = true
       try {
         if (fileList.value.length > 0 && uploadedImageUrl.value) {
           await uploadImage()
