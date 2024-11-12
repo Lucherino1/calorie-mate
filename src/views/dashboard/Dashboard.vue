@@ -1,7 +1,7 @@
 <template>
   <div v-loading.fullscreen="dashboardPageLoading" class="app-container--main">
     <div class="flex flex-col gap-5">
-      <p class="font-bold text-gray-light text-[34px] leading-10">
+      <p class="page-header text-gray-light">
         Hello, <span class="text-primary-dark">{{ authStore.user.firstName }}!</span>
       </p>
 

@@ -54,6 +54,10 @@ label {
   }
 }
 
+.page-header {
+  @apply font-bold text-[34px] leading-10;
+}
+
 .section-header {
   @apply font-bold text-lg mb-2 text-primary-dark;
 }
