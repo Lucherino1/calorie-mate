@@ -3,7 +3,7 @@
     :loading="tableLoading"
     class="pt-5 h-full w-full card--no-shadow overflow-x-scroll"
   >
-    <div class="flex flex-col items-center">
+    <div class="flex flex-col h-full items-center">
       <RecipesAndProductsRecipesTable
         table-height="650"
         :table-data="recipes"
@@ -59,7 +59,7 @@ async function approveProduct (productId: string) {
 
     recipes.value = recipes.value.filter(product => product.id !== productId)
 
-    showNotification('Product was approved successfully', 'Success', 'success')
+    showNotification('Recipe was approved successfully', 'Success', 'success')
   } catch (error) {
     showNotification()
   } finally {
@@ -73,7 +73,7 @@ async function rejectProduct (productId: string) {
     await approveService.recipeReview({ id: productId, approve: false })
 
     recipes.value = recipes.value.filter(product => product.id !== productId)
-    showNotification('Product was rejected successfully', 'Success', 'success')
+    showNotification('Recipe was rejected successfully', 'Success', 'success')
   } catch (error) {
     showNotification()
   } finally {

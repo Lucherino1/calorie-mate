@@ -66,7 +66,7 @@
             <li class="text-center">
               <p class="text-gray-light">
                 Calories:<br><b class="text-primary-dark text-xl">{{ calcedNutrition.calories }}</b>
-                <span class="text-primary-dark"> g</span>
+                <span class="text-primary-dark"> kcal</span>
               </p>
             </li>
           </ul>

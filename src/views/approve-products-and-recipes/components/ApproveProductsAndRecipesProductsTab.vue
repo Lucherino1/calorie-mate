@@ -3,7 +3,7 @@
     :loading="tableLoading"
     class="pt-5 h-full w-full card--no-shadow overflow-x-scroll"
   >
-    <div class="flex flex-col items-center">
+    <div class="flex flex-col items-center h-full">
       <RecipesAndProductsProductsTable
         table-height="650"
         :table-data="products"
