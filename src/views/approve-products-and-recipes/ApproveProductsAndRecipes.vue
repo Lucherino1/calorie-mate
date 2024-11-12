@@ -1,7 +1,7 @@
 <template>
   <ProductsAndRecipesTabsWrapper
     v-model:active-tab="activeTab"
-    page-title="Admin Panel"
+    :page-title="pageTitle"
   >
     <template #products>
       <ApproveProductsAndRecipesProductsTab />
@@ -17,4 +17,6 @@
 
 <script lang="ts" setup>
 const activeTab = ref('products')
+
+const pageTitle = computed(() => activeTab.value === 'products' ? 'Approve Products' : 'Approve Recipes')
 </script>
