@@ -1,7 +1,7 @@
 <template>
-  <div :loading="tableLoading" class="flex justify-center items-center">
-    <el-card class="card--no-shadow w-full overflow-x-scroll">
-      <div class="flex flex-col items-center w-full">
+  <div :loading="tableLoading" class="flex h-full justify-center items-center">
+    <el-card class="card--no-shadow w-full overflow-x-scroll h-full">
+      <div class="flex flex-col items-center w-full h-full">
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
           v-model:visible="isEditDialogVisible"
@@ -28,7 +28,6 @@
 
         <div class="w-full overflow-x-scroll">
           <RecipesAndProductsRecipesTable
-            table-height="550"
             :table-data="sortedRecipes"
             :table-loading="tableLoading"
           >

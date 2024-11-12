@@ -1,7 +1,6 @@
 <template>
   <AppTable
     v-loading="tableLoading"
-    :height="tableHeight"
     empty-title="No products added"
     :headers="productHeaders"
     :table-data="tableData"
@@ -32,7 +31,6 @@ import { normalizeStringLabel } from '@/helpers'
 defineProps<{
   tableData: IProduct[]
   tableLoading: boolean
-  tableHeight: string
   handleSortChange?: () => IProduct[]
 }>()
 

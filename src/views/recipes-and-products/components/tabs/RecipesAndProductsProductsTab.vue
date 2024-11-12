@@ -1,7 +1,7 @@
 <template>
-  <div :loading="tableLoading" class="flex w-full justify-center items-center">
-    <el-card class="card--no-shadow w-full overflow-x-scroll h-full">
-      <div class="flex flex-col items-center">
+  <div :loading="tableLoading" class="flex w-full h-full justify-center items-center">
+    <el-card class="card--no-shadow w-full h-full">
+      <div class="flex flex-col items-center flex-1 h-full">
         <ModalUpsertProduct
           v-model:product="editableProduct"
           v-model:visible="isEditDialogVisible"
@@ -27,7 +27,6 @@
         />
 
         <RecipesAndProductsProductsTable
-          table-height="550"
           :table-data="sortedProducts"
           :table-loading="tableLoading"
           :handle-sort-change="handleSortChange"
