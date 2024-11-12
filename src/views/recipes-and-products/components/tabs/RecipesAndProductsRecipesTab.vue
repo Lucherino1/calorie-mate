@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="tableLoading" class="flex justify-center items-center">
+  <div :loading="tableLoading" class="flex justify-center items-center">
     <el-card class="card--no-shadow w-full overflow-x-scroll">
       <div class="flex flex-col items-center w-full">
         <ModalUpsertRecipe
