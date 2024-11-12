@@ -1,6 +1,6 @@
 <template>
   <el-card
-    v-loading="tableLoading"
+    :loading="tableLoading"
     class="pt-5 h-full w-full card--no-shadow overflow-x-scroll"
   >
     <div class="flex flex-col items-center">

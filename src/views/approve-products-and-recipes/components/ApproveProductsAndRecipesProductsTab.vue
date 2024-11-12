@@ -1,6 +1,6 @@
 <template>
   <el-card
-    v-loading="tableLoading"
+    :loading="tableLoading"
     class="pt-5 h-full w-full card--no-shadow overflow-x-scroll"
   >
     <div class="flex flex-col items-center">
@@ -39,7 +39,7 @@ const products = ref<IProduct[]>([])
 const tableLoading = ref(false)
 
 async function getProducts () {
-  tableLoading.value = false
+  tableLoading.value = true
 
   try {
     const data = await approveService.getPendingApprovalProducts()

@@ -2,7 +2,6 @@
   <ProductsAndRecipesTabsWrapper
     v-model:active-tab="activeTab"
     page-title="Admin Panel"
-    :loading="pageLoading"
   >
     <template #products>
       <ApproveProductsAndRecipesProductsTab />
@@ -17,7 +16,5 @@
 </template>
 
 <script lang="ts" setup>
-const pageLoading = ref(false)
-
 const activeTab = ref('products')
 </script>

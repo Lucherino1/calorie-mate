@@ -25,7 +25,7 @@
         <div class="flex flex-col gap-10 flex-1 px-2">
           <div class="flex flex-col justify-center">
             <div class="flex gap-10 justify-start">
-              <div class="relative w-[150px] h-[150px] hover:opacity-60">
+              <div class="relative max-w-[150px] max-h-[150px] hover:opacity-60">
                 <el-upload
                   v-model:file-list="fileList"
                   action="#"
@@ -62,7 +62,7 @@
                 >
                   <el-icon
                     :size="$elComponentSize.large"
-                    class="text-red- cursor-pointer opacity-100"
+                    class="fill-red-600 text-red-600 cursor-pointer opacity-100"
                     @click.stop="handleImageRemove"
                   >
                     <Delete />
@@ -253,6 +253,7 @@ const formRules = useElFormRules(
   {
     name: [useRequiredRule()],
     type: [useRequiredRule()],
+    description: [useRequiredRule()],
     ingredients: [useRequiredRule()]
   }
 )
@@ -313,9 +314,9 @@ async function handleSave () {
     showNotification('Please add at least one ingredient to save the recipe.', 'Missing ingredients', 'warning')
     return
   }
-  modalButtonLoading.value = true
   formRef.value?.validate(async (isValid) => {
     if (isValid) {
+      modalButtonLoading.value = true
       try {
         if (fileList.value.length > 0 && uploadedImageUrl.value) {
           await uploadImage()
