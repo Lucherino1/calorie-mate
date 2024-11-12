@@ -1,6 +1,6 @@
 <template>
-  <div :loading="tableLoading" class="flex h-full justify-center items-center">
-    <el-card class="card--no-shadow w-full overflow-x-scroll h-full">
+  <div :loading="tableLoading" class="flex h-full w-full justify-center items-center">
+    <el-card class="card--no-shadow w-full h-full">
       <div class="flex flex-col items-center w-full h-full">
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
