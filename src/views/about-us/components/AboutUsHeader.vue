@@ -3,7 +3,7 @@
     <section class="flex justify-between px-[20px] 2xl:px-[80px] mt-[100px]">
       <div class="flex justify-around flex-col max-w-[410px]">
         <h1 class="font-bold leading-[60px] text-[55px]">
-          Welcome to a Calorie Mate -
+          Welcome to a Calorie Mate —
         </h1>
 
         <p class="text-[28px] leading-10 font-light mt-2 text-gray-dark">
