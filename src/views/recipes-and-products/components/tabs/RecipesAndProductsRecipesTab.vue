@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.fullscreen="pageLoading" class="flex justify-center items-center">
+  <div v-loading="tableLoading" class="flex justify-center items-center">
     <el-card class="card--no-shadow w-full overflow-x-scroll">
       <div class="flex flex-col items-center w-full">
         <ModalUpsertRecipe
@@ -90,7 +90,6 @@ const searchQuery = ref('')
 
 const recipePagesCache = ref<{ [key: number]: IRecipe[] }>({})
 
-const pageLoading = ref(false)
 const tableLoading = ref(false)
 
 const sortOrder = ref<'asc' | 'desc'>(null)
@@ -276,8 +275,6 @@ function handlePageChange (page: number) {
 }
 
 onMounted(async () => {
-  pageLoading.value = true
   await getPaginatedRecipes(currentPage.value, true)
-  pageLoading.value = false
 })
 </script>

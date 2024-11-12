@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.fullscreen="loading" class="app-container--main flex-col gap-3 flex h-full">
+  <div class="app-container--main flex-col gap-3 flex h-full">
     <div class="flex items-center text-center justify-between">
       <div class="flex flex-col gap-5">
         <BackButton v-if="backButton" :button-text="'Back to dashboard'" :route-name="$routeNames.dashboard" />
@@ -28,7 +28,6 @@
 <script lang="ts" setup>
 defineProps<{
   pageTitle: string
-  loading: boolean
   backButton?: boolean
 }>()
 

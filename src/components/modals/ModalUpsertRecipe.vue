@@ -25,7 +25,7 @@
         <div class="flex flex-col gap-10 flex-1 px-2">
           <div class="flex flex-col justify-center">
             <div class="flex gap-10 justify-start">
-              <div class="relative w-[150px] h-[150px] hover:opacity-60">
+              <div class="relative max-w-[150px] max-h-[150px] hover:opacity-60">
                 <el-upload
                   v-model:file-list="fileList"
                   drag
