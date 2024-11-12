@@ -50,7 +50,7 @@
           </template>
         </RecipesAndProductsProductsTable>
 
-        <div class="flex justify-center items-center mt-5 w-full">
+        <div class="flex flex-1 justify-center items-end mt-5 w-full">
           <el-pagination
             v-model:current-page="currentPage"
             :page-size="pageSize"
