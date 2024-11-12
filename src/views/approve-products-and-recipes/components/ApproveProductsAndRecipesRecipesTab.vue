@@ -1,6 +1,6 @@
 <template>
   <el-card
-    v-loading.fullscreen="pageLoading"
+    v-loading="tableLoading"
     class="pt-5 h-full w-full card--no-shadow overflow-x-scroll"
   >
     <div class="flex flex-col items-center">
@@ -35,13 +35,11 @@
 <script lang="ts" setup>
 import { showNotification } from '@/helpers'
 
-const pageLoading = ref(false)
-
 const recipes = ref<IRecipe[]>([])
 const tableLoading = ref(false)
 
 async function getRecipes () {
-  tableLoading.value = false
+  tableLoading.value = true
 
   try {
     const data = await approveService.getPendingApprovalRecipes()
@@ -84,8 +82,6 @@ async function rejectProduct (productId: string) {
 }
 
 onMounted(async () => {
-  tableLoading.value = true
   getRecipes()
-  tableLoading.value = false
 })
 </script>
