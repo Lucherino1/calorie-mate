@@ -42,13 +42,18 @@
         />
       </div>
       <div class="my-[100px]">
-        <el-button
-          class="w-[450px] p-8 text-xl"
-          :size="$elComponentSize.large"
-          :type="$elComponentType.primary"
+        <router-link
+          :to="{ name: routeNames.signup }"
+          class="flex items-center justify-center w-full"
         >
-          Join Calorie Mate
-        </el-button>
+          <el-button
+            class="w-[450px] p-8 text-xl"
+            :size="$elComponentSize.large"
+            :type="$elComponentType.primary"
+          >
+            Join Calorie Mate
+          </el-button>
+        </router-link>
         <p class="text-gray-dark mt-5">To achieve your goals</p>
       </div>
     </section>
@@ -56,11 +61,13 @@
 </template>
 
 <script lang="ts" setup>
+import { routeNames } from '@/router/route-names'
+
 const discoverCardsData = ref([
   {
     imageSrc: '/src/assets/images/about-us/main/calories-calculator.png',
     title: 'Calorie Tracker',
-    paragraph: 'Track your daily calorie intake effortlessly,f and stay on top of your progress with clear insights.'
+    paragraph: 'Track your daily calorie intake effortlessly, and stay on top of your progress with clear insights.'
   },
   {
     imageSrc: '/src/assets/images/about-us/main/meal.png',
@@ -90,7 +97,7 @@ const peopleData = [
     quote: 'If you want to accomplish something, then you will accomplish it, regardless of how bumpy the road is. I always told myself: I can\'t go back and start from the beginning, but I can start today and follow a new path!'
   },
   {
-    name: 'James',
+    name: 'Stepan',
     age: '37',
     imageBefore: '/src/assets/images/about-us/main/success-stories/james-before.jpeg',
     imageAfter: '/src/assets/images/about-us/main/success-stories/james-after.jpeg',
