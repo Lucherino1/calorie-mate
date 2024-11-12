@@ -1,5 +1,5 @@
 <template>
-  <div v-loading.fullscreen="pageLoading" class="flex w-full justify-center items-center">
+  <div :loading="tableLoading" class="flex w-full justify-center items-center">
     <el-card class="card--no-shadow w-full overflow-x-scroll h-full">
       <div class="flex flex-col items-center">
         <ModalUpsertProduct
@@ -87,7 +87,6 @@ const searchQuery = ref('')
 
 const productPagesCache = ref<{ [key: number]: IProduct[] }>({})
 
-const pageLoading = ref(false)
 const tableLoading = ref(false)
 const modalButtonLoading = ref(false)
 
@@ -267,8 +266,6 @@ function handlePageChange (page: number) {
 }
 
 onMounted(async () => {
-  pageLoading.value = true
   await getPaginatedProducts(currentPage.value, true)
-  pageLoading.value = false
 })
 </script>

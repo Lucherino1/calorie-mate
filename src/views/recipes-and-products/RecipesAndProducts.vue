@@ -2,7 +2,6 @@
   <ProductsAndRecipesTabsWrapper
     v-model:active-tab="activeTab"
     :page-title="title"
-    :loading="pageLoading"
   >
     <template #products>
       <RecipesAndProductsProductsTab />
@@ -18,7 +17,6 @@
 
 <script lang="ts" setup>
 
-const pageLoading = ref(false)
 const activeTab = ref('products')
 
 const authStore = useAuthStore()
