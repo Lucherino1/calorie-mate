@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col h-full text-start">
+  <div class="flex flex-col text-start">
     <p class="font-semibold text-base mb-1">{{ name }}, {{ age }}</p>
-    <el-card class="flex flex-col items-center max-w-[300px] mb-[150px]">
+    <el-card class="flex flex-col items-center max-w-[300px]">
       <div class="flex rounded-xl gap-1 overflow-hidden relative h-[300px]">
         <div class="relative h-full w-1/2">
           <img
