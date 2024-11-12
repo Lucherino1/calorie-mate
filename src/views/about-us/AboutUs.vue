@@ -6,11 +6,13 @@
           <h1 class="font-bold leading-[60px] text-[55px]">
             Welcome to a Calorie Mate -
           </h1>
+
           <p class="text-[28px] leading-10 font-light mt-2 text-gray-dark">
             your personal companion on the journey to a healthier lifestyle.
           </p>
           <AboutUsGoalItems class="mt-[60px]" />
         </div>
+
         <div class="2xl:min-w-[610px] 2xl:min-h-[355px] min-w-[405px] min-h-[235px]">
           <SkeletonImage
             v-model:src="headerImage"
@@ -21,9 +23,10 @@
       </section>
     </header>
 
-    <main class="flex flex-col justify-center items-center mt-[150px] px-[20px] 2xl:px-[80px]">
+    <main class="flex flex-col justify-center items-center mt-[100px]">
       <p class="page-header w-full text-center mb-10">Discover Calorie Mate</p>
-      <div class="flex flex-wrap gap-10">
+
+      <div class="flex flex-wrap gap-10 px-[20px] 2xl:px-[80px]">
         <AboutUsDiscoverCard
           v-for="(item, index) in discoverCardsData"
           :key="index"
@@ -31,6 +34,22 @@
           :paragraph="item.paragraph"
           :title="item.title"
         />
+      </div>
+      <div class="text-center w-full mt-[150px]">
+        <p class="page-header w-full mb-10">Our mission</p>
+
+        <div class="text-white bg-primary-dark py-8 w-full text-xl">
+          <p class="font-bold text-2xl mb-5">
+            We believe that taking control of your health shouldn’t be complicated.
+          </p>
+
+          <p class="font-light text-center px-2 lg:px-[250px]">
+            Our mission is to provide a user-friendly platform that empowers
+            you to make informed decisions about your nutrition and well-being.
+          </p>
+        </div>
+
+        <p class="page-header w-full mb-10 mt-[150px]">Success Stories</p>
       </div>
     </main>
   </div>
@@ -41,7 +60,7 @@ const headerImage = '/src/assets/images/about-us/header/macbook_mockup.png'
 
 const discoverCardsData = ref([
   {
-    imageSrc: '/src/assets/images/about-us/main/dashboard.png',
+    imageSrc: '/src/assets/images/about-us/main/calories-calculator.png',
     title: 'Calorie Tracker',
     paragraph: 'Track your daily calorie intake effortlessly,f and stay on top of your progress with clear insights.'
   },
