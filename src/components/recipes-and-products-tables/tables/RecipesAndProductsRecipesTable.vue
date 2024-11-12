@@ -43,7 +43,7 @@
         trigger="hover"
         popper-class="custom-popover"
       >
-        <ul class="flex flex-col gap-2 overflow-y-auto max-h-[160px]">
+        <ul class="flex flex-col gap-2 max-h-[160px]">
           <li v-for="(ingredient, index) in row.ingredients" :key="index" class="text-sm">
             <b>{{ ingredient.name }}</b>:<br>
             {{ ingredient.grams }}g
