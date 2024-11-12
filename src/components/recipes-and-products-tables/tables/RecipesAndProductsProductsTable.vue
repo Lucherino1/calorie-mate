@@ -7,7 +7,7 @@
     @sort-change="handleSortChange"
   >
     <template #name="{ row }">
-      <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="row.name" :multiline="2">
+      <TruncatedTooltip :maxWidthClass="'!max-w-[80px]'" :contentProp="row.name" :multiline="1">
         <b>{{ row.name }}</b>
       </TruncatedTooltip>
     </template>
