@@ -1,7 +1,7 @@
 <template>
   <div v-loading.fullscreen="dashboardPageLoading" class="app-container--main">
     <div class="flex flex-col gap-5">
-      <p class="font-bold text-gray-light text-[34px] leading-10">
+      <p class="page-header text-gray-light">
         Hello, <span class="text-primary-dark">{{ authStore.user.firstName }}!</span>
       </p>
 
@@ -39,6 +39,7 @@
           </ProgressCalories>
         </div>
       </el-card>
+
       <div class="flex flex-1 flex-col w-full justify-between">
         <DashboardNutrientCard
           v-for="nutrient in nutrientData"
@@ -51,8 +52,8 @@
         />
       </div>
 
-      <div class="flex-1 gap-5 flex flex-col">
-        <el-card class="flex justify-center text-center items-center min-h-[155px] weight-form-wrapper">
+      <div class="flex-1 gap-5 flex flex-col max-w-[400px]">
+        <el-card class="flex justify-center text-center relative items-center min-h-[135px] weight-form-wrapper">
           <el-form
             ref="formRef"
             :model="bodyDetailsFormModel"
@@ -75,12 +76,22 @@
             </el-form-item>
 
             <transition name="fade">
-              <div v-show="isEditWeightMode" class="flex items-center justify-center">
+              <div v-show="isEditWeightMode" class="absolute left-1/2 transform -translate-x-1/2">
                 <el-form-item class="flex items-center justify-end">
-                  <el-button :type="$elComponentType.danger" link @click="cancelEditMode()">
+                  <el-button
+                    :size="$elComponentSize.small"
+                    :type="$elComponentType.danger"
+                    link
+                    @click="cancelEditMode()"
+                  >
                     Cancel
                   </el-button>
-                  <el-button native-type="submit" :type="$elComponentType.info" link>
+                  <el-button
+                    :size="$elComponentSize.small"
+                    native-type="submit"
+                    :type="$elComponentType.info"
+                    link
+                  >
                     Save
                   </el-button>
                 </el-form-item>
@@ -89,10 +100,10 @@
           </el-form>
         </el-card>
 
-        <el-card class="w-full h-auto flex-1">
-          <div class="text-[34px] leading-10">
-            <p class="section-header">Hydration:</p>
-          </div>
+        <el-card class="flex-1 flex flex-col text-start bg-white">
+          <p class="section-header">
+            Hydration:
+          </p>
         </el-card>
       </div>
     </div>
@@ -108,7 +119,7 @@
         :itemsCount="meal.countedItems"
         :icon="meal.icon"
         :meal-type="meal.mealType"
-        :selected-date="SelectedDate"
+        :selected-date="selectedDate"
       />
     </div>
   </div>
@@ -122,7 +133,7 @@ const route = useRoute()
 
 const dashboardStore = useDashboardStore()
 
-const SelectedDate = ref(new Date().toISOString().split('T')[0])
+const selectedDate = ref(new Date().toISOString().split('T')[0])
 
 const userDashboard = ref<IDashboard>(null)
 const dashboardPageLoading = ref(false)
@@ -130,21 +141,26 @@ const dashboardPageLoading = ref(false)
 const authStore = useAuthStore()
 
 const getUserDashboard = async (selectedDate: string) => {
-  dashboardPageLoading.value = true
-  userDashboard.value = await dashboardService.getUserDashboard(selectedDate)
-  dashboardPageLoading.value = false
+  try {
+    dashboardPageLoading.value = true
+    userDashboard.value = await dashboardService.getUserDashboard(selectedDate)
+
+    dashboardPageLoading.value = false
+  } catch (error) {
+    showNotification()
+  }
 }
 
 const handleDateChange = (newDate: string) => {
-  const selectedDate = new Date(newDate)
+  const newSelectedDate = new Date(newDate)
 
-  const year = selectedDate.getFullYear()
-  const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
-  const day = String(selectedDate.getDate()).padStart(2, '0')
+  const year = newSelectedDate.getFullYear()
+  const month = String(newSelectedDate.getMonth() + 1).padStart(2, '0')
+  const day = String(newSelectedDate.getDate()).padStart(2, '0')
 
-  SelectedDate.value = `${year}-${month}-${day}`
-  route.query.date = selectedDate.toString()
-  dashboardStore.date = SelectedDate.value
+  selectedDate.value = `${year}-${month}-${day}`
+  route.query.date = newSelectedDate.toString()
+  dashboardStore.date = selectedDate.value
   getUserDashboard(dashboardStore.date)
 }
 
