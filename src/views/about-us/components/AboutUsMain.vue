@@ -32,15 +32,10 @@
         <AboutUsSuccessCard
           v-for="(person, index) in peopleData"
           :key="index"
-          :name="person.name"
-          :age="person.age"
-          :image-before="person.imageBefore"
-          :image-after="person.imageAfter"
-          :weight-before="person.weightBefore"
-          :weight-after="person.weightAfter"
-          :quote="person.quote"
+          :person="person"
         />
       </div>
+
       <div class="my-[100px]">
         <router-link
           :to="{ name: routeNames.signup }"
@@ -63,7 +58,7 @@
 <script lang="ts" setup>
 import { routeNames } from '@/router/route-names'
 
-const discoverCardsData = ref([
+const discoverCardsData = [
   {
     imageSrc: '/src/assets/images/about-us/main/calories-calculator.png',
     title: 'Calorie Tracker',
@@ -84,7 +79,7 @@ const discoverCardsData = ref([
     title: 'Goal Setting',
     paragraph: 'Define your personal health goals — whether it’s weight loss, muscle gain, or maintenance — and let us guide you every step.'
   }
-])
+]
 
 const peopleData = [
   {

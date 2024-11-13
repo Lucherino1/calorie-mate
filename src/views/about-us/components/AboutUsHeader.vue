@@ -14,7 +14,7 @@
 
       <div class="2xl:min-w-[610px] 2xl:min-h-[355px] min-w-[405px] min-h-[235px]">
         <SkeletonImage
-          v-model:src="headerImage"
+          :img-src-prop="headerImage"
           img-contain-class="object-contain"
           class="w-full h-full max-w-full max-h-full"
         />

@@ -13,5 +13,6 @@
 
 <script lang="ts" setup>
 import IconCheck from '~icons/icon/check'
+
 const goalHeaders = ['Lose weight', 'Eat healthier', 'Build muscle', 'Keep your form']
 </script>
