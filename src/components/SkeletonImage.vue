@@ -1,8 +1,8 @@
 <template>
   <div
     ref="intersectionTargetRef"
-    class="w-full h-full bg-gray-ultra-light relative"
-    :class="{'flex items-center justify-center': imageHasError}"
+    class="w-full h-full relative flex"
+    :class="{'flex items-center justify-center bg-gray-ultra-light': imageHasError}"
   >
     <el-skeleton v-if="isSkeletonLoading" class="w-full h-full absolute" animated>
       <template #template>
@@ -11,9 +11,10 @@
     </el-skeleton>
 
     <img
-      v-if="observedImgSrc && imageLoadingStarted"
-      class="object-cover w-full h-full absolute"
-      :src="observedImgSrc"
+      v-if="computedImgSrc && imageLoadingStarted"
+      class="w-full h-full absolute"
+      :class="imgContainClass"
+      :src="computedImgSrc"
       @load="onLoad"
       @error="onError"
     >
@@ -26,9 +27,16 @@
 
 <script lang="ts" setup>
 import IconErrorRecipe from '~icons/icon/error-recipe'
-// const props = defineProps<{
-//   imgSrc: string
-// }>()
+
+const props = withDefaults(
+  defineProps<{
+    imgContainClass?: 'object-contain' | 'object-cover'
+    imgSrcProp?: string
+  }>(),
+  {
+    imgContainClass: 'object-cover'
+  }
+)
 
 const imgSrc = defineModel<string>('src')
 
@@ -40,8 +48,10 @@ const isSkeletonLoading = ref(true)
 const imageLoadingStarted = ref(false)
 const isLoaded = ref(false)
 
+const computedImgSrc = computed(() => props.imgSrcProp || imgSrc.value)
+
 const onLoad = () => {
-  if (imgSrc.value === '') {
+  if (computedImgSrc.value === '') {
     imageHasError.value = true
     isLoaded.value = true
     isSkeletonLoading.value = false
@@ -62,7 +72,7 @@ const onError = () => {
 let observer: IntersectionObserver | null = null
 
 const observeImage = () => {
-  if (!imgSrc.value || imgSrc.value === null) {
+  if (!computedImgSrc.value) {
     imageHasError.value = true
     isSkeletonLoading.value = false
     return
@@ -71,7 +81,7 @@ const observeImage = () => {
     ([entry]) => {
       if (entry.isIntersecting) {
         imageLoadingStarted.value = true
-        observedImgSrc.value = imgSrc.value
+        observedImgSrc.value = computedImgSrc.value
         observer?.disconnect()
       }
     },

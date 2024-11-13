@@ -197,12 +197,11 @@
                       <div class="flex justify-center gap-1 items-center text-center">
                         <p>Submit for review</p>
 
-                        <el-tooltip
+                        <InfoTooltip
                           content="Submit for admin review to add this recipe to the public database."
-                          placement="top"
-                        >
-                          <IconInfo class="w-[18px] h-[18px] my-0 fill-primary" />
-                        </el-tooltip>
+                          :icon="IconInfo"
+                          fill-class="fill-primary"
+                        />
                       </div>
                     </template>
                   </el-checkbox>
@@ -323,7 +322,7 @@ async function handleSave () {
           await uploadImage()
           recipe.value.image = uploadedImageUrl.value
         }
-        console.log(uploadedImageUrl.value)
+
         if (!authStore.isUserAdmin) {
           recipe.value.isUnderReview = submitForReview.value
         }
