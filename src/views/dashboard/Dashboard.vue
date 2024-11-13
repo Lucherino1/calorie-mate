@@ -100,11 +100,10 @@
           </el-form>
         </el-card>
 
-        <el-card class="flex-1 flex flex-col text-start bg-white">
-          <p class="section-header">
-            Hydration:
-          </p>
-        </el-card>
+        <DashboardHydrationCard
+          v-model:water-amount="waterAmount"
+          @update-water-amount="handleWaterAmountUpdate"
+        />
       </div>
     </div>
 
@@ -135,6 +134,17 @@ const dashboardStore = useDashboardStore()
 
 const selectedDate = ref(new Date().toISOString().split('T')[0])
 
+const waterAmount = ref(0)
+
+function handleWaterAmountUpdate (newAmount: number) {
+  waterAmount.value = newAmount
+  try {
+    dashboardService.updateWaterAmount(selectedDate.value, waterAmount.value)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const userDashboard = ref<IDashboard>(null)
 const dashboardPageLoading = ref(false)
 
@@ -144,6 +154,8 @@ const getUserDashboard = async (selectedDate: string) => {
   try {
     dashboardPageLoading.value = true
     userDashboard.value = await dashboardService.getUserDashboard(selectedDate)
+
+    waterAmount.value = userDashboard.value.waterAmount
 
     dashboardPageLoading.value = false
   } catch (error) {

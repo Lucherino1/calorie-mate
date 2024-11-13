@@ -16,5 +16,6 @@ export const colors = {
   info: 'var(--el-color-info)',
   'gray-light': '#a3aed0',
   'gray-ultra-light': '#f4f7fe',
-  'gray-dark': '#707eae'
+  'gray-dark': '#707eae',
+  'aqua-blue': '#00c9ff'
 }
