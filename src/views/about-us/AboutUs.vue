@@ -1,3 +1,9 @@
 <template>
-  <div class="h-full">About Us</div>
+  <div>
+    <AboutUsHeader />
+
+    <AboutUsMain />
+
+    <AboutUsFooter />
+  </div>
 </template>
