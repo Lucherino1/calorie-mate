@@ -60,6 +60,8 @@
 @use "element-plus/theme-chalk/src/collapse-item";
 @use "element-plus/theme-chalk/src/collapse";
 @use "element-plus/theme-chalk/src/tag";
+@use "element-plus/theme-chalk/src/radio";
+@use "element-plus/theme-chalk/src/radio-group";
 
 @import './_card';
 @import './_input';
@@ -69,3 +71,4 @@
 @import './date-picker';
 @import './upload';
 @import './dialog';
+@import './radio-button'

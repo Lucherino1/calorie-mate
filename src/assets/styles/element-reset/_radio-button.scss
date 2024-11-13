@@ -1,0 +1,9 @@
+@use "element-plus/theme-chalk/src/radio-button";
+
+.separate-radio {
+  &.el-radio-button {
+    .el-radio-button__inner {
+      @apply w-full border-solid border-gray-medium min-w-[120px] py-3 rounded-xl border;
+    }
+  }
+}
