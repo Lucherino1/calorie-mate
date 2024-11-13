@@ -6,7 +6,7 @@
   >
     <div
       class="bg-aqua-blue w-full absolute bottom-0 left-0 transition-all duration-500 ease-in-out"
-      :class="{ 'h-[90%]': isFilled, 'h-0': !isFilled }"
+      :class="isFilled ? 'h-[90%]': 'h-0'"
     />
 
     <div
