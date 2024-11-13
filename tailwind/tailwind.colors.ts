@@ -14,6 +14,8 @@ export const colors = {
   warning: 'var(--el-color-warning)',
   danger: 'var(--el-color-danger)',
   info: 'var(--el-color-info)',
+  regular: '#606266',
+  'gray-medium': '#e5e7eb',
   'gray-light': '#a3aed0',
   'gray-ultra-light': '#f4f7fe',
   'gray-dark': '#707eae',
