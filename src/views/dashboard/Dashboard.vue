@@ -103,29 +103,7 @@
         <el-card class="flex-1 flex flex-col text-start bg-white">
           <p class="section-header">
             Hydration:
-            <span
-              class="text- font-normal text-base text-gray-light"
-            >
-              {{ waterAmount }}/{{ targetWaterAmount }} ml
-            </span>
-            <InfoTooltip
-              content="Using this menu you may control your hydration. 2 liters per day is the basic recommended water
-              intake for an average adult. Feel free to drink more if desired!
-               Each glass in the menu represents 250 ml."
-              fill-class="fill-info"
-              :icon="IconTooltipInfo"
-            />
           </p>
-          <div class="flex items-center gap-10 justify-center w-full">
-            <div class="grid grid-cols-4 gap-x-6 gap-y-2 pt-4">
-              <DashboardWaterGlass
-                v-for="index in totalGlasses"
-                :key="index"
-                v-model:isFilled="filledStates[index - 1]"
-                @click="updateWaterAmount(index)"
-              />
-            </div>
-          </div>
         </el-card>
       </div>
     </div>
@@ -141,7 +119,7 @@
         :itemsCount="meal.countedItems"
         :icon="meal.icon"
         :meal-type="meal.mealType"
-        :selected-date="SelectedDate"
+        :selected-date="selectedDate"
       />
     </div>
   </div>
@@ -151,35 +129,21 @@
 import { showNotification } from '@/helpers'
 import { EProgressColorStatus } from '@/views/dashboard/dashboard.enums'
 
-import IconTooltipInfo from '~icons/icon/info-tooltip'
-
 const route = useRoute()
 
 const dashboardStore = useDashboardStore()
 
-const SelectedDate = ref(new Date().toISOString().split('T')[0])
+const selectedDate = ref(new Date().toISOString().split('T')[0])
 
 const userDashboard = ref<IDashboard>(null)
 const dashboardPageLoading = ref(false)
 
 const authStore = useAuthStore()
 
-const totalGlasses = 8
-const targetWaterAmount = 2000
-const glassVolume = 250
-const waterAmount = ref(0)
-
-const filledStates = computed(() => {
-  const filledCount = Math.floor(waterAmount.value / glassVolume)
-  return Array.from({ length: totalGlasses }, (_, i) => i < filledCount)
-})
-
 const getUserDashboard = async (selectedDate: string) => {
   try {
     dashboardPageLoading.value = true
     userDashboard.value = await dashboardService.getUserDashboard(selectedDate)
-
-    waterAmount.value = userDashboard.value.waterAmount
 
     dashboardPageLoading.value = false
   } catch (error) {
@@ -187,32 +151,16 @@ const getUserDashboard = async (selectedDate: string) => {
   }
 }
 
-const updateWaterAmount = async (index) => {
-  const clickedGlassAmount = (index) * glassVolume
-
-  if (waterAmount.value >= clickedGlassAmount) {
-    waterAmount.value = index * (glassVolume) - glassVolume
-  } else {
-    waterAmount.value = clickedGlassAmount
-  }
-
-  try {
-    await dashboardService.updateWaterAmount(SelectedDate.value, waterAmount.value)
-  } catch (error) {
-    console.error(error)
-  }
-}
-
 const handleDateChange = (newDate: string) => {
-  const selectedDate = new Date(newDate)
+  const newSelectedDate = new Date(newDate)
 
-  const year = selectedDate.getFullYear()
-  const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
-  const day = String(selectedDate.getDate()).padStart(2, '0')
+  const year = newSelectedDate.getFullYear()
+  const month = String(newSelectedDate.getMonth() + 1).padStart(2, '0')
+  const day = String(newSelectedDate.getDate()).padStart(2, '0')
 
-  SelectedDate.value = `${year}-${month}-${day}`
-  route.query.date = selectedDate.toString()
-  dashboardStore.date = SelectedDate.value
+  selectedDate.value = `${year}-${month}-${day}`
+  route.query.date = newSelectedDate.toString()
+  dashboardStore.date = selectedDate.value
   getUserDashboard(dashboardStore.date)
 }
 
