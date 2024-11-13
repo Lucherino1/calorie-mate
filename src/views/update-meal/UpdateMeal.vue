@@ -6,7 +6,7 @@
     :loading="pageLoading"
   >
     <template #header>
-      <el-card class="px-2">
+      <el-card class="px-2 mb-5">
         <div class="flex text-center items-center gap-5 ">
           <p class="capitalize font-bold">TOTAL:</p>
           <ProgressCalories
@@ -28,24 +28,24 @@
             <li class="nutrition-list__item">
               <p class="truncate">Carbs:</p>
               <span class="truncate">
-                <b>{{ totalNutrients.carbs }}/
-                  {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].carbs }}
+                <b>
+                  {{ totalNutrients.carbs }}/{{ authStore.user.targetNutritionDetailsByMeal[props.mealType].carbs }}
                 </b> g
               </span>
             </li>
 
             <li class="nutrition-list__item">
               <p class="truncate">Proteins:</p>
-              <span class="truncate"><b>{{ totalNutrients.proteins }}/
-                {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].proteins }}
+              <span class="truncate"><b>
+                {{ totalNutrients.proteins }}/{{ authStore.user.targetNutritionDetailsByMeal[props.mealType].proteins }}
               </b> g
               </span>
             </li>
 
             <li class="nutrition-list__item">
               <p class="truncate">Fats:</p>
-              <span class="truncate"><b>{{ totalNutrients.fats }}/
-                {{ authStore.user.targetNutritionDetailsByMeal[props.mealType].fats }}
+              <span class="truncate"><b>
+                {{ totalNutrients.fats }}/{{ authStore.user.targetNutritionDetailsByMeal[props.mealType].fats }}
               </b> g
               </span>
             </li>

@@ -1,6 +1,6 @@
 <template>
   <div class="rounded-lg">
-    <div class="mt-5">
+    <div>
       <el-select
         v-model="searchQuery"
         filterable

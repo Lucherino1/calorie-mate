@@ -26,6 +26,9 @@
 
 <script lang="ts" setup>
 import IconErrorRecipe from '~icons/icon/error-recipe'
+// const props = defineProps<{
+//   imgSrc: string
+// }>()
 
 const imgSrc = defineModel<string>('src')
 

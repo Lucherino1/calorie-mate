@@ -7,7 +7,7 @@ import { updateMealRoutes } from '@/views/update-meal/update-meal.routes'
 import { recipesAndProductsRoutes } from '@/views/recipes-and-products/recipes-and-products.routes'
 import { profileSettingRoutes } from '@/views/profile-settings/profile-setting.routes'
 import { dashboardRoutes } from '@/views/dashboard/dashboard.routes'
-import { productRecipeApprovalRoutes } from '@/views/product-recipe-approval/approve-products-and-recipes.routes'
+import { productRecipeApprovalRoutes } from '@/views/approve-products-and-recipes/approve-products-and-recipes.routes'
 
 const routes: Array<RouteRecordRaw> = [
   {
