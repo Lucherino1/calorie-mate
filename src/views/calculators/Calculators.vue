@@ -32,7 +32,10 @@
           </div>
         </el-card>
 
-        <el-card class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]">
+        <el-card
+          class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]"
+          :class="isAgeError ? 'border-red-600' : 'border-none'"
+        >
           <p class="text-lg font-semibold">How old are you?</p>
           <div class="h-full flex items-center">
             <el-input-number
@@ -41,13 +44,17 @@
               placeholder="18"
               :min="1"
               :size="$elComponentSize.large"
+              @focus="isAgeError = false"
             >
               <template #suffix>y.o.</template>
             </el-input-number>
           </div>
         </el-card>
 
-        <el-card class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]">
+        <el-card
+          class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]"
+          :class="isHeightError ? 'border-red-600' : 'border-none'"
+        >
           <p class="text-lg font-semibold">How tall are you?</p>
           <div class="h-full flex items-center">
             <el-input-number
@@ -56,13 +63,17 @@
               placeholder="180"
               :min="1"
               :size="$elComponentSize.large"
+              @focus="isHeightError = false"
             >
               <template #suffix>cm</template>
             </el-input-number>
           </div>
         </el-card>
 
-        <el-card class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]">
+        <el-card
+          class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]"
+          :class="isWeightError ? 'border-red-600' : 'border-none'"
+        >
           <p class="text-lg font-semibold">What is your weight?</p>
           <div class="h-full flex items-center">
             <el-input-number
@@ -71,6 +82,7 @@
               placeholder="70"
               :min="1"
               :size="$elComponentSize.large"
+              @focus="isWeightError = false"
             >
               <template #suffix>kg</template>
             </el-input-number>
@@ -182,6 +194,10 @@ import CalculatorsModal from './components/CalculatorsModal.vue'
 
 const isModalVisible = ref(false)
 
+const isAgeError = ref(false)
+const isHeightError = ref(false)
+const isWeightError = ref(false)
+
 const bodyMetrics = ref<IBodyMetrics>({
   sex: 'male',
   age: null,
@@ -191,10 +207,34 @@ const bodyMetrics = ref<IBodyMetrics>({
 })
 
 function showModal () {
-  if (!bodyMetrics.value.age || !bodyMetrics.value.weight || !bodyMetrics.value.height) {
+  let hasError = false
+
+  if (!bodyMetrics.value.age) {
+    isAgeError.value = true
+    hasError = true
+  } else {
+    isAgeError.value = false
+  }
+
+  if (!bodyMetrics.value.weight) {
+    isWeightError.value = true
+    hasError = true
+  } else {
+    isWeightError.value = false
+  }
+
+  if (!bodyMetrics.value.height) {
+    isHeightError.value = true
+    hasError = true
+  } else {
+    isHeightError.value = false
+  }
+
+  if (hasError) {
     showNotification('Please enter valid details', 'Oops! Something went wrong.', 'warning')
   } else {
     isModalVisible.value = true
   }
 }
+
 </script>
