@@ -102,7 +102,7 @@
 
         <DashboardHydrationCard
           v-model:water-amount="waterAmount"
-          @update-water-amount="handleWaterAmountUpdate"
+          :selected-date="selectedDate"
         />
       </div>
     </div>
@@ -135,15 +135,6 @@ const dashboardStore = useDashboardStore()
 const selectedDate = ref(new Date().toISOString().split('T')[0])
 
 const waterAmount = ref(0)
-
-function handleWaterAmountUpdate (newAmount: number) {
-  waterAmount.value = newAmount
-  try {
-    dashboardService.updateWaterAmount(selectedDate.value, waterAmount.value)
-  } catch (error) {
-    console.error(error)
-  }
-}
 
 const userDashboard = ref<IDashboard>(null)
 const dashboardPageLoading = ref(false)

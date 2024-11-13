@@ -27,7 +27,12 @@
 </template>
 
 <script lang="ts" setup>
+import { showNotification } from '@/helpers'
 import IconTooltipInfo from '~icons/icon/info-tooltip'
+
+const props = defineProps<{
+  selectedDate: string
+}>()
 
 const waterAmount = defineModel<number>('water-amount')
 
@@ -35,10 +40,6 @@ const filledStates = computed(() => {
   const filledCount = Math.floor(waterAmount.value / glassVolume)
   return Array.from({ length: totalGlasses }, (_, i) => i < filledCount)
 })
-
-const emits = defineEmits<{
-  (e: 'update-water-amount', value: number): void
-}>()
 
 const totalGlasses = 8
 const targetWaterAmount = 2000
@@ -51,6 +52,12 @@ function updateWaterAmount (index: number) {
     ? (index - 1) * glassVolume
     : clickedGlassAmount
 
-  emits('update-water-amount', newWaterAmount)
+  waterAmount.value = newWaterAmount
+
+  try {
+    dashboardService.updateWaterAmount(props.selectedDate, newWaterAmount)
+  } catch (error) {
+    showNotification()
+  }
 }
 </script>
