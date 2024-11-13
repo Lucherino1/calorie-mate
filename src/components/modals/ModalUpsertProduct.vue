@@ -21,15 +21,16 @@
       ref="formRef"
       :model="product"
       :rules="formRules"
+      label-position="top"
       @submit.prevent="handleSave"
     >
       <div class="flex gap-20 justify-center pt-3">
         <div class="flex flex-col gap-3 max-w-[300px]">
-          <el-form-item label="Name" label-position="top" prop="name">
+          <el-form-item label="Name" prop="name">
             <el-input v-model="product.name" placeholder="Your product name is..." />
           </el-form-item>
 
-          <el-form-item label="Type" label-position="top" required>
+          <el-form-item label="Type" required>
             <el-select v-model="product.type" class="min-w-[100px]">
               <el-option
                 v-for="type in productTypes"
@@ -61,12 +62,11 @@
               <div class="flex justify-center gap-1 items-center text-center">
                 <p>Submit for review</p>
 
-                <el-tooltip
+                <InfoTooltip
                   content="Submit for admin review to add this product to the public database."
-                  placement="top"
-                >
-                  <IconInfo class="w-[18px] h-[18px] my-0 fill-primary" />
-                </el-tooltip>
+                  :icon="IconInfo"
+                  fill-class="fill-primary"
+                />
               </div>
             </template>
           </el-checkbox>
@@ -79,13 +79,13 @@
             </el-input-number>
           </el-form-item>
 
-          <el-form-item label="Proteins:" label-position="top">
+          <el-form-item label="Proteins:">
             <el-input-number v-model="product.nutritionDetails.proteins" type="number" :min="0">
               <template #suffix>g</template>
             </el-input-number>
           </el-form-item>
 
-          <el-form-item label="Fats:" label-position="top">
+          <el-form-item label="Fats:">
             <el-input-number v-model="product.nutritionDetails.fats" type="number" :min="0">
               <template #suffix>g</template>
             </el-input-number>
