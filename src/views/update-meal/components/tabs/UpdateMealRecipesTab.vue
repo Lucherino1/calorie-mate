@@ -46,10 +46,10 @@ import { showNotification } from '@/helpers'
 const props = defineProps<{
   mealType: TMealType
   allRecipes: IRecipe[]
-  userMeals?: IMeals
 }>()
 
 const recipesInMeal = defineModel<IRecipe[]>('recipesInMeal')
+const userMeals = defineModel<IMeals>('user-meals')
 
 const dashboardStore = useDashboardStore()
 
@@ -73,7 +73,8 @@ async function addRecipeToMeal (recipe: IRecipe) {
   }
 
   const newRecipe: IRecipe = { ...recipe, portions: 1 }
-  recipesInMeal.value.unshift(newRecipe)
+  recipesInMeal.value.push(newRecipe)
+  userMeals.value.recipes.push(newRecipe)
 
   try {
     await updateMealService.updateMeal({
@@ -89,20 +90,24 @@ async function addRecipeToMeal (recipe: IRecipe) {
 
 async function handleRecipeUpdate (updatedRecipe: IRecipe) {
   const index = recipesInMeal.value.findIndex(recipe => recipe.id === updatedRecipe.id)
-  if (index !== -1) {
-    recipesInMeal.value[index] = updatedRecipe
-  }
 
-  try {
-    await updateMealService.updateMeal({
-      date: dashboardStore.date,
-      mealType: props.mealType,
-      newItem: updatedRecipe,
-      mealComponent: 'recipes',
-      currentMealData: props.userMeals
-    })
-  } catch (error) {
-    showNotification('Failed to update the recipe in the meal.', 'error')
+  if (index !== -1) {
+    recipesInMeal.value[index] = { ...updatedRecipe }
+    userMeals.value.recipes = [...recipesInMeal.value]
+
+    try {
+      await updateMealService.updateMeal({
+        date: dashboardStore.date,
+        mealType: props.mealType,
+        newItem: updatedRecipe,
+        mealComponent: 'recipes',
+        currentMealData: userMeals.value
+      })
+    } catch (error) {
+      showNotification('Failed to update the recipe in the meal.', 'error')
+    }
+  } else {
+    showNotification('Recipe not found in meal', 'Error', 'error')
   }
 }
 

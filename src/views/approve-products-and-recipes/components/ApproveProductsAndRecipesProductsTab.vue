@@ -75,7 +75,6 @@ async function rejectProduct (productId: string) {
     products.value = products.value.filter(product => product.id !== productId)
     showNotification('Product was rejected successfully', 'Success', 'success')
   } catch (error) {
-    console.log(error)
     showNotification()
   } finally {
     tableLoading.value = false
