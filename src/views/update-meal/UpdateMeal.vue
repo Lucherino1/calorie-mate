@@ -57,18 +57,18 @@
     <template #products>
       <UpdateMealProductsTab
         v-model:products-in-meal="productsInMeal"
+        v-model:user-meals="userMeals"
         :meal-type="mealType"
         :all-products="allProducts"
-        :user-meals="userMeals"
       />
     </template>
 
     <template #recipes>
       <UpdateMealRecipesTab
         v-model:recipes-in-meal="recipesInMeal"
+        v-model:user-meals="userMeals"
         :meal-type="mealType"
         :all-recipes="allRecipes"
-        :user-meals="userMeals"
       />
     </template>
   </ProductsAndRecipesTabsWrapper>

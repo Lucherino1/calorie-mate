@@ -40,7 +40,6 @@ class UpdateMealService {
     currentMealData?: IMeals
   }): Promise<IMeals[]> {
     const authStore = useAuthStore()
-
     const mealData = currentMealData || (await this.getUserMeals(date, mealType))
 
     if (mealData) {
@@ -67,7 +66,6 @@ class UpdateMealService {
         .eq('date', date)
 
       if (error) throw new Error(error.message)
-
       return updatedMeals
     } else {
       throw new Error('No data found for the specified date or meal type')
