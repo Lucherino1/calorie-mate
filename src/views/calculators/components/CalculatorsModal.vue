@@ -37,13 +37,18 @@
       </div>
 
       <div class="mt-10">
-        <el-button
-          size="large"
-          class="w-full max-w-[300px]"
-          plain
+        <router-link
+          :to="{ name: routeNames.signup }"
+          class="flex items-center justify-center w-full"
         >
-          Join Calorie Mate
-        </el-button>
+          <el-button
+            size="large"
+            class="w-full max-w-[300px]"
+            plain
+          >
+            Join Calorie Mate
+          </el-button>
+        </router-link>
         <p class="text-gray-500 text-sm mt-3">And achieve your goals with us</p>
       </div>
     </template>
@@ -51,6 +56,8 @@
 </template>
 
 <script lang="ts" setup>
+import { routeNames } from '@/router/route-names'
+
 const props = defineProps<{
   bodyMetrics: IBodyMetrics
 }>()
