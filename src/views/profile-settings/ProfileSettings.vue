@@ -1,12 +1,13 @@
 <template>
-  <div class="app-container--main gap-20">
+  <div class="app-container--compact flex flex-col h-full">
     <h1 class="w-full page-header">Profile settings</h1>
-    <div class="flex w-full justify-between">
+    <div class="flex w-full justify-between overflow-hidden">
       <div class="mx-0 flex-1">
         <el-tabs v-model="activeTab" stretch class="flex w-full h-full">
-          <el-tab-pane lazy label="Body Details" name="bodyDetails" class="h-full">
-            <el-card class="max-w-[600px] mt-10">
+          <el-tab-pane lazy label="Body Details" name="bodyDetails" class="h-full flex justify-center items-center">
+            <el-card class="mt-2 h-full px-10 min-w-[600px]">
               <UserFormBodyDetails
+                class="overflow-y-auto overflow-x-hidden"
                 :body-form-data="formData"
                 submit-button-text="Sibmit"
               />
@@ -14,7 +15,7 @@
           </el-tab-pane>
 
           <el-tab-pane lazy class="h-full" label="Recipes" name="recipes">
-            <el-card class="max-w-[600px] mt-10">
+            <el-card class="max-w-[600px] mt-2">
               <UserFormProfile
                 :profile-form-data="profileFormData"
               />
