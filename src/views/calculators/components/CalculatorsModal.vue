@@ -7,7 +7,7 @@
   >
     <template #default>
       <div class="flex flex-col gap-10">
-        <el-card class="bg-primary">
+        <el-card class="bg-primary-dark">
           <p class="text-lg font-semibold text-white">
             Your BMI is {{ bmi.toFixed(1) }}<br>
             <span class="text-sm font-normal">
@@ -16,7 +16,7 @@
           </p>
         </el-card>
 
-        <el-card class="bg-primary">
+        <el-card class="bg-primary-dark">
           <p class="text-lg font-semibold text-white">
             Your daily calorie requirement is {{ tdee }} kcal<br>
             <span class="text-sm font-normal">
@@ -25,7 +25,7 @@
           </p>
         </el-card>
 
-        <el-card class="bg-primary">
+        <el-card class="bg-primary-dark">
           <p class="text-lg font-semibold text-white">
             Your ideal weight range is
             {{ idealWeightRange.min.toFixed(1) }} - {{ idealWeightRange.max.toFixed(1) }} kg<br>
