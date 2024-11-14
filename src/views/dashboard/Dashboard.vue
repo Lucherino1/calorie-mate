@@ -18,7 +18,7 @@
 
     <div class="flex gap-5 mt-10 flex-wrap">
       <el-card class="w-full h-auto flex-1 min-w-[310px]">
-        <p class="section-header">Total Calories:</p>
+        <p class="section-header mb-2">Total Calories:</p>
         <div class="flex justify-center items-center">
           <ProgressCalories
             class="py-8"
@@ -53,7 +53,7 @@
       </div>
 
       <div class="flex-1 gap-5 flex flex-col max-w-[400px]">
-        <el-card class="flex justify-center text-center relative items-center min-h-[135px] weight-form-wrapper">
+        <el-card class="flex justify-center text-center relative items-center min-h-[155px] weight-form-wrapper">
           <el-form
             ref="formRef"
             :model="bodyDetailsFormModel"
@@ -64,19 +64,22 @@
             :show-message="false"
             @submit.prevent="submitBodyDetails"
           >
-            <el-form-item label="Your weight is:" prop="currentWeight">
-              <el-input-number
-                v-model="bodyDetailsFormModel.currentWeight"
-                :precision="1"
-                :step="0.1"
-                @input="isEditWeightMode = true"
-              >
-                <template #suffix>kg</template>
-              </el-input-number>
+            <el-form-item prop="currentWeight">
+              <div class="flex flex-col items-center">
+                <p class="section-header mb-1">Your weight is:</p>
+                <el-input-number
+                  v-model="bodyDetailsFormModel.currentWeight"
+                  :precision="1"
+                  :step="0.1"
+                  @input="isEditWeightMode = true"
+                >
+                  <template #suffix>kg</template>
+                </el-input-number>
+              </div>
             </el-form-item>
 
             <transition name="fade">
-              <div v-show="isEditWeightMode" class="absolute left-1/2 transform -translate-x-1/2">
+              <div v-show="isEditWeightMode" class="w-full flex justify-center items-center">
                 <el-form-item class="flex items-center justify-end">
                   <el-button
                     :size="$elComponentSize.small"

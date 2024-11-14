@@ -1,4 +1,4 @@
-@use "element-plus/theme-chalk/src/upload";
+@import "element-plus/theme-chalk/src/upload";
 
 .el-upload {
   @apply p-0 m-0 flex w-full h-full justify-center items-center text-center;

@@ -7,7 +7,7 @@
   >
     <template #default>
       <div class="flex flex-col gap-10">
-        <el-card class="bg-primary">
+        <el-card class="bg-primary-dark">
           <p class="text-lg font-semibold text-white">
             Your BMI is {{ bmi.toFixed(1) }}<br>
             <span class="text-sm font-normal">
@@ -16,7 +16,7 @@
           </p>
         </el-card>
 
-        <el-card class="bg-primary">
+        <el-card class="bg-primary-dark">
           <p class="text-lg font-semibold text-white">
             Your daily calorie requirement is {{ tdee }} kcal<br>
             <span class="text-sm font-normal">
@@ -25,7 +25,7 @@
           </p>
         </el-card>
 
-        <el-card class="bg-primary">
+        <el-card class="bg-primary-dark">
           <p class="text-lg font-semibold text-white">
             Your ideal weight range is
             {{ idealWeightRange.min.toFixed(1) }} - {{ idealWeightRange.max.toFixed(1) }} kg<br>
@@ -37,13 +37,18 @@
       </div>
 
       <div class="mt-10">
-        <el-button
-          size="large"
-          class="w-full max-w-[300px]"
-          plain
+        <router-link
+          :to="{ name: routeNames.signup }"
+          class="flex items-center justify-center w-full"
         >
-          Join Calorie Mate
-        </el-button>
+          <el-button
+            size="large"
+            class="w-full max-w-[300px]"
+            plain
+          >
+            Join Calorie Mate
+          </el-button>
+        </router-link>
         <p class="text-gray-500 text-sm mt-3">And achieve your goals with us</p>
       </div>
     </template>
@@ -51,6 +56,8 @@
 </template>
 
 <script lang="ts" setup>
+import { routeNames } from '@/router/route-names'
+
 const props = defineProps<{
   bodyMetrics: IBodyMetrics
 }>()
@@ -58,8 +65,9 @@ const props = defineProps<{
 const isModalVisible = defineModel<boolean>('visible')
 
 const bmr = computed(() => {
-  return nutritionService.calcBMR(props.bodyMetrics.weight,
-    props.bodyMetrics.height, props.bodyMetrics.age, props.bodyMetrics.sex)
+  const { weight, height, age, sex } = props.bodyMetrics
+
+  return nutritionService.calcBMR(weight, height, age, sex)
 })
 
 const tdee = computed(() => {
@@ -74,6 +82,7 @@ const idealWeightRange = computed(() => {
   const heightInMeters = props.bodyMetrics.height / 100
   const minIdealWeight = 18.5 * heightInMeters ** 2
   const maxIdealWeight = 24.9 * heightInMeters ** 2
+
   return {
     min: minIdealWeight,
     max: maxIdealWeight
@@ -82,11 +91,11 @@ const idealWeightRange = computed(() => {
 
 const weightStatus = computed(() => {
   if (bmi.value < 18.5) {
-    return 'According to your BMI, you might be obese.'
+    return 'According to your BMI, you might be underweight.'
   } else if (bmi.value >= 18.5 && bmi.value <= 24.9) {
     return 'Great! Your weight is within the healthy range.'
   } else {
-    return 'According to your BMI, you might be underweight.'
+    return 'According to your BMI, you might be obese.'
   }
 })
 </script>

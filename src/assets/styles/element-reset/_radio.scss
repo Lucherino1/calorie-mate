@@ -1,4 +1,6 @@
-@use "element-plus/theme-chalk/src/radio-button";
+@import "element-plus/theme-chalk/src/radio";
+@import "element-plus/theme-chalk/src/radio-group";
+@import "element-plus/theme-chalk/src/radio-button";
 
 .separate-radio {
   &.el-radio-button {

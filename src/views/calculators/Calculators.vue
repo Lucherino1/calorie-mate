@@ -1,15 +1,15 @@
 <template>
   <div class="app-container--main flex flex-col justify-center items-center gap-10">
     <CalculatorsModal v-model:visible="isModalVisible" :body-metrics="bodyMetrics" />
-    <div class="w-full flex flex-col gap-10">
+    <div class="w-full flex flex-col gap-5">
       <h1 class="page-header">Health & Nutrition Calculators</h1>
       <p class="text-gray-light text-xl">For accurate calculation, we need some basic info about you</p>
     </div>
 
-    <div class="mt-[50px] flex gap-10 flex-1 flex-wrap justify-center items-center">
+    <div class="flex gap-10 flex-1 flex-wrap justify-center items-center">
       <div class="flex gap-10 flex-wrap max-w-[800px] w-full">
         <el-card class="flex flex-col text-center justify-center flex-1 min-w-[250px]">
-          <p class="text-lg w-full font-semibold">What is your sex?</p>
+          <p class="section-header">What is your sex?</p>
 
           <div class="flex flex-col justify-center h-full pt-5">
             <el-radio-group v-model="bodyMetrics.sex" class="flex justify-around items-center">
@@ -34,9 +34,9 @@
 
         <el-card
           class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]"
-          :class="isAgeError ? 'border-red-600' : 'border-none'"
+          :class="isAgeError ? 'border-red-600' : 'border'"
         >
-          <p class="text-lg font-semibold">How old are you?</p>
+          <p class="section-header">How old are you?</p>
           <div class="h-full flex items-center">
             <el-input-number
               v-model="bodyMetrics.age"
@@ -53,9 +53,9 @@
 
         <el-card
           class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]"
-          :class="isHeightError ? 'border-red-600' : 'border-none'"
+          :class="isHeightError ? 'border-red-600' : 'border'"
         >
-          <p class="text-lg font-semibold">How tall are you?</p>
+          <p class="section-header">How tall are you?</p>
           <div class="h-full flex items-center">
             <el-input-number
               v-model="bodyMetrics.height"
@@ -72,9 +72,9 @@
 
         <el-card
           class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]"
-          :class="isWeightError ? 'border-red-600' : 'border-none'"
+          :class="isWeightError ? 'border-red-600' : 'border'"
         >
-          <p class="text-lg font-semibold">What is your weight?</p>
+          <p class="section-header">What is your weight?</p>
           <div class="h-full flex items-center">
             <el-input-number
               v-model="bodyMetrics.weight"
@@ -167,30 +167,30 @@
       </div>
     </div>
 
-    <span class="flex gap-10 font-bold">
-      Body Mass Index (BMI)
-      <span>|</span>
-      Ideal Body Weight
-      <span>|</span>
-      Daily Calorie Intake
-    </span>
+    <footer class="mt-20 gap-10 flex flex-col items-center">
+      <span class="flex gap-10 font-bold">
+        Body Mass Index (BMI)
+        <span>|</span>
+        Ideal Body Weight
+        <span>|</span>
+        Daily Calorie Intake
+      </span>
 
-    <div class="flex w-full justify-center items-center mt-5">
       <el-button
         :type="$elComponentType.primary"
         :size="$elComponentSize.large"
         class="w-full max-w-[300px]"
+        :disabled="isInputDisabled"
         @click="showModal"
       >
         Calculate
       </el-button>
-    </div>
+    </footer>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { showNotification } from '@/helpers'
-import CalculatorsModal from './components/CalculatorsModal.vue'
 
 const isModalVisible = ref(false)
 
@@ -206,29 +206,14 @@ const bodyMetrics = ref<IBodyMetrics>({
   activity: 1.2
 })
 
+const isInputDisabled = computed(() => isAgeError.value || isHeightError.value || isWeightError.value)
+
 function showModal () {
-  let hasError = false
+  isAgeError.value = !bodyMetrics.value.age
+  isWeightError.value = !bodyMetrics.value.weight
+  isHeightError.value = !bodyMetrics.value.height
 
-  if (!bodyMetrics.value.age) {
-    isAgeError.value = true
-    hasError = true
-  } else {
-    isAgeError.value = false
-  }
-
-  if (!bodyMetrics.value.weight) {
-    isWeightError.value = true
-    hasError = true
-  } else {
-    isWeightError.value = false
-  }
-
-  if (!bodyMetrics.value.height) {
-    isHeightError.value = true
-    hasError = true
-  } else {
-    isHeightError.value = false
-  }
+  const hasError = isAgeError.value || isWeightError.value || isHeightError.value
 
   if (hasError) {
     showNotification('Please enter valid details', 'Oops! Something went wrong.', 'warning')
@@ -236,5 +221,4 @@ function showModal () {
     isModalVisible.value = true
   }
 }
-
 </script>
