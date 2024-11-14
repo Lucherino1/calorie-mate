@@ -65,8 +65,9 @@ const props = defineProps<{
 const isModalVisible = defineModel<boolean>('visible')
 
 const bmr = computed(() => {
-  return nutritionService.calcBMR(props.bodyMetrics.weight,
-    props.bodyMetrics.height, props.bodyMetrics.age, props.bodyMetrics.sex)
+  const { weight, height, age, sex } = props.bodyMetrics
+
+  return nutritionService.calcBMR(weight, height, age, sex)
 })
 
 const tdee = computed(() => {
@@ -81,6 +82,7 @@ const idealWeightRange = computed(() => {
   const heightInMeters = props.bodyMetrics.height / 100
   const minIdealWeight = 18.5 * heightInMeters ** 2
   const maxIdealWeight = 24.9 * heightInMeters ** 2
+
   return {
     min: minIdealWeight,
     max: maxIdealWeight
