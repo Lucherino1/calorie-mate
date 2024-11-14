@@ -180,6 +180,7 @@
         :type="$elComponentType.primary"
         :size="$elComponentSize.large"
         class="w-full max-w-[300px]"
+        :disabled="isInputDisables"
         @click="showModal"
       >
         Calculate
@@ -204,6 +205,13 @@ const bodyMetrics = ref<IBodyMetrics>({
   height: null,
   weight: null,
   activity: 1.2
+})
+
+const isInputDisables = computed(() => {
+  if (isAgeError.value || isHeightError.value || isWeightError.value) {
+    return true
+  }
+  return false
 })
 
 function showModal () {
