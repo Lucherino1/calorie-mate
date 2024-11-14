@@ -91,11 +91,11 @@ const idealWeightRange = computed(() => {
 
 const weightStatus = computed(() => {
   if (bmi.value < 18.5) {
-    return 'According to your BMI, you might be obese.'
+    return 'According to your BMI, you might be underweight.'
   } else if (bmi.value >= 18.5 && bmi.value <= 24.9) {
     return 'Great! Your weight is within the healthy range.'
   } else {
-    return 'According to your BMI, you might be underweight.'
+    return 'According to your BMI, you might be obese.'
   }
 })
 </script>
