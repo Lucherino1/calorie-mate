@@ -1,71 +1,47 @@
 <template>
-  <el-upload
-    class="avatar-uploader"
-    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-    :show-file-list="false"
-    :on-success="handleAvatarSuccess"
-    :before-upload="beforeAvatarUpload"
-  >
-    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-  </el-upload>
+  <div class="app-container--main gap-20">
+    <h1 class="w-full page-header">Profile settings</h1>
+    <div class="flex w-full justify-between">
+      <div class="mx-0 flex-1">
+        <el-tabs v-model="activeTab" stretch class="flex w-full h-full">
+          <el-tab-pane lazy label="Body Details" name="bodyDetails" class="h-full">
+            <el-card class="max-w-[600px] mt-10">
+              <UserFormBodyDetails
+                :body-form-data="formData"
+                submit-button-text="Sibmit"
+              />
+            </el-card>
+          </el-tab-pane>
+
+          <el-tab-pane lazy class="h-full" label="Recipes" name="recipes">
+            <el-card class="max-w-[600px] mt-10">
+              <UserFormProfile
+                :profile-form-data="profileFormData"
+              />
+            </el-card>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+    </div>
+  </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
+<script setup lang="ts">
+const activeTab = 'bodyDetails'
+const formData = ref<IBodyDetails>({
+  sex: 'male',
+  activityLevel: 1.2,
+  height: 172,
+  currentWeight: 70,
+  goalWeight: 80,
+  age: 0
+})
 
-import type { UploadProps } from 'element-plus'
-
-const imageUrl = ref('')
-
-const handleAvatarSuccess: UploadProps['onSuccess'] = (
-  response,
-  uploadFile
-) => {
-  imageUrl.value = URL.createObjectURL(uploadFile.raw!)
-}
-
-const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-  if (rawFile.type !== 'image/jpeg') {
-    ElMessage.error('Avatar picture must be JPG format!')
-    return false
-  } else if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error('Avatar picture size can not exceed 2MB!')
-    return false
-  }
-  return true
-}
+const profileFormData = ref<IProfileFields>({
+  email: 'goaododwodwo@gmail.com',
+  password: 'dwdwdwadwd',
+  firstName: 'Amir',
+  lastName: 'Stupish',
+  confirmPassword: 'dwdwdwadwd'
+})
 </script>
-
-<style scoped>
-.avatar-uploader .avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
-</style>
-
-<style>
-.avatar-uploader .el-upload {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: var(--el-color-primary);
-}
-
-.el-icon.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  text-align: center;
-}
-</style>
