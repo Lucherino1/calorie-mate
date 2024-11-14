@@ -1,6 +1,6 @@
 <template>
-  <el-card class="flex-1 flex flex-col text-start bg-white">
-    <p class="section-header">
+  <el-card class="flex-1 flex flex-col text-start bg-white min-w-[280px]">
+    <p class="section-header mb-1">
       Hydration:
       <span class="text- font-normal text-base text-gray-light">
         {{ waterAmount }}/{{ targetWaterAmount }} ml
