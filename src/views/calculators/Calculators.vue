@@ -6,10 +6,10 @@
       <p class="text-gray-light text-xl">For accurate calculation, we need some basic info about you</p>
     </div>
 
-    <div class="mt-[50px] flex gap-10 flex-1 flex-wrap justify-center items-center">
+    <div class="flex gap-10 flex-1 flex-wrap justify-center items-center">
       <div class="flex gap-10 flex-wrap max-w-[800px] w-full">
         <el-card class="flex flex-col text-center justify-center flex-1 min-w-[250px]">
-          <p class="text-lg w-full font-semibold">What is your sex?</p>
+          <p class="section-header">What is your sex?</p>
 
           <div class="flex flex-col justify-center h-full pt-5">
             <el-radio-group v-model="bodyMetrics.sex" class="flex justify-around items-center">
@@ -36,7 +36,7 @@
           class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]"
           :class="isAgeError ? 'border-red-600' : 'border'"
         >
-          <p class="text-lg font-semibold">How old are you?</p>
+          <p class="section-header">How old are you?</p>
           <div class="h-full flex items-center">
             <el-input-number
               v-model="bodyMetrics.age"
@@ -55,7 +55,7 @@
           class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]"
           :class="isHeightError ? 'border-red-600' : 'border'"
         >
-          <p class="text-lg font-semibold">How tall are you?</p>
+          <p class="section-header">How tall are you?</p>
           <div class="h-full flex items-center">
             <el-input-number
               v-model="bodyMetrics.height"
@@ -74,7 +74,7 @@
           class="flex flex-col text-center items-center flex-1 min-w-[250px] min-h-[200px]"
           :class="isWeightError ? 'border-red-600' : 'border'"
         >
-          <p class="text-lg font-semibold">What is your weight?</p>
+          <p class="section-header">What is your weight?</p>
           <div class="h-full flex items-center">
             <el-input-number
               v-model="bodyMetrics.weight"
@@ -167,15 +167,15 @@
       </div>
     </div>
 
-    <span class="flex gap-10 font-bold">
-      Body Mass Index (BMI)
-      <span>|</span>
-      Ideal Body Weight
-      <span>|</span>
-      Daily Calorie Intake
-    </span>
+    <footer class="mt-20 gap-10 flex flex-col items-center">
+      <span class="flex gap-10 font-bold">
+        Body Mass Index (BMI)
+        <span>|</span>
+        Ideal Body Weight
+        <span>|</span>
+        Daily Calorie Intake
+      </span>
 
-    <div class="flex w-full justify-center items-center mt-5">
       <el-button
         :type="$elComponentType.primary"
         :size="$elComponentSize.large"
@@ -185,7 +185,7 @@
       >
         Calculate
       </el-button>
-    </div>
+    </footer>
   </div>
 </template>
 

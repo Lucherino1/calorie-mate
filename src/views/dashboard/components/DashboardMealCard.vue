@@ -1,6 +1,6 @@
 <template>
   <el-card class="flex flex-col items-center text-center">
-    <p class="font-bold text-lg">{{ label }}</p>
+    <p class="section-header">{{ label }}</p>
     <el-progress class="py-[10px]" type="circle" :percentage="percentage">
       <template #default>
         <div class="w-full h-full flex justify-center items-center relative">
