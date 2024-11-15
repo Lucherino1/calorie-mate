@@ -3,7 +3,7 @@
     ref="formRef"
     :rules="formRules"
     :model="localProfileFormModel"
-    class="mt-[20px] flex flex-col gap-2 overflow-hidden"
+    class="mt-[20px] flex flex-col gap-1 overflow-hidden h-full"
     label-position="top"
     label-width="auto"
     require-asterisk-position="right"
@@ -14,7 +14,7 @@
       v-model:visible="isModalVisible"
     />
 
-    <div class="h-full overflow-y-auto">
+    <div class="h-full">
       <el-form-item label="First name" prop="firstName">
         <el-input v-model="localProfileFormModel.firstName" placeholder="Anthony" type="text" />
       </el-form-item>
@@ -27,6 +27,7 @@
         <el-input v-model="localProfileFormModel.email" placeholder="email@example.com" type="email" />
       </el-form-item>
     </div>
+
     <div class="flex justify-center">
       <el-form-item>
         <el-button
