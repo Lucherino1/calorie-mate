@@ -13,7 +13,10 @@
     <div class="h-full overflow-y-auto">
       <div class="flex gap-5 pb-1">
         <el-form-item class="flex-1" label="Select your sex" prop="sex">
-          <el-select v-model="localFormModel.sex" placeholder="Select your sex">
+          <el-select
+            v-model="localFormModel.sex"
+            placeholder="Select your sex"
+          >
             <el-option label="Male" value="male" />
             <el-option label="Female" value="female" />
           </el-select>
@@ -49,8 +52,10 @@
     <slot name="submitBtn">
       <el-form-item>
         <el-button
+          :loading="isSubmitButtonLoading"
           native-type="submit"
           class="w-full"
+          :disabled="isSubmitButtonDisabled"
           :type="$elComponentType.primary"
           :size="$elComponentSize.large"
         >
@@ -65,6 +70,8 @@
 const props = withDefaults(defineProps<{
   bodyFormData: Partial<IBodyDetails>
   submitButtonText: string
+  isSubmitButtonDisabled?: boolean
+  isSubmitButtonLoading?: boolean
 }>(), {
   submitButtonText: 'Submit'
 })
