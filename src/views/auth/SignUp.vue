@@ -26,6 +26,7 @@
             >
               Previous step
             </el-button>
+
             <el-button
               native-type="submit"
               class="flex-1"
