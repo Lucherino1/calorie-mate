@@ -30,6 +30,17 @@ class ProfileService {
 
     return useSupabase.from('profiles').update({ targetNutritionDetailsByMeal }).eq('id', authStore.user.id)
   }
+
+  async updateUserProfile (userProfile: Omit<IProfileFields, 'password' | 'confirmPassword'>) {
+    const authStore = useAuthStore()
+    const { email, firstName, lastName } = userProfile
+
+    return useSupabase.from('profiles').update({ email, firstName, lastName }).eq('id', authStore.user.id)
+  }
+
+  async updateUserPassword (newPassword: string) {
+    return useSupabase.auth.updateUser({ password: newPassword })
+  }
 }
 
 export const profileService = new ProfileService()
