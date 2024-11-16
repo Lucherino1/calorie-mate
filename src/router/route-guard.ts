@@ -9,7 +9,7 @@ export const routeGuard = async (
   const store = useAuthStore()
 
   if (to.meta.requireAuth && !store.user) {
-    return next({ name: routeNames.signin })
+    return next({ name: routeNames.aboutUs })
   }
 
   if (to.meta.roles) {
