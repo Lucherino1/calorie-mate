@@ -28,19 +28,30 @@ const profileFormData = ref<IUserProfile>({
   lastName: authStore.user?.lastName
 })
 
-async function submitProfileForm (updatedProfileData: IUserProfile) {
+async function submitProfileForm (updatedProfileData) {
   try {
     isSubmitButtonLoading.value = true
-    await profileService.updateUserProfile(updatedProfileData)
+
+    const currentEmail = authStore.user.email
+    const isEmailChanged = updatedProfileData.email && updatedProfileData.email !== currentEmail
+
+    if (isEmailChanged) {
+      await profileService.updateUserEmail(updatedProfileData.email)
+      showNotification('Please check your email for verification.', 'Email updated successfully! ', 'success')
+    }
+
+    const profileDataToUpdate = {
+      firstName: updatedProfileData.firstName,
+      lastName: updatedProfileData.lastName
+    }
+    await profileService.updateUserProfileDetails(profileDataToUpdate)
 
     authStore.user = {
       ...authStore.user,
       ...updatedProfileData
     }
-
-    showNotification('Profile updated successfully', 'Success', 'success')
   } catch (error) {
-    showNotification()
+    showNotification('Failed to update profile', 'Error', 'error')
   } finally {
     isSubmitButtonLoading.value = false
     isSubmitButtonDisabled.value = true

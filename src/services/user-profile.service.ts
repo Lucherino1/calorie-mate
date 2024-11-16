@@ -31,15 +31,73 @@ class ProfileService {
     return useSupabase.from('profiles').update({ targetNutritionDetailsByMeal }).eq('id', authStore.user.id)
   }
 
-  async updateUserProfile (userProfile: Omit<IProfileFields, 'password' | 'confirmPassword'>) {
-    const authStore = useAuthStore()
-    const { email, firstName, lastName } = userProfile
+  async updateUserEmail (email: string) {
+    const redirectEmailUrl = 'http://localhost:5173/profile-settings'
 
-    return useSupabase.from('profiles').update({ email, firstName, lastName }).eq('id', authStore.user.id)
+    try {
+      const { data, error } = await useSupabase.auth.updateUser(
+        { email },
+        { emailRedirectTo: redirectEmailUrl }
+      )
+      if (error) throw new Error()
+
+      return data
+    } catch (error) {
+      throw new Error()
+    }
+  }
+
+  async updateUserProfileDetails (userProfile: IUserProfile) {
+    const authStore = useAuthStore()
+    const userId = authStore.user?.id
+    const { firstName, lastName } = userProfile
+
+    try {
+      const { data, error } = await useSupabase
+        .from('profiles')
+        .update({ firstName, lastName })
+        .eq('id', userId)
+      if (error) throw new Error()
+
+      return data
+    } catch (error) {
+      throw new Error()
+    }
   }
 
   async updateUserPassword (newPassword: string) {
     return useSupabase.auth.updateUser({ password: newPassword })
+  }
+
+  async verifyAndUpdateEmail ({ email, token }: {email: string; token: string}) {
+    const authStore = useAuthStore()
+
+    const { error: otpError } = await useSupabase.auth.verifyOtp({
+      email,
+      token,
+      type: 'email_change'
+    })
+
+    if (otpError) {
+      throw new Error(otpError.message)
+    }
+
+    const { data: userData, error: userError } = await useSupabase.auth.getUser()
+
+    if (userError || !userData) {
+      throw new Error(userError?.message)
+    }
+
+    const { error: profileError } = await useSupabase
+      .from('profiles')
+      .update({ email: userData.user.email })
+      .eq('id', authStore.user.id)
+
+    if (profileError) {
+      throw new Error(profileError.message)
+    }
+
+    authStore.user.email = userData.user.email
   }
 }
 

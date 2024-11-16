@@ -31,7 +31,8 @@
     <div class="flex justify-center">
       <el-form-item>
         <el-button
-          type="text"
+          link
+          :type="$elComponentType.primary"
           :size="$elComponentSize.large"
           @click="isModalVisible = true"
         >

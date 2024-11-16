@@ -11,6 +11,12 @@ export const profileSettingRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/profile-settings/ProfileSettings.vue'),
     meta: {
       requireAuth: true
-    }
+    },
+    props: (route) => ({
+      query: route.query,
+      email: route.query.email,
+      token: route.query.token,
+      emailUpdated: route.query['email-updated'] === 'true'
+    })
   }
 ]
