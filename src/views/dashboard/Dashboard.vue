@@ -174,24 +174,26 @@ const formRef = useTemplateRef<TElementPlus['FormInstance']>('formRef')
 
 const formRules = { currentWeight: [useRequiredRule(), useCurrentWeightRule()] }
 
-const bodyDetailsFormModel = authStore.user.bodyDetails
+const bodyDetailsFormModel = reactive({ ...authStore.user.bodyDetails })
 
 const isEditWeightMode = ref(false)
 
 function cancelEditMode () {
-  isEditWeightMode.value = false
   bodyDetailsFormModel.currentWeight = authStore.user.bodyDetails.currentWeight
+
+  isEditWeightMode.value = false
 }
 
 async function submitBodyDetails () {
   formRef.value?.validate(async (isValid: boolean) => {
     if (!isValid) return
 
-    cancelEditMode()
+    isEditWeightMode.value = false
     try {
       await profileService.updateUserBodyDetails({ ...bodyDetailsFormModel })
 
-      authStore.user.bodyDetails = bodyDetailsFormModel
+      authStore.user.bodyDetails.currentWeight = bodyDetailsFormModel.currentWeight
+
       const {
         targetNutritionDetails,
         targetNutritionDetailsByMeal
