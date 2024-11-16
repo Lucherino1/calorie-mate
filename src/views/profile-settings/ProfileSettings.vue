@@ -1,71 +1,49 @@
 <template>
-  <el-upload
-    class="avatar-uploader"
-    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-    :show-file-list="false"
-    :on-success="handleAvatarSuccess"
-    :before-upload="beforeAvatarUpload"
-  >
-    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-  </el-upload>
+  <div v-loading.fullscreen="pageLoading" class="app-container--compact flex flex-col gap-5 h-full">
+    <h1 class="w-full page-header">Profile settings</h1>
+
+    <div class="mx-0 flex-1 flex w-full justify-between overflow-hidden">
+      <el-tabs v-model="activeTab" stretch class="flex w-full h-full">
+        <ProfileSettingsBodyDetailsTab />
+
+        <ProfileSettingsProfileTab />
+      </el-tabs>
+    </div>
+  </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import { Plus } from '@element-plus/icons-vue'
+<script setup lang="ts">
+import { showNotification } from '@/helpers'
 
-import type { UploadProps } from 'element-plus'
+const pageLoading = ref(false)
 
-const imageUrl = ref('')
+const props = defineProps<{
+  emailUpdated: boolean
+  token?: string
+  email?: string
+}>()
 
-const handleAvatarSuccess: UploadProps['onSuccess'] = (
-  response,
-  uploadFile
-) => {
-  imageUrl.value = URL.createObjectURL(uploadFile.raw!)
-}
+const activeTab = ref('bodyDetails')
 
-const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
-  if (rawFile.type !== 'image/jpeg') {
-    ElMessage.error('Avatar picture must be JPG format!')
-    return false
-  } else if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error('Avatar picture size can not exceed 2MB!')
-    return false
+const router = useRouter()
+
+onMounted(async () => {
+  if (props.emailUpdated && props.token && props.email) {
+    try {
+      pageLoading.value = true
+
+      await profileService.verifyAndUpdateEmail({
+        email: props.email,
+        token: props.token
+      })
+
+      showNotification('Email successfully updated!', 'Success', 'success')
+      router.replace({ query: { emailUpdated: undefined, token: undefined, email: undefined } })
+    } catch (error) {
+      showNotification()
+    } finally {
+      pageLoading.value = false
+    }
   }
-  return true
-}
+})
 </script>
-
-<style scoped>
-.avatar-uploader .avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
-</style>
-
-<style>
-.avatar-uploader .el-upload {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: var(--el-color-primary);
-}
-
-.el-icon.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  text-align: center;
-}
-</style>

@@ -52,6 +52,10 @@ label {
   &--main {
     @apply p-5 md:p-7 xl:p-10 2xl:p-[50px] max-w-[1418px] flex-1 mx-auto;
   }
+
+  &--compact {
+    @apply max-w-[1418px] px-[200px] py-[50px] mx-auto;
+  }
 }
 
 .multi-truncate {
