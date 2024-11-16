@@ -1,8 +1,8 @@
 <template>
   <aside class="h-auto min-h-screen bg-white flex flex-col z-50 min-w-[310px] max-w-[310px]">
-    <h1 class="pt-14 pb-12 font-poppins text-[26px] text-center border-b">
+    <a href="/" class="pt-14 pb-12 font-poppins text-[26px] text-center border-b">
       <b>CALORIE</b> MATE
-    </h1>
+    </a>
     <ul class="flex flex-col gap-6 flex-1 pl-5 pt-10">
       <li
         v-for="item in filteredMenuList"
