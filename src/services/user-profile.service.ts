@@ -32,7 +32,7 @@ class ProfileService {
   }
 
   async updateUserEmail (email: string) {
-    const redirectEmailUrl = 'http://localhost:5173'
+    const redirectEmailUrl = import.meta.env.VITE_BASE_URL
 
     try {
       const { data, error } = await useSupabase.auth.updateUser(
