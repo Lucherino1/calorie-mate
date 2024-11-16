@@ -30,6 +30,7 @@
         show-password
       />
     </el-form-item>
+
     <el-form-item
       label="Confirm Password"
       prop="confirmPassword"
@@ -40,6 +41,7 @@
         placeholder="Min. 8 characters"
       />
     </el-form-item>
+
     <el-form-item>
       <slot name="submitBtn">
         <el-button

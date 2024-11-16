@@ -18,6 +18,7 @@
             placeholder="Select your sex"
           >
             <el-option label="Male" value="male" />
+
             <el-option label="Female" value="female" />
           </el-select>
         </el-form-item>
@@ -49,6 +50,7 @@
         <el-input v-model.number="localFormModel.goalWeight" type="number" placeholder="Enter your goal weight" />
       </el-form-item>
     </div>
+
     <slot name="submitBtn">
       <el-form-item>
         <el-button
