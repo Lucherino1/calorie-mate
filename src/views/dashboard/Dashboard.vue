@@ -182,11 +182,15 @@ function cancelEditMode () {
   bodyDetailsFormModel.currentWeight = authStore.user.bodyDetails.currentWeight
 
   isEditWeightMode.value = false
+  formRef.value?.resetFields()
 }
 
 async function submitBodyDetails () {
   formRef.value?.validate(async (isValid: boolean) => {
-    if (!isValid) return
+    if (!isValid) {
+      showNotification('For accurate tracking, please enter a weight between 35 kg and 700 kg.', 'Invalid Weight', 'warning')
+      return
+    }
 
     isEditWeightMode.value = false
     try {
