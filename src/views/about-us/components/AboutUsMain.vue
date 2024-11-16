@@ -58,6 +58,8 @@
 <script lang="ts" setup>
 import { routeNames } from '@/router/route-names'
 
+import imageStepan from '@/assets/images/about-us/main/success-stories/james-before.jpeg'
+
 const discoverCardsData = [
   {
     imageSrc: '/src/assets/images/about-us/main/calories-calculator.png',
@@ -94,7 +96,7 @@ const peopleData = [
   {
     name: 'Stepan',
     age: '37',
-    imageBefore: '/src/assets/images/about-us/main/success-stories/james-before.jpeg',
+    imageBefore: imageStepan,
     imageAfter: '/src/assets/images/about-us/main/success-stories/james-after.jpeg',
     weightBefore: '85 kg',
     weightAfter: '75 kg',
