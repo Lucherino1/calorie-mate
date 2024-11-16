@@ -22,13 +22,13 @@ const authStore = useAuthStore()
 const isSubmitButtonDisabled = ref(true)
 const isSubmitButtonLoading = ref(false)
 
-const profileFormData = ref<IUserProfile>({
+const profileFormData = reactive({
   email: authStore.user?.email,
   firstName: authStore.user?.firstName,
   lastName: authStore.user?.lastName
 })
 
-async function submitProfileForm (updatedProfileData) {
+async function submitProfileForm (updatedProfileData: IUserProfile) {
   try {
     isSubmitButtonLoading.value = true
 
@@ -57,4 +57,16 @@ async function submitProfileForm (updatedProfileData) {
     isSubmitButtonDisabled.value = true
   }
 }
+
+watch(
+  () => authStore.user,
+  (newUser) => {
+    if (newUser) {
+      profileFormData.email = newUser.email
+      profileFormData.firstName = newUser.firstName
+      profileFormData.lastName = newUser.lastName
+    }
+  },
+  { immediate: true }
+)
 </script>
