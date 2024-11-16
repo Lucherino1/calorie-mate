@@ -37,7 +37,7 @@ async function submitProfileForm (updatedProfileData: IUserProfile) {
 
     if (isEmailChanged) {
       await profileService.updateUserEmail(updatedProfileData.email)
-      showNotification('Please check your email for verification.', 'Email updated successfully! ', 'success')
+      showNotification('A verification link has been sent to your email. Please check your inbox.', 'Verify your email address ', 'info')
     }
 
     const profileDataToUpdate = {
@@ -51,7 +51,7 @@ async function submitProfileForm (updatedProfileData: IUserProfile) {
       ...updatedProfileData
     }
   } catch (error) {
-    showNotification('Failed to update profile', 'Error', 'error')
+    showNotification('Please try again later', 'Failed to update profile', 'error')
   } finally {
     isSubmitButtonLoading.value = false
     isSubmitButtonDisabled.value = true

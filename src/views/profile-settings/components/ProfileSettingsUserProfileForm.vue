@@ -86,12 +86,4 @@ function submit () {
     }
   })
 }
-
-watch(
-  () => props.profileFormData,
-  (newProfileData) => {
-    Object.assign(localProfileFormModel, newProfileData)
-  },
-  { deep: true }
-)
 </script>
