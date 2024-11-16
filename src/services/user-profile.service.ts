@@ -32,7 +32,7 @@ class ProfileService {
   }
 
   async updateUserEmail (email: string) {
-    const redirectEmailUrl = 'http://localhost:5173/profile-settings'
+    const redirectEmailUrl = 'http://localhost:5173'
 
     try {
       const { data, error } = await useSupabase.auth.updateUser(
