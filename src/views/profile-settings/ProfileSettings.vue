@@ -25,6 +25,8 @@ const props = defineProps<{
 
 const activeTab = ref('bodyDetails')
 
+const authStore = useAuthStore()
+
 const router = useRouter()
 
 onMounted(async () => {
@@ -37,7 +39,10 @@ onMounted(async () => {
         token: props.token
       })
 
+      authStore.getUserProfile(authStore.user.id)
+
       showNotification('Email successfully updated!', 'Success', 'success')
+
       router.replace({ query: { emailUpdated: undefined, token: undefined, email: undefined } })
     } catch (error) {
       showNotification()
