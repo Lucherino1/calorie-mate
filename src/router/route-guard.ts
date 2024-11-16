@@ -39,8 +39,8 @@ export const initializeSession = async (
     await getUserProfile()
   }
 
-  next()
   userProfileLoading.value = false
+  next()
 }
 
 export const sessionAccessGuard = async (
