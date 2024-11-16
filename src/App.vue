@@ -11,6 +11,7 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router'
 import AppLayout from '@/layouts/AppLayout.vue'
+
 const route = useRoute()
 
 const authStore = useAuthStore()
