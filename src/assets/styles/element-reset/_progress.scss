@@ -1,0 +1,5 @@
+@use "element-plus/theme-chalk/src/progress";
+
+.el-progress-circle__path {
+  transition: stroke-dasharray 0.3s, stroke 0.2s, opacity 0.4s !important;
+}
