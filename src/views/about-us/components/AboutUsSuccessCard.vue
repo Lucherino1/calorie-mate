@@ -9,6 +9,7 @@
             :src="person.imageBefore"
             alt="Before"
           >
+
           <div
             class="absolute bottom-2 left-1/2 transform -translate-x-1/2
                   bg-primary-dark text-white text-xs font-semibold py-1 px-2 rounded-full"
@@ -23,6 +24,7 @@
             :src="person.imageAfter"
             alt="After"
           >
+
           <div
             class="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-nowrap
                   bg-white text-gray-800 text-xs font-semibold py-1 px-2 rounded-full flex items-center gap-1"

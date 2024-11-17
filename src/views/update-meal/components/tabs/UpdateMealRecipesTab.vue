@@ -17,6 +17,7 @@
       >
         <p class="font-semibold">{{ recipe.name }}</p>
       </el-option>
+
       <template #empty>No recipes match</template>
     </el-select>
 
@@ -28,6 +29,7 @@
         @update-recipe="handleRecipeUpdate"
         @remove-recipe="handleRecipeRemove"
       />
+
       <el-empty
         v-if="!recipesInMeal.length"
         class="text-2xl text-gray-light font-bold mt-10"

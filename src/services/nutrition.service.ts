@@ -17,13 +17,10 @@ class NutritionService {
 
     let goalCalories
     if (weightDifference > 0) {
-      // down
       goalCalories = tdee * (1 - Math.min(0.2, weightDifference * 0.02))
     } else if (weightDifference < 0) {
-      // up
       goalCalories = tdee * (1 + Math.min(0.2, Math.abs(weightDifference) * 0.02))
     } else {
-      // keep
       goalCalories = tdee
     }
     return roundToNearestTen(goalCalories)
@@ -60,8 +57,6 @@ class NutritionService {
     )
     return targetNutritionDetailsByMeal
   }
-
-  // Eaten calculations:
 
   calcNutritionPerGrams (nutritionDetails: INutritionDetails, grams: number) {
     if (grams === undefined || grams === null) grams = 100
@@ -233,8 +228,6 @@ class NutritionService {
     const calories = (proteins * 4) + (fats * 9) + (carbs * 4)
     return Math.round(calories)
   }
-
-  // calculate nutritious from recipes
 
   calcTotalRecipeCarbs (recipe: IRecipe): number {
     return recipe.ingredients.reduce((sum, ingredient) => sum + ingredient.nutritionDetails.carbs, 0)

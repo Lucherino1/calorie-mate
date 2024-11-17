@@ -19,6 +19,7 @@
           <div class="w-[30px] h-[30px] flex justify-center items-center">
             <component :is="item.icon" class="menu-icon" />
           </div>
+
           <span class="ml-2">{{ item.label }}</span>
         </router-link>
       </li>

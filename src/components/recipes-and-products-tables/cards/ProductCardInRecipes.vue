@@ -67,7 +67,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, nextTick } from 'vue'
 import IconVegan from '~icons/icon/vegan'
 import debounce from 'lodash/debounce'
 

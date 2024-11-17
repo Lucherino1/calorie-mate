@@ -22,6 +22,7 @@
           <span v-if="header.formatter">
             {{ header.formatter(row) }}
           </span>
+
           <span v-else>
             {{ row[header.value] }}
           </span>

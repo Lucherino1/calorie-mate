@@ -31,6 +31,7 @@
         @update-product="handleProductUpdate"
         @remove-product="handleProductRemove"
       />
+
       <el-empty
         v-if="!productsInMeal.length"
         class="text-2xl text-gray-light font-bold mt-10"

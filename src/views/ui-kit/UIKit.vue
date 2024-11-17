@@ -244,8 +244,6 @@ onMounted(() => {
   }, 500)
 })
 
-// date picker
-
 const value1 = ref(Date.now())
 </script>
 

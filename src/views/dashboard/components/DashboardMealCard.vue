@@ -5,6 +5,7 @@
       <template #default>
         <div class="w-full h-full flex justify-center items-center relative">
           <span class="text-[4rem]">{{ icon }}</span>
+
           <div class="w-[30px] h-[30px] absolute -bottom-3 right-1">
             <el-button circle type="info" @click="redirectToUpdateMeal">
               <IconPlus />
