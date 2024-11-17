@@ -58,8 +58,6 @@
 <script lang="ts" setup>
 import { routeNames } from '@/router/route-names'
 
-import imageStepan from '@/assets/images/about-us/main/success-stories/james-before.jpeg'
-
 const discoverCardsData = [
   {
     imageSrc: '/src/assets/images/about-us/main/calories-calculator.png',
@@ -87,8 +85,8 @@ const peopleData = [
   {
     name: 'Anna',
     age: '24',
-    imageBefore: '/src/assets/images/anna-before.jpeg',
-    imageAfter: '/src/assets/images/anna-after.jpg',
+    imageBefore: '/src/assets/images/about-us/main/success-stories/anna-before.jpeg',
+    imageAfter: '/src/assets/images/about-us/main/success-stories/anna-after.jpg',
     weightBefore: '65 kg',
     weightAfter: '53 kg',
     quote: 'If you want to accomplish something, then you will accomplish it, regardless of how bumpy the road is. I always told myself: I can\'t go back and start from the beginning, but I can start today and follow a new path!'
@@ -96,7 +94,7 @@ const peopleData = [
   {
     name: 'Stepan',
     age: '37',
-    imageBefore: imageStepan,
+    imageBefore: '/src/assets/images/about-us/main/success-stories/james-before.jpeg',
     imageAfter: '/src/assets/images/about-us/main/success-stories/james-after.jpeg',
     weightBefore: '85 kg',
     weightAfter: '75 kg',
