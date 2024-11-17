@@ -35,6 +35,7 @@
                   @input="handleInputChange"
                 />
               </div>
+
               <p class="text-gray-light text-right text-sm">
                 Portion weight: <b class="text-gray-dark text-base">{{ recipe.portionWeight }}</b>g
               </p>
