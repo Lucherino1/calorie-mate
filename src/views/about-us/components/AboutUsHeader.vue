@@ -24,5 +24,5 @@
 </template>
 
 <script lang="ts" setup>
-const headerImage = '/src/assets/images/about-us/header/macbook_mockup.png'
+const headerImage = '/images/about-us/header/macbook_mockup.png'
 </script>

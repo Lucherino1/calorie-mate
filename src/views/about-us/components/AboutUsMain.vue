@@ -60,22 +60,22 @@ import { routeNames } from '@/router/route-names'
 
 const discoverCardsData = [
   {
-    imageSrc: '/src/assets/images/about-us/main/calories-calculator.png',
+    imageSrc: '/images/about-us/main/calories-calculator.png',
     title: 'Calorie Tracker',
     paragraph: 'Track your daily calorie intake effortlessly, and stay on top of your progress with clear insights.'
   },
   {
-    imageSrc: '/src/assets/images/about-us/main/meal.png',
+    imageSrc: '/images/about-us/main/meal.png',
     title: 'Food Diary',
     paragraph: 'Record your meals and snacks, and gain a deeper understanding of your eating habits.'
   },
   {
-    imageSrc: '/src/assets/images/about-us/main/food.png',
+    imageSrc: '/images/about-us/main/food.png',
     title: 'Product and Recipe Library',
     paragraph: 'Add your own foods and recipes, or browse through our database to find inspiration for balanced meals.'
   },
   {
-    imageSrc: '/src/assets/images/about-us/main/target.png',
+    imageSrc: '/images/about-us/main/target.png',
     title: 'Goal Setting',
     paragraph: 'Define your personal health goals — whether it’s weight loss, muscle gain, or maintenance — and let us guide you every step.'
   }
@@ -85,8 +85,8 @@ const peopleData = [
   {
     name: 'Anna',
     age: '24',
-    imageBefore: '/src/assets/images/about-us/main/success-stories/anna-before.jpeg',
-    imageAfter: '/src/assets/images/about-us/main/success-stories/anna-after.jpg',
+    imageBefore: '/images/about-us/main/success-stories/anna-before.jpeg',
+    imageAfter: '/images/about-us/main/success-stories/anna-after.jpg',
     weightBefore: '65 kg',
     weightAfter: '53 kg',
     quote: 'If you want to accomplish something, then you will accomplish it, regardless of how bumpy the road is. I always told myself: I can\'t go back and start from the beginning, but I can start today and follow a new path!'
@@ -94,8 +94,8 @@ const peopleData = [
   {
     name: 'Stepan',
     age: '37',
-    imageBefore: '/src/assets/images/about-us/main/success-stories/james-before.jpeg',
-    imageAfter: '/src/assets/images/about-us/main/success-stories/james-after.jpeg',
+    imageBefore: '/images/about-us/main/success-stories/james-before.jpeg',
+    imageAfter: '/images/about-us/main/success-stories/james-after.jpeg',
     weightBefore: '85 kg',
     weightAfter: '75 kg',
     quote: 'Calorie Mate helped me stay consistent. I’ve learned that real change comes from small, steady improvements. With each step, I got closer to my goal.'
@@ -103,8 +103,8 @@ const peopleData = [
   {
     name: 'Zac',
     age: '30',
-    imageBefore: '/src/assets/images/about-us/main/success-stories/zac-before.jpg',
-    imageAfter: '/src/assets/images/about-us/main/success-stories/zac-after.jpg',
+    imageBefore: '/images/about-us/main/success-stories/zac-before.jpg',
+    imageAfter: '/images/about-us/main/success-stories/zac-after.jpg',
     weightBefore: '60 kg',
     weightAfter: '81 kg',
     quote: 'I was often bullied, but now I’m strong enough to stand up for myself. Calorie Mate gave me the motivation to change and build confidence.'
