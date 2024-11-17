@@ -47,7 +47,6 @@ import { showNotification } from '@/helpers'
 const props = defineProps<{
   mealType: TMealType
   allProducts: IProduct[]
-  // userMeals: IMeals
 }>()
 
 const userMeals = defineModel<IMeals>('user-meals')
