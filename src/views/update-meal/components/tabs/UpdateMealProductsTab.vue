@@ -1,31 +1,29 @@
 <template>
-  <div class="rounded-lg">
-    <div>
-      <el-select
-        v-model="searchQuery"
-        filterable
-        :filter-method="filterProducts"
-        :size="$elComponentSize.large"
-        placeholder="Enter a product name, e.g. 'bread', 'avocado', 'yogurt'"
-        clearable
+  <div class="rounded-lg h-full flex flex-col gap-8">
+    <el-select
+      v-model="searchQuery"
+      filterable
+      :filter-method="filterProducts"
+      :size="$elComponentSize.large"
+      placeholder="Enter a product name, e.g. 'bread', 'avocado', 'yogurt'"
+      clearable
+    >
+      <el-option
+        v-for="product in filteredProducts"
+        :key="product.id"
+        :label="product.name"
+        :value="product.name"
+        @click="addProductToMeal(product)"
       >
-        <el-option
-          v-for="product in filteredProducts"
-          :key="product.id"
-          :label="product.name"
-          :value="product.name"
-          @click="addProductToMeal(product)"
-        >
-          <div class="flex justify-between w-full">
-            <span class="font-semibold">{{ product.name }}</span>
-            <p><b>{{ product.nutritionDetails.calories }}</b> kcal</p>
-          </div>
-        </el-option>
-        <template #empty>No products match</template>
-      </el-select>
-    </div>
+        <div class="flex justify-between w-full">
+          <span class="font-semibold">{{ product.name }}</span>
+          <p><b>{{ product.nutritionDetails.calories }}</b> kcal</p>
+        </div>
+      </el-option>
+      <template #empty>No products match</template>
+    </el-select>
 
-    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-auto">
+    <div class="flex flex-col gap-5 h-full overflow-y-auto">
       <UpdateMealProductCard
         v-for="product in productsInMeal"
         :key="product.id"
@@ -49,7 +47,6 @@ import { showNotification } from '@/helpers'
 const props = defineProps<{
   mealType: TMealType
   allProducts: IProduct[]
-  // userMeals: IMeals
 }>()
 
 const userMeals = defineModel<IMeals>('user-meals')

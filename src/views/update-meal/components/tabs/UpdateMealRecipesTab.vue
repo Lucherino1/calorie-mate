@@ -1,28 +1,26 @@
 <template>
-  <div class="rounded-lg">
-    <div>
-      <el-select
-        v-model="searchQuery"
-        filterable
-        :filter-method="filterRecipes"
-        :size="$elComponentSize.large"
-        placeholder="Enter a recipe name, e.g. 'chicken salad', 'strawberry cheesecake'"
-        clearable
+  <div class="rounded-lg h-full flex flex-col gap-8">
+    <el-select
+      v-model="searchQuery"
+      filterable
+      :filter-method="filterRecipes"
+      :size="$elComponentSize.large"
+      placeholder="Enter a recipe name, e.g. 'chicken salad', 'strawberry cheesecake'"
+      clearable
+    >
+      <el-option
+        v-for="recipe in filteredRecipes"
+        :key="recipe.id"
+        :label="recipe.name"
+        :value="recipe.name"
+        @click="addRecipeToMeal(recipe)"
       >
-        <el-option
-          v-for="recipe in filteredRecipes"
-          :key="recipe.id"
-          :label="recipe.name"
-          :value="recipe.name"
-          @click="addRecipeToMeal(recipe)"
-        >
-          <p class="font-semibold">{{ recipe.name }}</p>
-        </el-option>
-        <template #empty>No recipes match</template>
-      </el-select>
-    </div>
+        <p class="font-semibold">{{ recipe.name }}</p>
+      </el-option>
+      <template #empty>No recipes match</template>
+    </el-select>
 
-    <div class="mt-8 flex flex-col gap-5 max-h-[500px] overflow-y-auto">
+    <div class="flex flex-col gap-5 h-full overflow-y-auto">
       <UpdateMealRecipeCard
         v-for="recipe in recipesInMeal"
         :key="recipe.id"

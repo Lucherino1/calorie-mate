@@ -1,12 +1,17 @@
 <template>
-  <div class="w-full h-full">
+  <div class="w-full max-h-[110px]">
     <el-card class="px-2 lg:px-0 card--no-shadow">
       <div class="flex items-center justify-between min-h-[70px]">
         <div class="flex min-w-[320px] items-center justify-between">
           <div class="flex justify-center items-center">
             <div>
               <div class="flex justify-center items-center">
-                <p class="text-wrap max-w-[170px] truncate font-bold text-base text-primary-dark">{{ product.name }}</p>
+                <p
+                  class="text-wrap max-w-[170px] truncate font-bold text-base text-primary-dark"
+                >
+                  {{ product.name }}
+                </p>
+
                 <span v-if="product.isVegan" class="flex items-center fill-success w-[20px] h-[20px] ml-2">
                   <IconVegan class="w-full h-full" />
                 </span>
@@ -61,7 +66,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, nextTick } from 'vue'
 import IconVegan from '~icons/icon/vegan'
 import debounce from 'lodash/debounce'
 
