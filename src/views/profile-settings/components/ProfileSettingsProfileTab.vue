@@ -4,10 +4,8 @@
       <ProfileSettingsUserProfileForm
         class="overflow-y-auto w-full h-full flex flex-col py-5"
         :profile-form-data="profileFormData"
-        :is-submit-button-disabled="isSubmitButtonDisabled"
         :is-submit-button-loading="isSubmitButtonLoading"
         password-label="New password"
-        @validate="isSubmitButtonDisabled = false"
         @submit="submitProfileForm"
       />
     </el-card>
@@ -19,7 +17,6 @@ import { showNotification } from '@/helpers'
 
 const authStore = useAuthStore()
 
-const isSubmitButtonDisabled = ref(true)
 const isSubmitButtonLoading = ref(false)
 
 const profileFormData = reactive({
@@ -37,7 +34,7 @@ async function submitProfileForm (updatedProfileData: IUserProfile) {
 
     if (isEmailChanged) {
       await profileService.updateUserEmail(updatedProfileData.email)
-      showNotification('A verification link has been sent to your email. Please check your inbox.', 'Verify your email address ', 'info')
+      showNotification('A verification link has been sent to your new email. Please check your inbox.', 'Verify your email address ', 'info')
     }
 
     const profileDataToUpdate = {
@@ -54,7 +51,6 @@ async function submitProfileForm (updatedProfileData: IUserProfile) {
     showNotification('Please try again later', 'Failed to update profile', 'error')
   } finally {
     isSubmitButtonLoading.value = false
-    isSubmitButtonDisabled.value = true
   }
 }
 

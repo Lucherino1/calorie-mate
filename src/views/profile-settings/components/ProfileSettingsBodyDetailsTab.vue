@@ -5,10 +5,8 @@
         class="overflow-y-auto w-full h-full flex flex-col py-5"
         :body-form-data="formData"
         submit-button-text="Save"
-        :is-submit-button-disabled="isSubmitButtonDisabled"
         :is-submit-button-loading="isSubmitButtonLoading"
         @submit="submitBodyDetails"
-        @validate="isSubmitButtonDisabled = false"
       />
     </el-card>
   </el-tab-pane>
@@ -19,7 +17,6 @@ import { showNotification } from '@/helpers'
 
 const authStore = useAuthStore()
 
-const isSubmitButtonDisabled = ref(true)
 const isSubmitButtonLoading = ref(false)
 
 const formData = ref<Partial<IBodyDetails>>({ ...authStore.user.bodyDetails })
@@ -41,12 +38,7 @@ async function submitBodyDetails (bodyDetailsFormModel: IBodyDetails) {
   } catch (error) {
     showNotification()
   } finally {
-    isSubmitButtonDisabled.value = true
     isSubmitButtonLoading.value = false
   }
 }
-
-watch(formData, () => {
-  isSubmitButtonDisabled.value = false
-}, { deep: true })
 </script>

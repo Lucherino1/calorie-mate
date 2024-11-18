@@ -57,7 +57,6 @@
           :loading="isSubmitButtonLoading"
           native-type="submit"
           class="w-full"
-          :disabled="isSubmitButtonDisabled"
           :type="$elComponentType.primary"
           :size="$elComponentSize.large"
         >
@@ -72,7 +71,6 @@
 const props = withDefaults(defineProps<{
   bodyFormData: Partial<IBodyDetails>
   submitButtonText: string
-  isSubmitButtonDisabled?: boolean
   isSubmitButtonLoading?: boolean
 }>(), {
   submitButtonText: 'Submit'
