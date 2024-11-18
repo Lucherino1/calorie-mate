@@ -21,12 +21,12 @@
                   <IconVegan class="w-full h-full" />
                 </span>
               </div>
-              <p class="text-gray-500 mt-1">{{ recipe.description }}</p>
+              <p class="text-gray-dark mt-1">{{ recipe.description }}</p>
             </div>
 
             <div class="flex flex-col gap-2">
               <div class="flex items-center gap-2">
-                <span class="text-base text-gray-500">Amount:</span>
+                <span class="text-base text-gray-dark">Portions:</span>
                 <el-input-number
                   ref="recipeInput"
                   v-model="portions"
