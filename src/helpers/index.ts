@@ -1,5 +1,5 @@
 import orderBy from 'lodash/orderBy'
-import { ElNotification } from 'element-plus'
+import { ElNotification, ElMessageBox } from 'element-plus'
 
 export const roundToNearestTen = (value: number): number => {
   return Math.round(value / 10) * 10
@@ -13,6 +13,30 @@ export function showNotification (message: string = 'Please try again later.', t
     showClose: true,
     offset: 50
   })
+}
+
+export async function showConfirmationDialog ({
+  title = 'Confirmation',
+  message,
+  confirmButtonText = 'Yes',
+  cancelButtonText = 'No',
+  type = 'warning'
+}: {
+  title?: string
+  message: string
+  confirmButtonText?: string
+  cancelButtonText?: string
+  type?: 'warning' | 'info' | 'success' | 'error'
+}) {
+  return ElMessageBox.confirm(
+    message,
+    title,
+    {
+      confirmButtonText,
+      cancelButtonText,
+      type
+    }
+  )
 }
 
 export function sortArrayBySortFieldAndOrder<T> (arr: T[], sortField: string, sortOrder: 'asc' | 'desc') {
