@@ -27,6 +27,7 @@
       <UpdateMealProductCard
         v-for="product in productsInMeal"
         :key="product.id"
+        v-model:remove-button-loading="isButtonRemoveLoading[product.id]"
         :product="product"
         @update-product="handleProductUpdate"
         @remove-product="handleProductRemove"
@@ -55,6 +56,8 @@ const userMeals = defineModel<IMeals>('user-meals')
 const productsInMeal = defineModel<IProduct[]>('productsInMeal')
 
 const dashboardStore = useDashboardStore()
+
+const isButtonRemoveLoading = ref<Record<string, boolean>>({})
 
 const searchQuery = ref('')
 const filteredProducts = ref<IProduct[]>([])
@@ -117,22 +120,20 @@ async function handleProductUpdate (updatedProduct: IProduct) {
 }
 
 async function handleProductRemove (productId: string) {
-  const index = productsInMeal.value.findIndex(product => product.id === productId)
+  isButtonRemoveLoading.value[productId] = true
 
-  if (index !== -1) {
-    productsInMeal.value.splice(index, 1)
-
-    try {
-      await updateMealService.removeProduct({
-        date: dashboardStore.date,
-        mealType: props.mealType,
-        productId,
-        mealComponent: 'products'
-      })
-    } catch (error) {
-      showNotification()
-    }
+  try {
+    await updateMealService.removeProduct({
+      date: dashboardStore.date,
+      mealType: props.mealType,
+      productId,
+      mealComponent: 'products'
+    })
+    productsInMeal.value = productsInMeal.value.filter(product => product.id !== productId)
+  } catch (error) {
+    showNotification('Failed to remove product', 'Error', 'error')
+  } finally {
+    isButtonRemoveLoading.value[productId] = false
   }
 }
-
 </script>
