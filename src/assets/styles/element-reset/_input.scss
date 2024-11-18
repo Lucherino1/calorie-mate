@@ -1,0 +1,24 @@
+@import "element-plus/theme-chalk/src/input";
+@import "element-plus/theme-chalk/src/input-number";
+
+.el-input {
+  &__wrapper {
+    @apply rounded-2xl;
+  }
+  &__inner {
+    @apply leading-[14px] border-gray-light;
+    
+    &::placeholder {
+      @apply text-gray-light leading-[14px];
+    }
+  }
+}
+
+.el-input-number {
+  &__decrease {
+    @apply rounded-l-2xl hover:rounded-xl hover:text-white hover:bg-primary hover:duration-300 #{!important};
+  }
+  &__increase, el-icon {
+    @apply rounded-r-2xl hover:rounded-xl hover:text-white hover:bg-primary hover:duration-300 #{!important};
+  }
+}

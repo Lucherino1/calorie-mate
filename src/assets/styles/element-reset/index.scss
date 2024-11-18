@@ -1,0 +1,71 @@
+@use "../variables/colors";
+
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': colors.$primary,
+    ),
+    'success': (
+      'base': colors.$success,
+    ),
+    'warning': (
+      'base': colors.$warning,
+    ),
+    'danger': (
+      'base': colors.$danger,
+    ),
+    'error': (
+      'base': colors.$error,
+    ),
+    'info': (
+      'base': colors.$info,
+    ),
+  ),
+  $common_component_size: (
+    'large': 50px,
+    'default': 36px,
+    'small': 28px,
+  ),
+  $button: (
+    'font-weight': 700,
+  ),
+  $button-border-radius: (
+    'large': 16px,
+    'default': 10px,
+    'small': 8px,
+  ),
+);
+
+@use "element-plus/theme-chalk/src/base";
+@use "element-plus/theme-chalk/src/button";
+@use "element-plus/theme-chalk/src/select";
+@use "element-plus/theme-chalk/src/option";
+@use "element-plus/theme-chalk/src/popper";
+@use "element-plus/theme-chalk/src/loading";
+@use "element-plus/theme-chalk/src/table";
+@use "element-plus/theme-chalk/src/switch";
+@use "element-plus/theme-chalk/src/date-picker";
+@use "element-plus/theme-chalk/src/tabs";
+@use "element-plus/theme-chalk/src/skeleton";
+@use "element-plus/theme-chalk/src/checkbox";
+@use "element-plus/theme-chalk/src/notification";
+@use "element-plus/theme-chalk/src/scrollbar";
+@use "element-plus/theme-chalk/src/popover";
+@use "element-plus/theme-chalk/src/empty";
+@use "element-plus/theme-chalk/src/pagination";
+@use "element-plus/theme-chalk/src/overlay";
+@use "element-plus/theme-chalk/src/tooltip";
+@use "element-plus/theme-chalk/src/collapse-item";
+@use "element-plus/theme-chalk/src/collapse";
+@use "element-plus/theme-chalk/src/tag";
+
+@import './_progress';
+@import './_card';
+@import './_input';
+@import './_form';
+@import './_select';
+@import './_date-picker';
+@import './_upload';
+@import './_dialog';
+@import './_radio';
+@import './message-box'

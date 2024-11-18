@@ -1,0 +1,8 @@
+@use "element-plus/theme-chalk/src/message-box";
+
+.el-message-box {
+  @apply rounded-2xl;
+  &__message {
+    @apply text-wrap max-w-[400px] #{!important};
+  }
+}

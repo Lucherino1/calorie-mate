@@ -1,0 +1,68 @@
+/* UPDATE DEPENDING ON YOUR PROJECT NEEDS */
+
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
+
+html,
+body,
+#app {
+  @apply h-full box-border;
+}
+
+html {
+  font-size: 16px;
+  line-height: normal;
+}
+
+body {
+  @apply font-main text-base text-primary-dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, svg {
+  display: initial;
+}
+
+label {
+  @apply block text-sm font-semibold text-gray-600;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+/* scrollbar itself */
+*::-webkit-scrollbar-thumb {
+  background-color: #babac0;
+  border-radius: 16px;
+  border: 2px solid #fff;
+}
+
+/* set button(top and bottom of the scrollbar) */
+*::-webkit-scrollbar-button {
+  display: none;
+}
+
+.app-container {
+  @apply mx-auto w-full max-w-[1728px];
+
+  &--main {
+    @apply p-5 md:p-7 xl:p-10 2xl:p-[50px] max-w-[1418px] flex-1 mx-auto;
+  }
+
+  &--compact {
+    @apply max-w-[1418px] px-[200px] py-[50px] mx-auto;
+  }
+}
+
+.multi-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: var(--mt-lines, 3);
+  -webkit-box-orient: vertical;
+  white-space: initial;
+  overflow: hidden;
+  word-break: break-word;
+}

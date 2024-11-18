@@ -1,0 +1,13 @@
+@import "element-plus/theme-chalk/src/upload";
+
+.el-upload {
+  @apply p-0 m-0 flex w-full h-full justify-center items-center text-center;
+
+  &-dragger {
+    @apply m-0 p-0 flex justify-center items-center text-center;
+
+    &.is-dragover {
+      @apply w-full h-full overflow-hidden #{!important};
+    }
+  }
+}
