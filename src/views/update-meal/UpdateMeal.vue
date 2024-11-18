@@ -6,8 +6,8 @@
     :loading="pageLoading"
   >
     <template #header>
-      <el-card class="px-2 mb-5">
-        <div class="flex text-center items-center gap-5 ">
+      <el-card class="px-2 mb-5 min-w-[490px]">
+        <div class="flex text-center items-center justify-between max-w-[440px] min-w-[440px]">
           <p class="capitalize font-bold">TOTAL:</p>
           <ProgressCalories
             :type="'circle'"
@@ -177,6 +177,6 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 .nutrition-list__item {
-  @apply max-w-[80px] flex gap-2 flex-col text-sm text-primary-dark;
+  @apply min-w-[70px] flex gap-2 flex-col text-sm text-primary-dark;
 }
 </style>
