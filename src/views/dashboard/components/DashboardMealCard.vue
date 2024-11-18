@@ -21,7 +21,7 @@
       <span class="text-base leading-7">{{ caloriesLimit }}</span>
     </p>
 
-    <span class="font-thin"> kcal</span>
+    <span class="font-thin">kcal</span>
 
     <p class="text-sm text-gray-500">
       {{ itemsCount }}
