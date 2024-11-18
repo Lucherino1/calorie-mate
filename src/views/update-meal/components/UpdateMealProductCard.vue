@@ -55,6 +55,7 @@
         <div class="my-0 flex justify-end w-[180px]">
           <el-button
             :type="$elComponentType.danger"
+            :loading="removeButtonLoading"
             @click="removeProduct"
           >
             Remove
@@ -72,6 +73,8 @@ import debounce from 'lodash/debounce'
 const props = defineProps<{
   product: IProduct
 }>()
+
+const removeButtonLoading = defineModel<boolean>('removeButtonLoading')
 
 const emit = defineEmits<{
   (e: 'update-product', updatedProduct: IProduct)
@@ -97,7 +100,10 @@ function handleInputChange () {
 }
 
 function removeProduct () {
-  emit('remove-product', localProduct.value.id)
+  if (!removeButtonLoading.value) {
+    removeButtonLoading.value = true
+    emit('remove-product', localProduct.value.id)
+  }
 }
 
 onMounted(async () => {

@@ -96,6 +96,7 @@
             <div class="flex justify-end w-[180px]">
               <el-button
                 :type="$elComponentType.danger"
+                :loading="removeButtonLoading"
                 @click="removeRecipe"
               >
                 Remove
@@ -116,6 +117,8 @@ import IconErrorRecipe from '~icons/icon/error-recipe'
 const props = defineProps<{
   recipe: IRecipe
 }>()
+
+const removeButtonLoading = defineModel<boolean>('removeButtonLoading')
 
 const emit = defineEmits<{
   (e: 'update-recipe', updatedRecipe: IRecipe)
@@ -142,11 +145,15 @@ function handleInputChange () {
 }
 
 function removeRecipe () {
-  emit('remove-recipe', localRecipe.value.id)
+  if (!removeButtonLoading.value) {
+    removeButtonLoading.value = true
+    emit('remove-recipe', localRecipe.value.id)
+  }
 }
 
 const buttonRef = ref()
 const popoverRef = ref()
+
 const onClickOutside = () => {
   unref(popoverRef).popperRef?.delayHide?.()
 }
