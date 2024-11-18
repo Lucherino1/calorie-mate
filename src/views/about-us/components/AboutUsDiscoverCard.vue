@@ -2,7 +2,11 @@
   <el-card class="max-w-[270px] mx-auto">
     <div class="flex flex-col justify-center items-center text-center">
       <span class="w-[100px] h-[100px] mb-5 flex justify-center items-center">
-        <SkeletonImage :img-src-prop="imageSrc" />
+        <img
+          :src="imageSrc"
+          class="w-full h-full object-cover overflow-hidden"
+          alt="discover image"
+        >
       </span>
 
       <p class="font-bold pb-1">{{ title }}</p>

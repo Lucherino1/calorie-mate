@@ -94,9 +94,9 @@ const peopleData = [
   {
     name: 'Stepan',
     age: '37',
-    imageBefore: '/images/about-us/main/success-stories/james-before.jpeg',
-    imageAfter: '/images/about-us/main/success-stories/james-after.jpeg',
-    weightBefore: '85 kg',
+    imageBefore: '/images/about-us/main/success-stories/stepan-before.jpeg',
+    imageAfter: '/images/about-us/main/success-stories/stepan-after.jpeg',
+    weightBefore: '95 kg',
     weightAfter: '75 kg',
     quote: 'Calorie Mate helped me stay consistent. I’ve learned that real change comes from small, steady improvements. With each step, I got closer to my goal.'
   },

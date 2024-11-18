@@ -12,17 +12,13 @@
         <AboutUsGoalItems class="mt-[60px]" />
       </div>
 
-      <div class="2xl:min-w-[610px] 2xl:min-h-[355px] min-w-[405px] min-h-[235px]">
-        <SkeletonImage
-          :img-src-prop="headerImage"
-          img-contain-class="object-contain"
-          class="w-full h-full max-w-full max-h-full"
-        />
+      <div class="2xl:max-w-[610px] 2xl:max-h-[355px] max-w-[405px] max-h-[235px]">
+        <img
+          src="/images/about-us/header/macbook_mockup.png"
+          class="w-full h-full object-contain"
+          alt="macbook mockup"
+        >
       </div>
     </section>
   </header>
 </template>
-
-<script lang="ts" setup>
-const headerImage = '/images/about-us/header/macbook_mockup.png'
-</script>
