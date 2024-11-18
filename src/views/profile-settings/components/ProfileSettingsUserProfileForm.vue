@@ -46,7 +46,6 @@
         native-type="submit"
         class="w-full"
         :loading="isSubmitButtonLoading"
-        :disabled="isSubmitButtonDisabled"
         :type="$elComponentType.primary"
         :size="$elComponentSize.large"
       >
@@ -57,13 +56,10 @@
 </template>
 
 <script lang="ts" setup>
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   profileFormData: IUserProfile
-  isSubmitButtonDisabled?: boolean
   isSubmitButtonLoading: boolean
-}>(), {
-  isSubmitButtonDisabled: false
-})
+}>()
 
 const emit = defineEmits<{
   (e: 'submit', localProfileFormModel: IUserProfile)
