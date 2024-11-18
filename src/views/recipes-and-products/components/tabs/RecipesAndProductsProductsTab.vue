@@ -42,7 +42,7 @@
               <el-button
                 :type="$elComponentType.danger"
                 :size="$elComponentSize.small"
-                @click="deleteProduct(row.id)"
+                @click="deleteProduct(row.id, row.name)"
               >
                 Delete
               </el-button>
@@ -69,7 +69,7 @@ import debounce from 'lodash/debounce'
 import cloneDeep from 'lodash/cloneDeep'
 
 import { EProductType } from '@/types/products-and-recipes.enums'
-import { showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
+import { showConfirmationDialog, showNotification, sortArrayBySortFieldAndOrder } from '@/helpers'
 
 const authStore = useAuthStore()
 
@@ -230,9 +230,15 @@ async function saveProduct () {
   }
 }
 
-async function deleteProduct (productId: string) {
+async function deleteProduct (productId: string, productName: string) {
   try {
     productPagesCache.value = {}
+
+    await showConfirmationDialog({
+      title: 'Product deleting',
+      message: `Are you sure you want to delete "${productName}"?`
+    })
+
     tableLoading.value = true
 
     await productsAndRecipesService.deleteProduct({ productId, isAdmin: authStore.isUserAdmin })
@@ -242,7 +248,9 @@ async function deleteProduct (productId: string) {
 
     showNotification('Product deleted successfully', 'Success', 'success')
   } catch (error) {
-    showNotification()
+    if (error !== 'cancel') {
+      showNotification()
+    }
   } finally {
     isSearchAndInputDisabled.value = products.value.length === 0
     isEditDialogVisible.value = false

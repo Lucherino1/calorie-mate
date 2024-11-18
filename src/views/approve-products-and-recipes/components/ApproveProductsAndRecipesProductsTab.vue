@@ -14,7 +14,7 @@
             <el-button
               :type="$elComponentType.danger"
               :size="$elComponentSize.small"
-              @click="rejectProduct(row.id)"
+              @click="rejectProduct(row.id, row.name)"
             >
               Reject
             </el-button>
@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { showNotification } from '@/helpers'
+import { showConfirmationDialog, showNotification } from '@/helpers'
 
 const products = ref<IProduct[]>([])
 const tableLoading = ref(false)
@@ -67,15 +67,23 @@ async function approveProduct (productId: string) {
   }
 }
 
-async function rejectProduct (productId: string) {
-  tableLoading.value = true
+async function rejectProduct (productId: string, productName: string) {
   try {
+    await showConfirmationDialog({
+      title: 'Product rejecting',
+      message: `Are you sure you want to reject "${productName}"?`
+    })
+
+    tableLoading.value = true
+
     await approveService.productReview({ id: productId, approve: false })
 
     products.value = products.value.filter(product => product.id !== productId)
     showNotification('Product was rejected successfully', 'Success', 'success')
   } catch (error) {
-    showNotification()
+    if (error !== 'cancel') {
+      showNotification()
+    }
   } finally {
     tableLoading.value = false
   }

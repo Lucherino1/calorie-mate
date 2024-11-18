@@ -5,7 +5,7 @@
         <ModalUpsertRecipe
           v-model:recipe="editableRecipe"
           v-model:visible="isEditDialogVisible"
-          v-model:modal-button-loading="modalButtonLoading"
+          :modal-button-loading="modalButtonLoading"
           :isCreating="isCreating"
           :title="isCreating ? 'Add New Recipe' : 'Edit Recipe'"
           @close="isEditDialogVisible = false"
@@ -42,7 +42,7 @@
               <el-button
                 :type="$elComponentType.danger"
                 :size="$elComponentSize.small"
-                @click="deleteRecipe(row.id)"
+                @click="deleteRecipe(row.id, row.name)"
               >
                 Delete
               </el-button>
@@ -70,7 +70,7 @@ import debounce from 'lodash/debounce'
 import cloneDeep from 'lodash/cloneDeep'
 
 import { ERecipeType } from '@/types/products-and-recipes.enums'
-import { showNotification } from '@/helpers'
+import { showNotification, showConfirmationDialog } from '@/helpers'
 
 const authStore = useAuthStore()
 
@@ -236,9 +236,14 @@ function openCreateDialog () {
   isEditDialogVisible.value = true
 }
 
-async function deleteRecipe (recipeId: string) {
+async function deleteRecipe (recipeId: string, recipeName: string) {
   try {
     recipePagesCache.value = {}
+
+    await showConfirmationDialog({
+      title: 'Recipe deleting',
+      message: `Are you sure you want to delete "${recipeName}"?`
+    })
 
     tableLoading.value = true
     await productsAndRecipesService.deleteRecipe({ recipeId, isAdmin: authStore.isUserAdmin })
@@ -250,7 +255,9 @@ async function deleteRecipe (recipeId: string) {
 
     isEditDialogVisible.value = false
   } catch (error) {
-    showNotification()
+    if (error !== 'cancel') {
+      showNotification()
+    }
   } finally {
     isSearchAndInputDisabled.value = recipes.value.length === 0
     tableLoading.value = false
