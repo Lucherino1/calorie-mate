@@ -115,7 +115,7 @@ async function handleProductUpdate (updatedProduct: IProduct) {
       showNotification()
     }
   } else {
-    showNotification('Product not found in meal', 'Error', 'error')
+    showNotification()
   }
 }
 
@@ -131,7 +131,7 @@ async function handleProductRemove (productId: string) {
     })
     productsInMeal.value = productsInMeal.value.filter(product => product.id !== productId)
   } catch (error) {
-    showNotification('Failed to remove product', 'Error', 'error')
+    showNotification()
   } finally {
     isButtonRemoveLoading.value[productId] = false
   }

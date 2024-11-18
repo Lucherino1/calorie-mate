@@ -25,6 +25,7 @@
       <UpdateMealRecipeCard
         v-for="recipe in recipesInMeal"
         :key="recipe.id"
+        v-model:remove-button-loading="isButtonRemoveLoading[recipe.id]"
         :recipe="recipe"
         @update-recipe="handleRecipeUpdate"
         @remove-recipe="handleRecipeRemove"
@@ -47,6 +48,8 @@ const props = defineProps<{
   mealType: TMealType
   allRecipes: IRecipe[]
 }>()
+
+const isButtonRemoveLoading = ref<Record<string, boolean>>({})
 
 const recipesInMeal = defineModel<IRecipe[]>('recipesInMeal')
 const userMeals = defineModel<IMeals>('user-meals')
@@ -84,7 +87,7 @@ async function addRecipeToMeal (recipe: IRecipe) {
       mealComponent: 'recipes'
     })
   } catch (error) {
-    showNotification('Failed to add the recipe to the meal.', 'error')
+    showNotification()
   }
 }
 
@@ -104,27 +107,29 @@ async function handleRecipeUpdate (updatedRecipe: IRecipe) {
         currentMealData: userMeals.value
       })
     } catch (error) {
-      showNotification('Failed to update the recipe in the meal.', 'error')
+      showNotification()
     }
   } else {
-    showNotification('Recipe not found in meal', 'Error', 'error')
+    showNotification()
   }
 }
 
 async function handleRecipeRemove (recipeId: string) {
-  const index = recipesInMeal.value.findIndex(recipe => recipe.id === recipeId)
-  if (index !== -1) {
-    recipesInMeal.value.splice(index, 1)
-    try {
-      await updateMealService.removeProduct({
-        date: dashboardStore.date,
-        mealType: props.mealType,
-        productId: recipeId,
-        mealComponent: 'recipes'
-      })
-    } catch (error) {
-      showNotification()
-    }
+  isButtonRemoveLoading.value[recipeId] = true
+
+  try {
+    await updateMealService.removeProduct({
+      date: dashboardStore.date,
+      mealType: props.mealType,
+      productId: recipeId,
+      mealComponent: 'recipes'
+    })
+
+    recipesInMeal.value = recipesInMeal.value.filter(recipe => recipe.id !== recipeId)
+  } catch (error) {
+    showNotification()
+  } finally {
+    isButtonRemoveLoading.value[recipeId] = false
   }
 }
 </script>
