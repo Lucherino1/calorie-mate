@@ -237,14 +237,13 @@ import { ERecipeType } from '@/types/products-and-recipes.enums'
 const props = defineProps<{
   title: string
   isCreating: boolean
+  modalButtonLoading: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'save', recipe: IRecipe): void
 }>()
-
-const modalButtonLoading = defineModel<boolean>('modal-button-loading')
 
 const authStore = useAuthStore()
 
@@ -316,7 +315,6 @@ async function handleSave () {
   }
   formRef.value?.validate(async (isValid) => {
     if (isValid) {
-      modalButtonLoading.value = true
       try {
         if (fileList.value.length > 0 && uploadedImageUrl.value) {
           await uploadImage()
@@ -335,8 +333,6 @@ async function handleSave () {
         uploadedImageUrl.value = null
       } catch (error) {
         showNotification()
-      } finally {
-        modalButtonLoading.value = false
       }
     }
   })
