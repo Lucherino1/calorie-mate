@@ -208,7 +208,7 @@
                   <el-button @click="handleCancel">Cancel</el-button>
                   <div>
                     <el-button
-                      :loading="modalButtonLoading"
+                      :loading="modalButtonLoading || imageUploading"
                       :type="$elComponentType.primary"
                       native-type="submit"
                     >
@@ -272,6 +272,8 @@ const uploadedImageUrl = ref<string>(null)
 const searchQuery = ref<string>(null)
 const filteredProducts = ref<IProduct[]>([])
 
+const imageUploading = ref(false)
+
 const handleImageChange: UploadProps['onChange'] = (uploadFile) => {
   uploadedImageUrl.value = uploadFile.url
 }
@@ -283,6 +285,7 @@ const handleImageRemove: UploadProps['onRemove'] = () => {
 }
 
 const uploadImage = async () => {
+  imageUploading.value = true
   try {
     if (fileList.value.length > 0) {
       const file = fileList.value[0] as UploadFile
@@ -295,6 +298,8 @@ const uploadImage = async () => {
     }
   } catch (error) {
     showNotification('Please try again later', 'Failed to upload an image')
+  } finally {
+    imageUploading.value = false
   }
 }
 
@@ -406,14 +411,7 @@ const getAllProducts = async () => {
   }
 }
 
-watch(isModalVisible, (newVal) => {
-  if (newVal) {
-    fileList.value = []
-    uploadedImageUrl.value = null
-    getAllProducts()
-  } else {
-    fileList.value = []
-    uploadedImageUrl.value = null
-  }
+onMounted(() => {
+  getAllProducts()
 })
 </script>

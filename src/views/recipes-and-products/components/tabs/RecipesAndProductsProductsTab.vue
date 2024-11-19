@@ -3,6 +3,7 @@
     <el-card class="card--no-shadow w-full h-full">
       <div class="flex flex-col items-center  flex-1 h-full">
         <ModalUpsertProduct
+          v-if="isEditDialogVisible"
           v-model:product="editableProduct"
           v-model:visible="isEditDialogVisible"
           :modal-button-loading="modalButtonLoading"
