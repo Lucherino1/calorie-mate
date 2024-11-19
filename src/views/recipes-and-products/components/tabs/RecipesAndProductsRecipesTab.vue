@@ -3,6 +3,7 @@
     <el-card class="card--no-shadow w-full h-full">
       <div class="flex flex-col items-center w-full h-full">
         <ModalUpsertRecipe
+          v-if="isEditDialogVisible"
           v-model:recipe="editableRecipe"
           v-model:visible="isEditDialogVisible"
           :modal-button-loading="modalButtonLoading"
