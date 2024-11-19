@@ -24,7 +24,10 @@
         </el-form-item>
 
         <el-form-item class="flex-1" label="Age" prop="age">
-          <el-input v-model.number="localFormModel.age" type="number" placeholder="Enter your age" />
+          <el-input
+            v-model.number="localFormModel.age"
+            type="number" placeholder="Enter your age"
+          />
         </el-form-item>
       </div>
 
@@ -42,12 +45,25 @@
       <el-form-item label="Height in (cm)" prop="height">
         <el-input v-model.number="localFormModel.height" type="number" placeholder="Enter your height" />
       </el-form-item>
+
       <el-form-item label="Current Weight in (kg)" prop="currentWeight">
-        <el-input v-model.number="localFormModel.currentWeight" type="number" placeholder="Enter your weight" />
+        <el-input
+          v-model.number="localFormModel.currentWeight"
+          type="number"
+          :precision="1"
+          :step="0.1"
+          placeholder="Enter your weight"
+        />
       </el-form-item>
 
       <el-form-item label="Goal Weight in (kg)" prop="goalWeight">
-        <el-input v-model.number="localFormModel.goalWeight" type="number" placeholder="Enter your goal weight" />
+        <el-input
+          v-model.number="localFormModel.goalWeight"
+          type="number"
+          :precision="1"
+          :step="0.1"
+          placeholder="Enter your goal weight"
+        />
       </el-form-item>
     </div>
 
