@@ -7,13 +7,13 @@
       :size="$elComponentSize.large"
       placeholder="Enter a recipe name, e.g. 'chicken salad', 'strawberry cheesecake'"
       clearable
+      @change="addRecipeToMeal"
     >
       <el-option
         v-for="recipe in filteredRecipes"
         :key="recipe.id"
         :label="recipe.name"
         :value="recipe.name"
-        @click="addRecipeToMeal(recipe)"
       >
         <p class="font-semibold">{{ recipe.name }}</p>
       </el-option>
@@ -69,25 +69,31 @@ function filterRecipes (searchQuery: string) {
   }
 }
 
-async function addRecipeToMeal (recipe: IRecipe) {
-  if (recipesInMeal.value.some(recip => recip.id === recipe.id)) {
+async function addRecipeToMeal (selectedRecipeName: string) {
+  const selectedRecipe = props.allRecipes.find(recipe =>
+    recipe.name.toLowerCase() === selectedRecipeName.toLowerCase()
+  )
+
+  if (recipesInMeal.value.some(recip => recip.id === selectedRecipe.id)) {
     showNotification('You may just change your portion count', 'This recipe is already added to your meal.', 'warning')
-    return
-  }
+    searchQuery.value = ''
+  } else {
+    const newRecipe: IRecipe = { ...selectedRecipe, portions: 1 }
+    recipesInMeal.value.push(newRecipe)
+    userMeals.value.recipes.push(newRecipe)
 
-  const newRecipe: IRecipe = { ...recipe, portions: 1 }
-  recipesInMeal.value.push(newRecipe)
-  userMeals.value.recipes.push(newRecipe)
+    searchQuery.value = ''
 
-  try {
-    await updateMealService.updateMeal({
-      date: dashboardStore.date,
-      mealType: props.mealType,
-      newItem: newRecipe,
-      mealComponent: 'recipes'
-    })
-  } catch (error) {
-    showNotification()
+    try {
+      await updateMealService.updateMeal({
+        date: dashboardStore.date,
+        mealType: props.mealType,
+        newItem: newRecipe,
+        mealComponent: 'recipes'
+      })
+    } catch (error) {
+      showNotification()
+    }
   }
 }
 

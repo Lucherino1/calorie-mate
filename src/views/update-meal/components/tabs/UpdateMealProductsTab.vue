@@ -7,13 +7,13 @@
       :size="$elComponentSize.large"
       placeholder="Enter a product name, e.g. 'bread', 'avocado', 'yogurt'"
       clearable
+      @change="addProductToMeal"
     >
       <el-option
         v-for="product in filteredProducts"
         :key="product.id"
         :label="product.name"
         :value="product.name"
-        @click="addProductToMeal(product)"
       >
         <div class="flex justify-between w-full">
           <span class="font-semibold">{{ product.name }}</span>
@@ -72,17 +72,22 @@ function filterProducts (searchQuery: string) {
   }
 }
 
-async function addProductToMeal (product: IProduct) {
-  const isProductAlreadyInMeal = productsInMeal.value.some(prod => prod.id === product.id)
+async function addProductToMeal (selectedProductName: string) {
+  const selectedProduct = props.allProducts.find(
+    product => product.name.toLowerCase() === selectedProductName.toLowerCase()
+  )
+
+  const isProductAlreadyInMeal = productsInMeal.value.some(prod => prod.id === selectedProduct.id)
 
   if (isProductAlreadyInMeal) {
     showNotification('You may just change your grams', 'This product is already added to your meal.', 'warning')
   } else {
     const defaultGrams = 100
-    const newProduct: IProduct = { ...product, grams: defaultGrams }
+    const newProduct: IProduct = { ...selectedProduct, grams: defaultGrams }
 
     productsInMeal.value.push(newProduct)
     userMeals.value.products.push(newProduct)
+
     try {
       await updateMealService.updateMeal({
         date: dashboardStore.date,
